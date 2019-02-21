@@ -1,0 +1,3 @@
+[submodule "devops-microcosm"]
+	path = devops-microcosm
+	url = https://github.com/SLS-ALL/devops-microcosm.git
