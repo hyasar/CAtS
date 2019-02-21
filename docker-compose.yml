@@ -1,0 +1,68 @@
+version: '3'
+
+services:
+
+  jenkins:
+    image: h1kkan/jenkins-docker:lts
+    container_name: jenkins
+    ports:
+      - "8080:8080"
+    restart: on-failure
+    volumes:
+      - jenkins_home:/var/jenkins_home
+    extra_hosts:
+     - "staging:10.1.1.7"
+
+  sonarqube:
+    image: sonarqube:lts
+    container_name: sonarqube
+    ports:
+      - "9000:9000"
+    volumes:
+      - sonarqube_conf:/opt/sonarqube/conf
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_bundled-plugins:/opt/sonarqube/lib/bundled-plugins
+    links:
+      - jenkins
+
+  selenium-hub:
+    image: selenium/hub:3.141.59-hafnium
+    container_name: selenium-hub
+    ports:
+      - "4444:4444"
+
+  chrome:
+    image: selenium/node-chrome:3.141.59-hafnium
+    volumes:
+      - /dev/shm:/dev/shm
+    depends_on:
+      - selenium-hub
+    environment:
+      - HUB_HOST=selenium-hub
+      - HUB_PORT=4444
+
+  firefox:
+    image: selenium/node-firefox:3.141.59-hafnium
+    volumes:
+      - /dev/shm:/dev/shm
+    depends_on:
+      - selenium-hub
+    environment:
+      - HUB_HOST=selenium-hub
+      - HUB_PORT=4444
+
+  helloworld:
+    build: ./helloworld
+    command: python /code/manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./helloworld/:/code
+    ports:
+      - "8000:8000"
+
+volumes:
+  jenkins_home:
+  sonarqube_conf:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_bundled-plugins:
