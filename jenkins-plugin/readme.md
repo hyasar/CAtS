@@ -64,3 +64,13 @@ To build a plugin, run `mvn install`. This will create the file `./target/plugin
 ```bash
 $ mvn install
 ```
+
+It shall generate a `.hpi ` under the target folder.
+
+### Install Plugin
+
+In Jenkins, select `manage jenkins` >  `manage plugin`.
+
+Go to `advanced` > `Upload Plugin`. 
+
+Select the generated plugin.
