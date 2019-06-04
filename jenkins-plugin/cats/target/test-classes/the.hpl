@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Group-Id: io.jenkins.plugins
+Short-Name: cats
+Long-Name: TODO Plugin
+Plugin-Version: 1.0-SNAPSHOT (private-06/04/2019 14:01-jingzes)
+Hudson-Version: 2.7.3
+Jenkins-Version: 2.7.3
+Plugin-Developers: 
+Support-Dynamic-Loading: true
+Libraries: /home/jingzes/CAtS/jenkins-plugin/cats/src/main/resources,/
+ home/jingzes/CAtS/jenkins-plugin/cats/target/classes
+Resource-Path: /home/jingzes/CAtS/jenkins-plugin/cats/src/main/webapp
+
