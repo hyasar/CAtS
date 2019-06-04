@@ -47,6 +47,16 @@ It may be helpful to add the following to your `~/.m2/settings.xml` (Windows use
 </settings>
 ```
 
+### Create Target
+
+Under the `./cats` directory, run
+
+```
+mvn package
+```
+
+It shall generate a folder named target.
+
 ### Building a Plugin
 
 To build a plugin, run `mvn install`. This will create the file `./target/pluginname.hpi` that you can deploy to Jenkins.
