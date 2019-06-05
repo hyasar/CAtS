@@ -1,4 +1,4 @@
 # CAtS
 
-To download submodule "microcosm", use the following command:
-git submodule update --init --recursive
+## Jenkins Pipeline
+http://ec2-54-162-139-224.compute-1.amazonaws.com:8080/
