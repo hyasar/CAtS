@@ -1,8 +1,14 @@
-To create database:
+* To create database:
+```
 $ python3 manage.py migrate
+```
 
-To start up:
+* To start up:
+```
 $ python3 manage.py runserver
+```
 
-Install dependencies:
+* Install dependencies:
+```
 $ pip install psycopg2
+```
