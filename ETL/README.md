@@ -35,12 +35,20 @@ virtualenv venv
 source venv/bin/activate
 ```
 * Install dependencies
-```
-sudo apt-get install python-psycopg2
-sudo apt-get install libpq-dev
-pip install psycopg2
-pip install sqlalchemy
-```
+
+  If postgresql has not been installed, run
+  ```
+  sudo apt-get install postgresql
+  ```
+
+  Then install other dependencies
+  ```
+  sudo apt-get install python-psycopg2
+  sudo apt-get install libpq-dev
+  pip install psycopg2
+  pip install sqlalchemy
+  ```
+  
 * Run script to automatically build table "groups" and "controllers"
 ```
 python load_data_catagory.py
