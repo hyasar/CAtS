@@ -84,7 +84,7 @@ COMMENT ON COLUMN public.controllers.pid IS 'parent controller id';
 --
 
 CREATE TABLE public.groups (
-    gid character varying(4) NOT NULL,
+    gid character varying(5) NOT NULL,
     title character varying(100) NOT NULL
 );
 
