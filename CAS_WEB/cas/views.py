@@ -21,14 +21,8 @@ def login_action(request):
     form = LoginForm(request.POST)
     context['form'] = form
 
-<<<<<<< HEAD
-=======
-    print("--------========----------")
-    # print(form.username)
->>>>>>> tmp
     # Validates the form.
     if not form.is_valid():
-        print("Errors:"+form.non_field_errors())
         return render(request, 'cas/login.html', context)
 
     new_user = authenticate(username=form.cleaned_data['username'],
@@ -55,6 +49,7 @@ def register_action(request):
 
     # Validates the form.
     if not form.is_valid():
+        print("Errors:"+form.non_field_errors())
         return render(request, 'cas/register.html', context)
 
     # At this point, the form data is valid.  Register and login the user.
@@ -78,7 +73,6 @@ def logout_action(request):
 
 @login_required
 def projects_action(request):
-<<<<<<< HEAD
     content = {}
     content['user'] = request.user
     return render(request, 'cas/projects.html', content)
@@ -90,6 +84,3 @@ def create_project_action(request):
         content['user'] = request.user
         content['form'] = ProjectForm()
         return render(request, 'cas/new_project.html', content)
-=======
-    return render(request, 'cas/projects.html')
->>>>>>> tmp
