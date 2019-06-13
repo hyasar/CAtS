@@ -1,0 +1,13 @@
+.navbar.navbar-dark.navbar-expand-md.bg-dark {
+  opacity: 0.8;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+  color: #fff;
+  font-size: 13px;
+}
+
+.navbar-dark .navbar-nav .nav-link.cas-logo {
+  font-size: 15px;
+}
+
