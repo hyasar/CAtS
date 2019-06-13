@@ -10,7 +10,7 @@ WORKDIR /code
 
 # Install dependencies
 COPY requirements.txt /code/
-RUN pip install -r requirements.txt
+RUN pip3 install -r requirements.txt
 
 # Open port 8000 for serving the webservice
 EXPOSE 8000
@@ -19,4 +19,4 @@ EXPOSE 8000
 COPY . /code/
 
 # Start the service
-# CMD ["python3", "manage.py", "runserver 0.0.0.0:8000"]
+CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]

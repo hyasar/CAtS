@@ -4,10 +4,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from cas.models import *
 
-
 class LoginForm(forms.Form):
-    username = forms.CharField(max_length=20, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    password = forms.CharField(max_length=200, widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    username = forms.CharField(max_length = 20, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    password = forms.CharField(max_length = 200, widget = forms.PasswordInput(attrs={'class': 'form-control'}))
 
     # Customizes form validation for properties that apply to more
     # than one field.  Overrides the forms.Form.clean function.
@@ -26,19 +25,18 @@ class LoginForm(forms.Form):
         # We must return the cleaned data we got from our parent.
         return cleaned_data
 
-
 class RegistrationForm(forms.Form):
     first_name = forms.CharField(max_length=20, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    last_name = forms.CharField(max_length=20, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    email = forms.CharField(max_length=50,
-                            widget=forms.EmailInput(attrs={'class': 'form-control'}))
-    username = forms.CharField(max_length=20, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    password1 = forms.CharField(max_length=200,
-                                label='Password',
-                                widget=forms.PasswordInput(attrs={'class': 'form-control'}))
-    password2 = forms.CharField(max_length=200,
-                                label='Confirm password',
-                                widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    last_name  = forms.CharField(max_length=20, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    email      = forms.CharField(max_length=50,
+                                 widget = forms.EmailInput(attrs={'class': 'form-control'}))
+    username   = forms.CharField(max_length = 20, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    password1  = forms.CharField(max_length = 200,
+                                 label='Password',
+                                 widget = forms.PasswordInput(attrs={'class': 'form-control'}))
+    password2  = forms.CharField(max_length = 200,
+                                 label='Confirm password',
+                                 widget = forms.PasswordInput(attrs={'class': 'form-control'}))
 
     # Customizes form validation for properties that apply to more
     # than one field.  Overrides the forms.Form.clean function.
@@ -67,7 +65,6 @@ class RegistrationForm(forms.Form):
         # We must return the cleaned data we got from the cleaned_data
         # dictionary
         return username
-
 
 class ProjectForm(forms.Form):
     name = forms.CharField(max_length=100, label='Project Name',

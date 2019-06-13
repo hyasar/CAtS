@@ -52,13 +52,13 @@ services:
       - HUB_HOST=selenium-hub
       - HUB_PORT=4444
 
-  helloworld:
-    build: ./helloworld
-    command: python /code/manage.py runserver 0.0.0.0:8000
-    volumes:
-      - ./helloworld/:/code
-    ports:
-      - "8000:8000"
+#  helloworld:
+#    build: ./helloworld
+#    command: python /code/manage.py runserver 0.0.0.0:8000
+#    volumes:
+#      - ./helloworld/:/code
+#    ports:
+#      - "8000:8000"
 
 volumes:
   jenkins_home:
