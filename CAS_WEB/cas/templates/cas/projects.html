@@ -17,7 +17,7 @@
     {% load staticfiles %}
     <link href="{% static '/css/app.css' %}" rel="stylesheet" type="text/css">
 
-    <title mb-3>Dashbord</title mb-3>
+    <title mb-3>Projects</title mb-3>
 </head>
 <body>
 
@@ -62,35 +62,71 @@
         </div>
 
         {% for project in projects %}
-        <div class="row">
-            <div class="mb-2">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title mb-3">{{ project.name }}</h5>
-                        <p class="card-text mt-3">{{ project.description }}</p>
-                        <p class="font-weight-light card-date mb-0 pb-0">{{ project.updated_time }}</p>
-                    </div>
+        <div class="mb-2">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">{{ project.name }}</h5>
+                    <p class="card-text mt-3">{{ project.description }}</p>
+                    <p class="font-weight-light card-date mb-0 pb-0">{{ project.updated_time }}</p>
                 </div>
             </div>
         </div>
         {% endfor %}
-    </div>
 
-    <div class="pagination">
-        <span class="step-links">
-            {% if projects.has_previous %}
-                <a href="?page=1">&laquo; first</a>
-                <a href="?page={{ projects.previous_page_number }}">previous</a>
-            {% endif %}
-            <span class="current">
-                Page {{ projects.number }} of {{ projects.paginator.num_pages }}.
-            </span>
 
-            {% if projects.has_next %}
-                <a href="?page={{ projects.next_page_number }}">next</a>
-                <a href="?page={{ projects.paginator.num_pages }}">last &raquo;</a>
-            {% endif %}
-        </span>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+
+                {% if projects.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1" aria-label="first">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ projects.previous_page_number }}" aria-label="previous">
+                        <span aria-hidden="true">previous</span>
+                    </a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="" aria-label="first">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item disabled">
+                    <a class="page-link" href="" aria-label="previous">
+                        <span aria-hidden="true">previous</span>
+                    </a>
+                </li>
+                {% endif %}
+
+                {% if projects.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ projects.next_page_number }}" aria-label="next">
+                        <span aria-hidden="true">next</span>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ projects.paginator.num_pages }}" aria-label="last">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="" aria-label="next">
+                        <span aria-hidden="true">next</span>
+                    </a>
+                </li>
+                <li class="page-item disabled">
+                    <a class="page-link" href="" aria-label="last">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+            <span class="current">Page {{ projects.number }} of {{ projects.paginator.num_pages }}</span>
+        </nav>
     </div>
 </section>
 
