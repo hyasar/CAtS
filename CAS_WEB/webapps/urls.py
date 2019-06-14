@@ -23,6 +23,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.login_action, name='login'),
     path('register', views.register_action, name='register'),
-    path('projects', views.projects_action, name='projects'),
-    path('new_project', views.create_project_action, name='new_project')
+    path('projects', views.get_project_list_action, name='projects'),
+    path('new_project', views.create_project_action, name='new_project'),
 ]

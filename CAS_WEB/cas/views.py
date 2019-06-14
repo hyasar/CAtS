@@ -4,8 +4,10 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from django.core.paginator import Paginator
 
 from cas.forms import *
+import datetime
 
 # Create your views here.
 def login_action(request):
@@ -72,9 +74,12 @@ def logout_action(request):
     return redirect(reverse('login'))
 
 @login_required
-def projects_action(request):
+def get_project_list_action(request):
     content = {}
     content['user'] = request.user
+
+    project_list = Project.object.filter(user=request.user)
+    paginator = Paginator(project_list, 2)
     return render(request, 'cas/projects.html', content)
 
 @login_required
@@ -83,4 +88,23 @@ def create_project_action(request):
     if request.method == 'GET':
         content['user'] = request.user
         content['form'] = ProjectForm()
+
+        #### Example: create new project ####
+        # project = Project(name='project1',
+        #                   user=request.user,
+        #                   created_time=datetime.datetime.now(),
+        #                   updated_time=datetime.datetime.now())
+        # project.save()
+        #### ####
+
+        #### Example: configure control of project ####
+        control1 = Control.objects.get(cid='ac-1')
+        control2 = Control.objects.get(cid='ac-2')
+        project=Project.objects.get(name='project1')
+        ## add item into manyToMany field
+        project.control.add(control1)
+        project.control.add(control2)
+        project.save()
+        #### ####
+
         return render(request, 'cas/new_project.html', content)

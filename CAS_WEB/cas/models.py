@@ -6,10 +6,23 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 class Control(models.Model):
-    parent_id = models.IntegerField()
+    cid = models.CharField(primary_key=True, max_length=10)
+    gid = models.CharField(max_length=5)
+    title = models.CharField(max_length=100)
+    parameters = models.TextField(blank=True, null=True)  # This field type is a guess.
+    properties = models.TextField(blank=True, null=True)  # This field type is a guess.
+    links = models.TextField(blank=True, null=True)  # This field type is a guess.
+    parts = models.TextField(blank=True, null=True)  # This field type is a guess.
+    classinfo = models.CharField(max_length=32, blank=True, null=True)
+    pid = models.CharField(max_length=10, blank=True, null=True)
+    high = models.BooleanField()
+    moderate = models.BooleanField()
+    low = models.BooleanField()
 
-    def __str__(self):
-        return 'Project(id=' + str(self.id) + ', content=' + str(self.text) + ')'
+    class Meta:
+        managed = False ## This means that Django won't manage the lifecycle of this table
+        db_table = 'control'
+
 
 
 class Project(models.Model):
