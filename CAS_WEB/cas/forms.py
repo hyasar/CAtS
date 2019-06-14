@@ -71,3 +71,5 @@ class RegistrationForm(forms.Form):
 class ProjectForm(forms.Form):
     name = forms.CharField(max_length=100, label='Project Name',
                            widget=forms.TextInput(attrs={'class': 'form-control'}))
+    description = forms.CharField(max_length=600,
+                           widget=forms.TextInput(attrs={'class': 'form-control'}))

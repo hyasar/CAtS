@@ -28,6 +28,7 @@ class Control(models.Model):
 class Project(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name="project")
     name = models.CharField(max_length=100)
+    description = models.TextField(blank=True, null=True, max_length=600)
     created_time = models.DateTimeField()
     updated_time = models.DateTimeField()
     control = models.ManyToManyField(Control)

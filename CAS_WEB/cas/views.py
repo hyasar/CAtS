@@ -78,8 +78,14 @@ def get_project_list_action(request):
     content = {}
     content['user'] = request.user
 
-    project_list = Project.object.filter(user=request.user)
+    project_list = Project.objects.filter(user=request.user)
     paginator = Paginator(project_list, 2)
+    page = request.GET.get('page')
+    if not page:
+        page = 1
+    projects = paginator.get_page(page)
+    print(project_list)
+    content['projects'] = projects
     return render(request, 'cas/projects.html', content)
 
 @login_required
@@ -88,23 +94,23 @@ def create_project_action(request):
     if request.method == 'GET':
         content['user'] = request.user
         content['form'] = ProjectForm()
-
-        #### Example: create new project ####
-        # project = Project(name='project1',
-        #                   user=request.user,
-        #                   created_time=datetime.datetime.now(),
-        #                   updated_time=datetime.datetime.now())
-        # project.save()
-        #### ####
-
-        #### Example: configure control of project ####
-        control1 = Control.objects.get(cid='ac-1')
-        control2 = Control.objects.get(cid='ac-2')
-        project=Project.objects.get(name='project1')
-        ## add item into manyToMany field
-        project.control.add(control1)
-        project.control.add(control2)
-        project.save()
-        #### ####
-
         return render(request, 'cas/new_project.html', content)
+
+
+    #### Example: create new project ####
+    project = Project(name=request.POST['name'], description=request.POST['description'], user=request.user,
+                       created_time=datetime.datetime.now(), updated_time=datetime.datetime.now())
+    project.save()
+    #### ####
+
+    #### Example: configure control of project ####
+    # control1 = Control.objects.get(cid='ac-1')
+    # control2 = Control.objects.get(cid='ac-2')
+    # project=Project.objects.get(name='project1')
+    # ## add item into manyToMany field
+    # project.control.add(control1)
+    # project.control.add(control2)
+    # project.save()
+    #### ####
+
+    return render(request, 'cas/new_project.html', content)
