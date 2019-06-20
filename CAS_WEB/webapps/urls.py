@@ -25,4 +25,5 @@ urlpatterns = [
     path('register', views.register_action, name='register'),
     path('projects', views.get_project_list_action, name='projects'),
     path('new_project', views.create_project_action, name='new_project'),
+    path('controls', views.get_control_list_action, name='controls'),
 ]
