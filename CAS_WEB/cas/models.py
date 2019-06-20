@@ -20,7 +20,7 @@ class Control(models.Model):
 
     class Meta:
         managed = False ## This means that Django won't manage the lifecycle of this table
-        db_table = 'control'
+        db_table = 'controls'
 
 
 
