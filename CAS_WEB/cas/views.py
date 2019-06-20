@@ -134,4 +134,4 @@ def get_control_list_action(request):
     # print(project_list)
     content['controls'] = controls
     # return render(request, 'cas/projects.html', content)
-    return HttpResponse(json.dump(content))
+    return HttpResponse(json.dumps(content))
