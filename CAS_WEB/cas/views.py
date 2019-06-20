@@ -135,3 +135,4 @@ def get_control_list_action(request):
     content['controls'] = controls
     # return render(request, 'cas/projects.html', content)
     return render(request, 'cas/controls.html', content)
+
