@@ -121,7 +121,7 @@ def create_project_action(request):
 
 # @login_required
 def get_control_list_action(request):
-    # content = {}
+    content = {}
     # content['user'] = request.user
 
     control_list = Control.objects.all()
@@ -132,6 +132,6 @@ def get_control_list_action(request):
     controls = paginator.get_page(page)
     print(control_list)
     print(type(controls))
-    # content['controls'] = controls
+    content['controls'] = controls
     # return render(request, 'cas/projects.html', content)
-    return JsonResponse(controls)
+    return render(request, 'cas/controls.html', content)
