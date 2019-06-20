@@ -124,8 +124,8 @@ def get_control_list_action(request):
     content = {}
     # content['user'] = request.user
 
-    control_list = Control.objects.values('cid', 'title', 'id', 'gid')
-    paginator = Paginator(control_list, 20)
+    control_list = Control.objects.values('cid', 'title', 'id', 'gid', 'parameters', 'properties', 'classinfo')
+    paginator = Paginator(control_list, 2)
     page = request.GET.get('page')
     if not page:
         page = 1
