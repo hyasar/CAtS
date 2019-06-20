@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
+from django.http import HttpResponse
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -7,7 +8,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.core.paginator import Paginator
 
 from cas.forms import *
+from cas.views import *
 import datetime
+import json
+
 
 # Create your views here.
 def login_action(request):
@@ -32,8 +36,6 @@ def login_action(request):
 
     login(request, new_user)
     return redirect(reverse('projects'))
-
-
 
 
 def register_action(request):
@@ -68,10 +70,12 @@ def register_action(request):
     login(request, new_user)
     return redirect(reverse('projects'))
 
+
 @login_required
 def logout_action(request):
     logout(request)
     return redirect(reverse('login'))
+
 
 @login_required
 def get_project_list_action(request):
@@ -87,6 +91,7 @@ def get_project_list_action(request):
     # print(project_list)
     content['projects'] = projects
     return render(request, 'cas/projects.html', content)
+
 
 @login_required
 def create_project_action(request):
@@ -114,3 +119,21 @@ def create_project_action(request):
     #### ####
 
     return render(request, 'cas/new_project.html', content)
+
+
+@login_required
+def get_control_list_action(request):
+    content = {}
+    content['user'] = request.user
+
+    control_list = Control.objects
+    paginator = Paginator(control_list, 2)
+    page = request.GET.get('page')
+    if not page:
+        page = 1
+    controls = paginator.get_page(page)
+    print(control_list)
+    content['controls'] = controls
+    # return render(request, 'cas/projects.html', content)
+    return HttpResponse(json.dump(content))
+
