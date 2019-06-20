@@ -5,13 +5,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.core.paginator import Paginator
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 
 from cas.forms import *
 from cas.models import *
 
 import datetime
-import json
 
 # Create your views here.
 def login_action(request):
@@ -134,4 +133,4 @@ def get_control_list_action(request):
     print(control_list)
     content['controls'] = controls
     # return render(request, 'cas/projects.html', content)
-    return HttpResponse(content)
+    return JsonResponse(content)
