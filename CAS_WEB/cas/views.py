@@ -129,7 +129,7 @@ def get_control_list_action(request):
     page = request.GET.get('page')
     if not page:
         page = 1
-    controls = paginator.get_page(page)
+    controls = paginator.page(page)
     print(control_list)
     print(type(controls))
     content['controls'] = list(controls)
