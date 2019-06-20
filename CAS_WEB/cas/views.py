@@ -131,7 +131,7 @@ def get_control_list_action(request):
     if not page:
         page = 1
     controls = paginator.get_page(page)
-    # print(project_list)
+    print(control_list)
     content['controls'] = controls
     # return render(request, 'cas/projects.html', content)
     return HttpResponse(content)
