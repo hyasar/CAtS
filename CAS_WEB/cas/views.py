@@ -136,3 +136,18 @@ def get_control_list_action(request):
     # return render(request, 'cas/controls.html', content)
     return JsonResponse(content)
 
+  
+@login_required
+def search_projects_action(request):
+    content = {}
+    content['user'] = request.user
+
+    query_name = request.GET.get('name')
+    project_list = Project.objects.filter(user=request.user).filter(name__contains=query_name)
+    paginator = Paginator(project_list, 2)
+    page = request.GET.get('page')
+    if not page:
+        page = 1
+    projects = paginator.get_page(page)
+    content['projects'] = projects
+    return render(request, 'cas/projects.html', content)
