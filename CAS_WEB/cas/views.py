@@ -120,10 +120,10 @@ def create_project_action(request):
     return render(request, 'cas/new_project.html', content)
 
 
-@login_required
+# @login_required
 def get_control_list_action(request):
     content = {}
-    content['user'] = request.user
+    # content['user'] = request.user
 
     control_list = Control.objects.filter(user=request.user)
     paginator = Paginator(control_list, 2)
