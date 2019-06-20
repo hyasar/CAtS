@@ -132,7 +132,7 @@ def get_control_list_action(request):
     controls = paginator.get_page(page)
     print(control_list)
     print(type(controls))
-    content['controls'] = controls
-    # return render(request, 'cas/projects.html', content)
-    return render(request, 'cas/controls.html', content)
+    content['controls'] = list(controls)
+    # return render(request, 'cas/controls.html', content)
+    return JsonResponse(content)
 
