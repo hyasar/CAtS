@@ -1,17 +1,16 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
-from django.http import HttpResponse
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.core.paginator import Paginator
+from django.http import HttpResponse, JsonResponse
 
 from cas.forms import *
-from cas.views import *
-import datetime
-import json
+from cas.models import *
 
+import datetime
 
 # Create your views here.
 def login_action(request):
@@ -36,6 +35,8 @@ def login_action(request):
 
     login(request, new_user)
     return redirect(reverse('projects'))
+
+
 
 
 def register_action(request):
@@ -70,12 +71,10 @@ def register_action(request):
     login(request, new_user)
     return redirect(reverse('projects'))
 
-
 @login_required
 def logout_action(request):
     logout(request)
     return redirect(reverse('login'))
-
 
 @login_required
 def get_project_list_action(request):
@@ -88,9 +87,9 @@ def get_project_list_action(request):
     if not page:
         page = 1
     projects = paginator.get_page(page)
+    # print(project_list)
     content['projects'] = projects
     return render(request, 'cas/projects.html', content)
-
 
 @login_required
 def create_project_action(request):
@@ -119,6 +118,25 @@ def create_project_action(request):
 
     return render(request, 'cas/new_project.html', content)
 
+
+# @login_required
+def get_control_list_action(request):
+    content = {}
+    # content['user'] = request.user
+
+    control_list = Control.objects.values('cid', 'title', 'id', 'gid', 'parameters', 'properties', 'classinfo')
+    paginator = Paginator(control_list, 2)
+    page = request.GET.get('page')
+    if not page:
+        page = 1
+    controls = paginator.page(page)
+    print(control_list)
+    print(type(controls))
+    content['controls'] = list(controls)
+    # return render(request, 'cas/controls.html', content)
+    return JsonResponse(content)
+
+  
 @login_required
 def search_projects_action(request):
     content = {}
@@ -133,20 +151,3 @@ def search_projects_action(request):
     projects = paginator.get_page(page)
     content['projects'] = projects
     return render(request, 'cas/projects.html', content)
-
-@login_required
-def get_control_list_action(request):
-    content = {}
-    content['user'] = request.user
-
-    control_list = Control.objects
-    paginator = Paginator(control_list, 2)
-    page = request.GET.get('page')
-    if not page:
-        page = 1
-    controls = paginator.get_page(page)
-    print(control_list)
-    content['controls'] = controls
-    # return render(request, 'cas/projects.html', content)
-    return HttpResponse(json.dump(content))
-

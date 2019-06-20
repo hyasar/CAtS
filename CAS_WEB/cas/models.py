@@ -5,7 +5,8 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 class Control(models.Model):
-    cid = models.CharField(primary_key=True, max_length=10)
+    id = models.IntegerField(primary_key=True)
+    cid = models.CharField(unique=True, max_length=10)
     gid = models.CharField(max_length=5)
     title = models.CharField(max_length=100)
     parameters = models.TextField(blank=True, null=True)  # This field type is a guess.
