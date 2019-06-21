@@ -1,6 +1,5 @@
 <!doctype html>
 <html lang="en">
-
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -8,33 +7,47 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-          crossorigin="anonymous">
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
-          integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay"
-          crossorigin="anonymous">
+          integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
 
     <!-- Customized stylesheet -->
     {% load staticfiles %}
     <link href="{% static '/css/app.css' %}" rel="stylesheet" type="text/css">
-    <link href="{% static '/css/styles.css' %}" rel="stylesheet" type="text/css">
 
-    <title mb-3>Log In</title mb-3>
+    <title mb-3>New Project</title mb-3>
 </head>
-
 <body>
 
 
 <nav class="navbar navbar-dark bg-dark">
     <div class="container">
         <a class="navbar-brand" href="#"><i class="fas fa-cat mr-1"></i> CAS</a>
-        <ul class="navbar-nav navbar-right">
-            <li class="nav-item" activate>
-                <a class="nav-link" href="{% url 'register' %}">Register <span class="sr-only">(current)</span></a>
+
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'projects' %}">Projects <span class="sr-only">(current)</span></a>
             </li>
         </ul>
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'new_project' %}">New Project<span class="sr-only">(current)</span></a>
+            </li>
+        </ul>
+        <li class="navbar-nav navbar-right nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+               aria-haspopup="true" aria-expanded="false">
+                {{ user.username }}
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="#">Profile</a>
+                <a class="dropdown-item" href="#">Settings</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">Logout</a>
+            </div>
+        </li>
     </div>
 </nav>
 
@@ -44,20 +57,25 @@
         <div class="col-md-4"></div>
         <div class="col-md-4 login-clean">
 
-            <form method="post" action="{% url 'login' %}">
+            <form method="post" action="{% url 'new_project' %}">
                 <div class="text-primary illustration"><i class="fas fa-cat mr-1"></i></div>
-                {% for field in form.visible_fields %}
-                    <div class="form-group">
-                        {{ field.label_tag }}
-                        {{ field }}
-                    </div>
-                {% endfor %}
+                <h3>New Project</h3>
+                <div class="form-group">
+                    <label for="name">
+                        Project Name
+                    </label>
+                    <input type="text" class="form-control" id="name" name="name">
+                     <label for="description">
+                        Description
+                    </label>
+                    <input type="text" class="form-control" id="description" name="description">
+                </div>
 
                 <div class="errorlist">
                     {% for error in form.non_field_errors %}
-                        <p class="error" style="color: red">
-                            {{ error }}
-                        </p>
+                    <p class="error">
+                        {{ error }}
+                    </p>
                     {% endfor %}
                 </div>
 

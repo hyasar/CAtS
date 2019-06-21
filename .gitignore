@@ -1,1 +1,4 @@
-.idea/
+CAS_WEB/.idea/
+ETL/
+*.pyc
+CAS_WEB/cas/migrations/

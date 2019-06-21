@@ -17,7 +17,7 @@
     {% load staticfiles %}
     <link href="{% static '/css/app.css' %}" rel="stylesheet" type="text/css">
 
-    <title mb-3>Dashbord</title mb-3>
+    <title mb-3>Projects</title mb-3>
 </head>
 <body>
 
@@ -26,15 +26,20 @@
     <div class="container">
         <a class="navbar-brand" href="#"><i class="fas fa-cat mr-1"></i> CAS</a>
 
-        <ul class="navbar-nav mr-auto">
+        <ul class="navbar-nav">
             <li class="nav-item active">
-                <a class="nav-link" href="#">Projects <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="{% url 'projects' %}">Projects <span class="sr-only">(current)</span></a>
+            </li>
+        </ul>
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'new_project' %}">New Project<span class="sr-only">(current)</span></a>
             </li>
         </ul>
         <li class="navbar-nav navbar-right nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
                aria-haspopup="true" aria-expanded="false">
-                user
+                {{ user.username }}
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="#">Profile</a>
@@ -50,79 +55,78 @@
 <section class="bg-light py-4">
     <div class="container">
         <div class="mb-3">
-            <form class="form-inline input-group-sm">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search Projects" aria-label="Search">
+            <form class="form-inline input-group-sm" method="get" action="{% url 'search_projects' %}">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search Projects" aria-label="Search" name="name">
                 <button class="btn btn-info my-2 my-sm-0 btn-sm" type="submit">Search</button>
             </form>
         </div>
-        <div class="row">
-            <div class="mb-2">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title mb-3">Project 1</h5>
-                        <p class="card-text mt-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Itaque cum
-                            sunt asperiores earum quibusdam? Tempore a accusamus repellendus animi sunt, illo vel ipsa
-                            nostrum doloremque.</p>
-                        <p class="font-weight-light card-date mb-0 pb-0">Dec 13, 2018</p>
-                    </div>
-                </div>
-            </div>
-            <div class="mb-2">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title mb-3">Project 2</h5>
-                        <p class="card-text mt-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem
-                            laboriosam nesciunt odio asperiores nihil ex deleniti consectetur veniam ipsum deserunt.
-                            Amet dolor quae quam deleniti exercitationem nostrum nobis sint facere.</p>
-                        <p class="font-weight-light card-date mb-0 pb-0">June 25, 2018</p>
-                    </div>
-                </div>
-            </div>
-            <div class="mb-2">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title mb-3">Project 3</h5>
-                        <p class="card-text mt-3">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Atque veniam
-                            autem officia dolores ex quisquam nostrum aspernatur, omnis non labore natus animi
-                            possimus?</p>
-                        <p class="font-weight-light card-date mb-0 pb-0">Apr 7, 2018</p>
-                    </div>
-                </div>
-            </div>
-            <div class="mb-2">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title mb-3">Project 4</h5>
-                        <p class="card-text mt-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Itaque cum
-                            sunt asperiores earum quibusdam? Tempore a accusamus repellendus animi sunt, illo vel ipsa
-                            nostrum doloremque.</p>
-                        <p class="font-weight-light card-date mb-0 pb-0">Dec 13, 2018</p>
-                    </div>
-                </div>
-            </div>
-            <div class="mb-2">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title mb-3">Project 5</h5>
-                        <p class="card-text mt-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem
-                            laboriosam nesciunt odio asperiores nihil ex deleniti consectetur veniam ipsum deserunt.
-                            Amet dolor quae quam deleniti exercitationem nostrum nobis sint facere.</p>
-                        <p class="font-weight-light card-date mb-0 pb-0">June 25, 2018</p>
-                    </div>
-                </div>
-            </div>
-            <div class="mb-2">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title mb-3">Project 6</h5>
-                        <p class="card-text mt-3">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Atque veniam
-                            autem officia dolores ex quisquam nostrum aspernatur, omnis non labore natus animi
-                            possimus?</p>
-                        <p class="font-weight-light card-date mb-0 pb-0">Apr 7, 2018</p>
-                    </div>
+
+        {% for project in projects %}
+        <div class="mb-2">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">{{ project.name }}</h5>
+                    <p class="card-text mt-3">{{ project.description }}</p>
+                    <p class="font-weight-light card-date mb-0 pb-0">{{ project.updated_time }}</p>
                 </div>
             </div>
         </div>
+        {% endfor %}
+
+
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+
+                {% if projects.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1" aria-label="first">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ projects.previous_page_number }}" aria-label="previous">
+                        <span aria-hidden="true">previous</span>
+                    </a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="" aria-label="first">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item disabled">
+                    <a class="page-link" href="" aria-label="previous">
+                        <span aria-hidden="true">previous</span>
+                    </a>
+                </li>
+                {% endif %}
+
+                {% if projects.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ projects.next_page_number }}" aria-label="next">
+                        <span aria-hidden="true">next</span>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ projects.paginator.num_pages }}" aria-label="last">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="" aria-label="next">
+                        <span aria-hidden="true">next</span>
+                    </a>
+                </li>
+                <li class="page-item disabled">
+                    <a class="page-link" href="" aria-label="last">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+            <span class="current">Page {{ projects.number }} of {{ projects.paginator.num_pages }}</span>
+        </nav>
     </div>
 </section>
 

@@ -38,7 +38,6 @@ class RegistrationForm(forms.Form):
                                  label='Confirm password',
                                  widget = forms.PasswordInput(attrs={'class': 'form-control'}))
 
-
     # Customizes form validation for properties that apply to more
     # than one field.  Overrides the forms.Form.clean function.
     def clean(self):
@@ -52,18 +51,25 @@ class RegistrationForm(forms.Form):
         if password1 and password2 and password1 != password2:
             raise forms.ValidationError("Passwords did not match.")
 
-        # We must return the cleaned data we got from our parent.
-        return cleaned_data
-
-
-    # Customizes form validation for the username field.
-    def clean_username(self):
-        # Confirms that the username is not already present in the
-        # User model database.
         username = self.cleaned_data.get('username')
         if User.objects.filter(username__exact=username):
             raise forms.ValidationError("Username is already taken.")
 
-        # We must return the cleaned data we got from the cleaned_data
-        # dictionary
-        return username
+        # We must return the cleaned data we got from our parent.
+        return cleaned_data
+
+    # # Customizes form validation for the username field.
+    # def clean_username(self):
+    #     # Confirms that the username is not already present in the
+    #     # User model database.
+    #
+    #
+    #     # We must return the cleaned data we got from the cleaned_data
+    #     # dictionary
+    #     return username
+
+class ProjectForm(forms.Form):
+    name = forms.CharField(max_length=100, label='Project Name',
+                           widget=forms.TextInput(attrs={'class': 'form-control'}))
+    description = forms.CharField(max_length=600,
+                           widget=forms.TextInput(attrs={'class': 'form-control'}))
