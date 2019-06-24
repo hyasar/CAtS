@@ -89,6 +89,17 @@ def get_project_list_action(request):
     return render(request, 'cas/projects.html', content)
 
 @login_required
+def get_project_configuration(request):
+    content = {}
+    content['user'] = request.user
+
+    project = Project.objects.filter(user=request.user, id=request.GET.get('id'))
+
+    # print(project_list)
+    content['project'] = project
+    return render(request, 'cas/project.html', content)
+
+@login_required
 def create_project_action(request):
     content = {}
     if request.method == 'GET':
