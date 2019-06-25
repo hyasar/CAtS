@@ -174,9 +174,12 @@ def update_project(request, id):
 
     content['project'] = project
 
+    print(project.description)
+
 
     return render(request, 'cas/update_project.html', content)
 
+@login_required
 def update_project_info(request, id):
     project = get_object_or_404(Project, pk=id)
     name = request.POST['name']
@@ -192,6 +195,7 @@ def update_project_info(request, id):
 
     return render(request, 'cas/single_project.html', content)
 
+@login_required
 def delete_project(request, id):
     project = get_object_or_404(Project, pk=id)
     content = {}
@@ -199,6 +203,7 @@ def delete_project(request, id):
     content['project'] = project
     return render(request, 'cas/delete_project.html', content)
 
+@login_required
 def __delete_project(request, id):
     project = get_object_or_404(Project, pk=id)
     project.delete()
