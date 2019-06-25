@@ -7,127 +7,206 @@
     <title>Config Project</title>
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+          integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
 
     <!-- Customized stylesheet -->
     <link rel="stylesheet" href="static/css/app.css" type="text/css">
     <link rel="stylesheet" href="static/css/projectConfigure.css" type="txet/css">
-    
+
 </head>
 
 <body>
-    <nav class="navbar navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="#"><i class="fas fa-cat mr-1"></i> CAS</a>
-    
-            <ul class="navbar-nav">
-                <li class="nav-item active">
-                    <a class="nav-link" href="{% url 'projects' %}">Projects <span class="sr-only">(current)</span></a>
-                </li>
-            </ul>
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'new_project' %}">New Project<span class="sr-only">(current)</span></a>
-                </li>
-            </ul>
-            <li class="navbar-nav navbar-right nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                   aria-haspopup="true" aria-expanded="false">
-                    {{ user.username }}
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown"
-                    style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 0px; will-change: transform;">
-                    <a class="dropdown-item" href="#">Profile</a>
-                    <a class="dropdown-item" href="#">Settings</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Logout</a>
-                </div>
+<nav class="navbar navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="#"><i class="fas fa-cat mr-1"></i> CAS</a>
+
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'projects' %}">Projects <span class="sr-only">(current)</span></a>
             </li>
+        </ul>
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'new_project' %}">New Project<span class="sr-only">(current)</span></a>
+            </li>
+        </ul>
+        <li class="navbar-nav navbar-right nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+               aria-haspopup="true" aria-expanded="false">
+                {{ user.username }}
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown"
+                 style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 0px; will-change: transform;">
+                <a class="dropdown-item" href="#">Profile</a>
+                <a class="dropdown-item" href="#">Settings</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">Logout</a>
+            </div>
+        </li>
+    </div>
+</nav>
+
+<div class='container'>
+
+
+    <h3>{{project.name}}</h3>
+    <input hidden id="project_id" value="{{project.id}}">
+    <hr>
+
+    <!--<div class="ProjectType">-->
+    <!--<label for="ProjectType">Project Type</label>-->
+    <!--<select id="ProjectType">-->
+    <!--<option>Default select 1</option>-->
+    <!--<option>Default select 2</option>-->
+    <!--<option>Default select 3</option>-->
+    <!--<option>Default select 4</option>-->
+    <!--</select>-->
+    <!--</div>-->
+
+    <!--<div class="ImportController">-->
+    <!--<label id="ImportController">Import Controller</label>-->
+    <!--<select class="Choose from project">-->
+    <!--<option>Project 1 setting</option>-->
+    <!--<option>Project 2 setting</option>-->
+    <!--<option>Project 3 setting</option>-->
+    <!--<option>Project 4 setting</option>-->
+    <!--</select>-->
+    <!--</div>-->
+    <div class="row">
+        <section class="bg-light py-4 col-6">
+
+
+            <div class="card">
+                <div class="container">
+                    <div class="mb-2">
+                        <hr>
+                        <div class="form-check">
+                            <div class="col-6">
+                                <input class="form-check-input" type="checkbox" value="{{control.id}}"
+                                       id="control0"></div>
+                            <div class="col-6">
+                                <label for="control0">&nbsp;cid0, title</label>
+                            </div>
+                            <hr>
+                        </div>
+
+                        <div class="form-check">
+                            <div class="col-6">
+                                <input class="form-check-input" type="checkbox" value="{{control.id}}"
+                                       id="control3"></div>
+                            <div class="col-6">
+                                <label for="control3">&nbsp;cid0, title</label>
+                            </div>
+                            <hr>
+                        </div>
+
+                        <div class="form-check">
+                            <div class="col-6">
+                                <input class="form-check-input" type="checkbox" value="{{control.id}}"
+                                       id="control1"></div>
+                            <div class="col-6">
+                                <label for="control1">&nbsp;cid0, title</label>
+                            </div>
+                            <hr>
+                        </div>
+                        <div class="form-check">
+                            <div class="col-6">
+                                <input class="form-check-input" type="checkbox" value="{{control.id}}"
+                                       id="control2"></div>
+                            <div class="col-6">
+                                <label for="control2">&nbsp;cid0, title</label>
+                            </div>
+
+                        </div>
+                        <hr>
+
+
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination justify-content-center row">
+
+                                {% if projects.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=1" aria-label="first">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ projects.previous_page_number }}"
+                                       aria-label="previous">
+                                        <span aria-hidden="true">previous</span>
+                                    </a>
+                                </li>
+                                {% else %}
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="" aria-label="first">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="" aria-label="previous">
+                                        <span aria-hidden="true">previous</span>
+                                    </a>
+                                </li>
+                                {% endif %}
+
+                                {% if projects.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ projects.next_page_number }}" aria-label="next">
+                                        <span aria-hidden="true">next</span>
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ projects.paginator.num_pages }}"
+                                       aria-label="last">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                                {% else %}
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="" aria-label="next">
+                                        <span aria-hidden="true">next</span>
+                                    </a>
+                                </li>
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="" aria-label="last">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                            <span class="current">Page {{ projects.number }} of {{ projects.paginator.num_pages }}</span>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="col-6">
+            <!--<section class="bg-light py-4">-->
+            <div class="container">
+                <div class="mb-2">
+                    <div class="card">
+                        <textarea>List of selected Controls:</textarea>
+                    </div>
+                </div>
+            </div>
+            <!--</section>-->
+            <button type="button" class="btn btn-secondary btn-block">Add Controllers</button>
         </div>
-    </nav>
-
-    <div class='container'>
-        <form>
-
-            <div class="ProjectName">
-                <label for="ProjectName">Project Name</label>
-                <input type="ProjectName" class="form-control" id="projectName" aria-describedby="emailHelp" placeholder="Project Name" style="width: 300px">
-            </div>
-
-            <!--<div class="ProjectType">-->
-                <!--<label for="ProjectType">Project Type</label>-->
-                <!--<select id="ProjectType">-->
-                    <!--<option>Default select 1</option>-->
-                    <!--<option>Default select 2</option>-->
-                    <!--<option>Default select 3</option>-->
-                    <!--<option>Default select 4</option>-->
-                <!--</select>-->
-            <!--</div>-->
-
-            <!--<div class="ImportController">-->
-                <!--<label id="ImportController">Import Controller</label>-->
-                <!--<select class="Choose from project">-->
-                    <!--<option>Project 1 setting</option>-->
-                    <!--<option>Project 2 setting</option>-->
-                    <!--<option>Project 3 setting</option>-->
-                    <!--<option>Project 4 setting</option>-->
-                <!--</select>-->
-            <!--</div>-->
-
-            <div class="Select more controllers">
-                <label id="SelectController">Select Controllers</label>
-                <select class="Choose from project">
-                    <option>Type A</option>
-                    <option>Type B</option>
-                    <option>Type C</option>
-                    <option>Type D</option>
-                </select>
-
-                <div class='container'>
-                    <input type="checkbox" name="vehicle1" value="Bike"> I have a bike<br>
-                    <input type="checkbox" name="vehicle2" value="Car"> I have a car<br>
-                    <input type="checkbox" name="vehicle3" value="Boat" checked> I have a boat<br>
-                    <input type="checkbox" name="vehicle1" value="Bike"> I have a bike<br>
-                    <input type="checkbox" name="vehicle2" value="Car"> I have a car<br>
-                    <input type="checkbox" name="vehicle3" value="Boat" checked> I have a boat<br>
-                </div>
-
-                <div class='container'>
-                    <br>
-                    <label for="SelectController">Current Controllers</label>
-                    <ul>
-                        <li>Controller Type A
-                            <ul>
-                                <li>Type A - 4539</li>
-                                <li>Type B - 6743</li>
-                            </ul>
-                        </li>
-                        <li>Controller Type B
-                            <ul>
-                                <li>Type A - 4539</li>
-                                <li>Type B - 6743</li>
-                            </ul>
-                        </li>
-                        <li>Controller Type C
-                            <ul>
-                                <li>Type A - 4539</li>
-                                <li>Type B - 6743</li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-                <button type="button">Add Controllers</button>
-            </div>
-        </form>
     </div>
 
 
-    <script src="static/js/jquery.min.js"></script>
-    <script src="static/js/popper.min.js"></script>
-    <script src="static/js/bootstrap.min.js"></script>
+</div>
+
+
+<script src="static/js/jquery.min.js"></script>
+<script src="static/js/popper.min.js"></script>
+<script src="static/js/bootstrap.min.js"></script>
 
 
 </body>

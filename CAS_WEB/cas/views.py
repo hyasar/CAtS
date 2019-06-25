@@ -94,10 +94,12 @@ def get_project_configuration(request):
     content = {}
     content['user'] = request.user
 
-    project = Project.objects.filter(user=request.user, id=request.GET.get('id'))
+    project = Project.objects.get(user=request.user, id=request.GET.get('id'))
 
     # print(project_list)
     content['project'] = project
+    # content['controls'] = get_control_list_action(request)
+    # print(content['controls'])
     return render(request, 'cas/config_project.html', content)
 
 @login_required
@@ -139,8 +141,6 @@ def get_control_list_action(request):
     if not page:
         page = 1
     controls = paginator.page(page)
-    print(control_list)
-    print(type(controls))
     content['controls'] = list(controls)
     # return render(request, 'cas/controls.html', content)
     return JsonResponse(content)
