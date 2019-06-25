@@ -74,7 +74,6 @@
                     <h5 class="card-title mb-3"><a href="project?id={{project.id}}">{{ project.name }}</a></h5>
                     <p class="card-text mt-3">{{ project.description }}</p>
                     <p class="font-weight-light card-date mb-0 pb-0">{{ project.updated_time }}</p>
-                    <p class="card-text mt-3">{{project.id}}</p>
                 </div>
                 <div class="inline-block-box">
                     <form action="{% url 'update_project' project.id %}">
