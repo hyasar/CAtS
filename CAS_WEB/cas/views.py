@@ -6,16 +6,19 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect, JsonResponse, Http404, HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+
 
 from .forms import *
 from .models import *
 
-
 import datetime
+import json
+
 
 # Create your views here.
 def login_action(request):
-    context = {}
+    context = dict()
 
     # Just display the registration form if this is a GET request.
     if request.method == 'GET':
@@ -37,8 +40,9 @@ def login_action(request):
     login(request, new_user)
     return redirect(reverse('projects'))
 
+
 def register_action(request):
-    context = {}
+    context = dict()
 
     # Just display the registration form if this is a GET request.
     if request.method == 'GET':
@@ -69,14 +73,16 @@ def register_action(request):
     login(request, new_user)
     return redirect(reverse('projects'))
 
+
 @login_required
 def logout_action(request):
     logout(request)
     return redirect(reverse('login'))
 
+
 @login_required
 def get_project_list_action(request):
-    content = {}
+    content = dict()
     content['user'] = request.user
 
     project_list = Project.objects.filter(user=request.user)
@@ -85,13 +91,24 @@ def get_project_list_action(request):
     if not page:
         page = 1
     projects = paginator.get_page(page)
-    # print(project_list)
     content['projects'] = projects
     return render(request, 'cas/projects.html', content)
 
+
+@login_required
+def get_project_configuration(request):
+    content = dict()
+    content['user'] = request.user
+
+    project = Project.objects.filter(user=request.user, id=request.GET.get('id'))
+
+    content['project'] = project
+    return render(request, 'cas/project.html', content)
+
+
 @login_required
 def create_project_action(request):
-    content = {}
+    content = dict()
     if request.method == 'GET':
         content['user'] = request.user
         content['form'] = ProjectForm()
@@ -117,7 +134,30 @@ def create_project_action(request):
     return render(request, 'cas/new_project.html', content)
 
 
-@login_required
+# @login_required
+@csrf_exempt
+def configure_control_action(request):
+    # json
+    data = json.loads(request.body.decode("utf-8"))
+    # else
+    # data = request.POST
+
+    project_id = data.get("id", 0)
+
+    project = get_object_or_404(Project, pk=project_id)
+
+    cids = data.get("cids", [])
+    for cid in cids:
+        control = get_object_or_404(Control, cid=cid)
+        project.control.add(control)
+    project.save()
+    content = dict()
+    content['id'] = project_id
+    content['controls'] = list(project.control.all().values())
+    return JsonResponse(content)
+
+
+# @login_required
 def get_control_list_action(request):
     content = {}
     # content['user'] = request.user
@@ -128,16 +168,13 @@ def get_control_list_action(request):
     if not page:
         page = 1
     controls = paginator.page(page)
-    print(control_list)
-    print(type(controls))
     content['controls'] = list(controls)
-    # return render(request, 'cas/controls.html', content)
     return JsonResponse(content)
 
   
 @login_required
 def search_projects_action(request):
-    content = {}
+    content = dict()
     content['user'] = request.user
 
     query_name = request.GET.get('name')
@@ -149,24 +186,26 @@ def search_projects_action(request):
     projects = paginator.get_page(page)
     content['projects'] = projects
     return render(request, 'cas/projects.html', content)
-#
+
+
 @login_required
 def search_project_by_id(request, id):
-    content = {}
+    content = dict()
     content['user'] = request.user
     try:
         project = Project.objects.filter(id=id).first()
-    except:
+    except Exception:
         raise Http404("Project not found")
 
     content['project'] = project
 
     return render(request, 'cas/single_project.html', content)
 
+
 @login_required
 def update_project(request, id):
     if request.method == 'GET':
-        content = {}
+        content = dict()
         content['user'] = request.user
         try:
             project = Project.objects.filter(id=id).first()
@@ -184,12 +223,11 @@ def update_project(request, id):
     project.description = description
     project.save()
 
-    content = {}
+    content = dict()
     content['user'] = request.user
     content['project'] = project
 
     return render(request, 'cas/single_project.html', content)
-
 
 
 @login_required
@@ -200,7 +238,6 @@ def delete_project(request, id):
         content['user'] = request.user
         content['project'] = project
         return render(request, 'cas/delete_project.html', content)
-
     project = get_object_or_404(Project, pk=id)
     project.delete()
 

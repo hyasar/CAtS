@@ -36,12 +36,13 @@
                 <a class="nav-link" href="{% url 'new_project' %}">New Project<span class="sr-only">(current)</span></a>
             </li>
         </ul>
-        <li class="navbar-nav navbar-right nav-item dropdown">
+        <li class="navbar-nav navbar-right nav-item dropdown" style="position: relative; z-index: 2">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
                aria-haspopup="true" aria-expanded="false">
                 {{ user.username }}
             </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown" 
+                style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 0px; will-change: transform;">
                 <a class="dropdown-item" href="#">Profile</a>
                 <a class="dropdown-item" href="#">Settings</a>
                 <div class="dropdown-divider"></div>

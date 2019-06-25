@@ -16,6 +16,11 @@
     <!-- Customized stylesheet -->
     {% load staticfiles %}
     <link href="{% static '/css/app.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static '/js/projects.js' %}" rel="stylesheet" type="text/javascript">
+
+    <!-- Load react -->
+    <script src="https://unpkg.com/react@16/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js" crossorigin></script>
 
     <title mb-3>Projects</title mb-3>
 </head>
@@ -41,7 +46,8 @@
                aria-haspopup="true" aria-expanded="false">
                 {{ user.username }}
             </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown"
+                style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 0px; will-change: transform;">
                 <a class="dropdown-item" href="#">Profile</a>
                 <a class="dropdown-item" href="#">Settings</a>
                 <div class="dropdown-divider"></div>
@@ -65,10 +71,9 @@
         <div class="mb-2">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title mb-3">{{ project.name }}</h5>
+                    <h5 class="card-title mb-3"><a href="project?id={{project.id}}">{{ project.name }}</a></h5>
                     <p class="card-text mt-3">{{ project.description }}</p>
                     <p class="font-weight-light card-date mb-0 pb-0">{{ project.updated_time }}</p>
-                    <p class="card-text mt-3">{{project.id}}</p>
                 </div>
                 <div class="inline-block-box">
                     <form action="{% url 'update_project' project.id %}">
