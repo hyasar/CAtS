@@ -117,7 +117,7 @@ def create_project_action(request):
     return render(request, 'cas/new_project.html', content)
 
 
-# @login_required
+@login_required
 def get_control_list_action(request):
     content = {}
     # content['user'] = request.user
@@ -165,22 +165,17 @@ def search_project_by_id(request, id):
 
 @login_required
 def update_project(request, id):
-    content = {}
-    content['user'] = request.user
-    try:
-        project = Project.objects.filter(id=id).first()
-    except:
-        raise Http404("Project not found")
+    if request.method == 'GET':
+        content = {}
+        content['user'] = request.user
+        try:
+            project = Project.objects.filter(id=id).first()
+        except:
+            raise Http404("Project not found")
 
-    content['project'] = project
+        content['project'] = project
+        return render(request, 'cas/update_project.html', content)
 
-    print(project.description)
-
-
-    return render(request, 'cas/update_project.html', content)
-
-@login_required
-def update_project_info(request, id):
     project = get_object_or_404(Project, pk=id)
     name = request.POST['name']
     description = request.POST['description']
@@ -195,16 +190,17 @@ def update_project_info(request, id):
 
     return render(request, 'cas/single_project.html', content)
 
-@login_required
-def delete_project(request, id):
-    project = get_object_or_404(Project, pk=id)
-    content = {}
-    content['user'] = request.user
-    content['project'] = project
-    return render(request, 'cas/delete_project.html', content)
+
 
 @login_required
-def __delete_project(request, id):
+def delete_project(request, id):
+    if request.method == 'GET':
+        project = get_object_or_404(Project, pk=id)
+        content = {}
+        content['user'] = request.user
+        content['project'] = project
+        return render(request, 'cas/delete_project.html', content)
+
     project = get_object_or_404(Project, pk=id)
     project.delete()
 
