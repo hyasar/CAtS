@@ -112,3 +112,6 @@ static_collected
 
 # idea staff
 .idea/
+
+# DS_STORE
+**/.DS_Store
