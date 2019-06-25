@@ -16,16 +16,10 @@
     <!-- Customized stylesheet -->
     {% load staticfiles %}
     <link href="{% static '/css/app.css' %}" rel="stylesheet" type="text/css">
-    <link href="{% static '/js/projects.js' %}" rel="stylesheet" type="text/javascript">
-
-    <!-- Load react -->
-    <script src="https://unpkg.com/react@16/umd/react.production.min.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js" crossorigin></script>
 
     <title mb-3>Projects</title mb-3>
 </head>
 <body>
-
 
 <nav class="navbar navbar-dark bg-dark">
     <div class="container">
@@ -46,8 +40,7 @@
                aria-haspopup="true" aria-expanded="false">
                 {{ user.username }}
             </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown"
-                style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 0px; will-change: transform;">
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="#">Profile</a>
                 <a class="dropdown-item" href="#">Settings</a>
                 <div class="dropdown-divider"></div>
@@ -56,7 +49,6 @@
         </li>
     </div>
 </nav>
-
 
 <section class="bg-light py-4">
     <div class="container">
@@ -67,85 +59,28 @@
             </form>
         </div>
 
-        {% for project in projects %}
         <div class="mb-2">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title mb-3"><a href="project?id={{project.id}}">{{ project.name }}</a></h5>
+                    <h5 class="card-title mb-3">{{ project.name }}</h5>
                     <p class="card-text mt-3">{{ project.description }}</p>
+                    <p class="'card-test" mt-3>{{project.id}}</p>
                     <p class="font-weight-light card-date mb-0 pb-0">{{ project.updated_time }}</p>
-                    <p class="card-text mt-3">{{project.id}}</p>
-                </div>
-                <div class="inline-block-box">
-                    <form action="{% url 'update_project' project.id %}">
-                        <input type="submit" value="Update" />
-                    </form>
-                    <form action="{% url 'delete_project' project.id %}">
-                        <input type="submit" value="Delete" />
-                    </form>
                 </div>
             </div>
-
         </div>
-        {% endfor %}
+        <!--<div style="display: flex;">-->
+        <div class="inline-block">
+            <form action="{% url 'update_project' project.id %}">
+                <input type="submit" value="Update" />
+            </form>
+            <form action="{% url 'delete_project' project.id %}">
+                <input type="submit" value="Delete" />
+            </form>
+        </div>
 
-
-        <nav aria-label="Page navigation example">
-            <ul class="pagination justify-content-center">
-
-                {% if projects.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" href="?page=1" aria-label="first">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ projects.previous_page_number }}" aria-label="previous">
-                        <span aria-hidden="true">previous</span>
-                    </a>
-                </li>
-                {% else %}
-                <li class="page-item disabled">
-                    <a class="page-link" href="" aria-label="first">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-                <li class="page-item disabled">
-                    <a class="page-link" href="" aria-label="previous">
-                        <span aria-hidden="true">previous</span>
-                    </a>
-                </li>
-                {% endif %}
-
-                {% if projects.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ projects.next_page_number }}" aria-label="next">
-                        <span aria-hidden="true">next</span>
-                    </a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ projects.paginator.num_pages }}" aria-label="last">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-                {% else %}
-                <li class="page-item disabled">
-                    <a class="page-link" href="" aria-label="next">
-                        <span aria-hidden="true">next</span>
-                    </a>
-                </li>
-                <li class="page-item disabled">
-                    <a class="page-link" href="" aria-label="last">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-                {% endif %}
-            </ul>
-            <span class="current">Page {{ projects.number }} of {{ projects.paginator.num_pages }}</span>
-        </nav>
     </div>
 </section>
-
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->

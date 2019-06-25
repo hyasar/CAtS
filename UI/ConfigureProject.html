@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="Template CAS project creating page">
+    <title>Template CAS Project Creating Page</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+
+    <!-- Customized stylesheet -->
+    <link rel="stylesheet" href="assets/css/app.css" type="text/css">
+    <link rel="stylesheet" href="assets/css/projectConfigure.css" type="txet/css">
+</head>
+
+<body>
+    <nav class="navbar navbar-dark navbar-expand-md bg-dark">
+        <div class="container"><a class="navbar-brand" href="#"><i class="fa fa-github-alt cas-logo" id="cas-logo"></i>&nbsp; CATS</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navcol-1">
+                <ul class="nav navbar-nav">
+                    <li class="nav-item" role="presentation"><a class="nav-link cas-logo" href="#">Services</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="#">Account</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="#">Support</a></li>
+                    <li class="nav-item" role="presentation"></li>
+                    <li class="nav-item" role="presentation"></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class='container'>
+        <form>
+
+            <div class="ProjectName">
+                <label for="ProjectName">Project Name</label>
+                <input type="ProjectName" class="form-control" id="projectName" aria-describedby="emailHelp" placeholder="Project Name" style="width: 300px">
+            </div>
+
+            <div class="ProjectType">
+                <label for="ProjectType">Project Type</label>
+                <select class="ProjectType">
+                    <option>Default select 1</option>
+                    <option>Default select 2</option>
+                    <option>Default select 3</option>
+                    <option>Default select 4</option>
+                </select>
+            </div>
+
+            <div class="ImportController">
+                <label for="ImportController">Import Controller</label>
+                <select class="Choose from project">
+                    <option>Project 1 setting</option>
+                    <option>Project 2 setting</option>
+                    <option>Project 3 setting</option>
+                    <option>Project 4 setting</option>
+                </select>
+            </div>
+
+            <div class="Select more controllers">
+                <label for="SelectController">Select Controllers</label>
+                <select class="Choose from project">
+                    <option>Type A</option>
+                    <option>Type B</option>
+                    <option>Type C</option>
+                    <option>Type D</option>
+                </select>
+
+                <div class='container'>
+                    <input type="checkbox" name="vehicle1" value="Bike"> I have a bike<br>
+                    <input type="checkbox" name="vehicle2" value="Car"> I have a car<br>
+                    <input type="checkbox" name="vehicle3" value="Boat" checked> I have a boat<br>
+                    <input type="checkbox" name="vehicle1" value="Bike"> I have a bike<br>
+                    <input type="checkbox" name="vehicle2" value="Car"> I have a car<br>
+                    <input type="checkbox" name="vehicle3" value="Boat" checked> I have a boat<br>
+                </div>
+
+                <div class='container'>
+                    <br>
+                    <label for="SelectController">Current Controllers</label>
+                    <ul>
+                        <li>Controller Type A
+                            <ul>
+                                <li>Type A - 4539</li>
+                                <li>Type B - 6743</li>
+                            </ul>
+                        </li>
+                        <li>Controller Type B
+                            <ul>
+                                <li>Type A - 4539</li>
+                                <li>Type B - 6743</li>
+                            </ul>
+                        </li>
+                        <li>Controller Type C
+                            <ul>
+                                <li>Type A - 4539</li>
+                                <li>Type B - 6743</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <button type="button">Add Controllers</button>
+            </div>
+        </form>
+    </div>
+
+
+    <script src="js/jquery.slim.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+
+
+</body>
+
+</html>

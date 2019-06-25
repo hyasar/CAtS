@@ -5,8 +5,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.core.paginator import Paginator
+from django.http import HttpResponseRedirect, JsonResponse, Http404, HttpResponse
 
-from cas.forms import *
+from .forms import *
+from .models import *
+
+
 import datetime
 
 # Create your views here.
@@ -32,9 +36,6 @@ def login_action(request):
 
     login(request, new_user)
     return redirect(reverse('projects'))
-
-
-
 
 def register_action(request):
     context = {}
@@ -125,3 +126,104 @@ def create_project_action(request):
     #### ####
 
     return render(request, 'cas/new_project.html', content)
+
+
+# @login_required
+def get_control_list_action(request):
+    content = {}
+    # content['user'] = request.user
+
+    control_list = Control.objects.values('cid', 'title', 'id', 'gid', 'parameters', 'properties', 'classinfo')
+    paginator = Paginator(control_list, 2)
+    page = request.GET.get('page')
+    if not page:
+        page = 1
+    controls = paginator.page(page)
+    print(control_list)
+    print(type(controls))
+    content['controls'] = list(controls)
+    # return render(request, 'cas/controls.html', content)
+    return JsonResponse(content)
+
+  
+@login_required
+def search_projects_action(request):
+    content = {}
+    content['user'] = request.user
+
+    query_name = request.GET.get('name')
+    project_list = Project.objects.filter(user=request.user).filter(name__contains=query_name)
+    paginator = Paginator(project_list, 2)
+    page = request.GET.get('page')
+    if not page:
+        page = 1
+    projects = paginator.get_page(page)
+    content['projects'] = projects
+    return render(request, 'cas/projects.html', content)
+#
+@login_required
+def search_project_by_id(request, id):
+    content = {}
+    content['user'] = request.user
+    try:
+        project = Project.objects.filter(id=id).first()
+    except:
+        raise Http404("Project not found")
+
+    content['project'] = project
+
+    return render(request, 'cas/single_project.html', content)
+
+@login_required
+def update_project(request, id):
+    content = {}
+    content['user'] = request.user
+    try:
+        project = Project.objects.filter(id=id).first()
+    except:
+        raise Http404("Project not found")
+
+    content['project'] = project
+
+    print(project.description)
+
+
+    return render(request, 'cas/update_project.html', content)
+
+@login_required
+def update_project_info(request, id):
+    project = get_object_or_404(Project, pk=id)
+    name = request.POST['name']
+    description = request.POST['description']
+
+    project.name = name
+    project.description = description
+    project.save()
+
+    content = {}
+    content['user'] = request.user
+    content['project'] = project
+
+    return render(request, 'cas/single_project.html', content)
+
+@login_required
+def delete_project(request, id):
+    project = get_object_or_404(Project, pk=id)
+    content = {}
+    content['user'] = request.user
+    content['project'] = project
+    return render(request, 'cas/delete_project.html', content)
+
+@login_required
+def __delete_project(request, id):
+    project = get_object_or_404(Project, pk=id)
+    project.delete()
+
+    return HttpResponse("the project has been delete successfully")
+
+
+
+
+
+
+

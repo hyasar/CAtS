@@ -10,6 +10,16 @@
     font-size: 10px
 }
 
+.inline-block {
+    display: flex;
+}
+
+
+.inline-block-box {
+    display: flex;
+    position: relative;
+    left: 975px;
+}
 html {
     background-color: grey
 }
