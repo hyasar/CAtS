@@ -23,7 +23,8 @@ class Control(models.Model):
         managed = False ## This means that Django won't manage the lifecycle of this table
         db_table = 'controls'
 
-
+    def __str__(self):
+        return self.title
 
 class Project(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name="project")
@@ -34,4 +35,5 @@ class Project(models.Model):
     control = models.ManyToManyField(Control)
 
     def __str__(self):
-        return 'Project(id=' + str(self.id) + ', name=' + str(self.name) + ')'
+        # return 'Project(id=' + str(self.id) + ', name=' + str(self.name) + ')'
+        return self.name
