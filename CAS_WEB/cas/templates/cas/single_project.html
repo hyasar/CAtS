@@ -21,7 +21,6 @@
 </head>
 <body>
 
-
 <nav class="navbar navbar-dark bg-dark">
     <div class="container">
         <a class="navbar-brand" href="#"><i class="fas fa-cat mr-1"></i> CAS</a>
@@ -51,7 +50,6 @@
     </div>
 </nav>
 
-
 <section class="bg-light py-4">
     <div class="container">
         <div class="mb-3">
@@ -71,10 +69,18 @@
                 </div>
             </div>
         </div>
+        <!--<div style="display: flex;">-->
+        <div class="inline-block">
+            <form action="{% url 'update_project' project.id %}">
+                <input type="submit" value="Update" />
+            </form>
+            <form action="{% url 'delete_project' project.id %}">
+                <input type="submit" value="Delete" />
+            </form>
+        </div>
 
     </div>
 </section>
-
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->

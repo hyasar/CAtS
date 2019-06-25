@@ -63,16 +63,17 @@
                 <h3>Project Id {{project.id}}</h3>
 
                 <div class="form-group">
-
-                    <input class="form-control" id={{project.id}} name="name" value={{project.name}}>
                     <label for="name">
                         Project Name
                     </label>
+                    <input class="form-control" id={{project.id}} name="name" value="{{project.name}}">
 
-                    <input class="form-control" id="description" name="description" value={{project.description}}>
+
                     <label for="description">
                         Description
                     </label>
+                    <input type="text" class="form-control" id="description" name="description" value="{{project.description}}">
+
                 </div>
 
 
