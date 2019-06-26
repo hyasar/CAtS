@@ -98,7 +98,7 @@ def get_project_configuration(request):
 
     # print(project_list)
     content['project'] = project
-    return render(request, 'cas/config_project.html', content)
+    return render(request, 'cas/test.html', content)
 
 @login_required
 def create_project_action(request):
