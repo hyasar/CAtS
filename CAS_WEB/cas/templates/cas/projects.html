@@ -16,13 +16,13 @@
     <!-- Customized stylesheet -->
     {% load staticfiles %}
     <link href="{% static '/css/app.css' %}" rel="stylesheet" type="text/css">
-    <link href="{% static '/js/projects.js' %}" rel="stylesheet" type="text/javascript">
+
 
     <!-- Load react -->
     <script src="https://unpkg.com/react@16/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js" crossorigin></script>
 
-    <title mb-3>Projects</title mb-3>
+    <title mb-3>Projects</title>
 </head>
 <body>
 
@@ -71,22 +71,28 @@
         {% for project in projects %}
 
 
-        <div class="mb-2">
+        <div class="mb-2" id="project_{{project.id}}">
             <div class="card">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-10">
+                            <!-- 标题点进去应该是显示result dashboard比较好吧 -->
                             <h5 class="card-title mb-3"><a href="project?id={{project.id}}">{{ project.name }}</a></h5>
                             <p class="card-text mt-3">{{ project.description }}</p>
                             <p class="font-weight-light card-date mb-0 pb-0">{{ project.updated_time }}</p>
                         </div>
                         <div class="col-2">
+                            <a href="project?id={{project.id}}" class="btn btn-info btn-secondary btn-block">
+                                Config Controls
+                            </a>
                             <a href="{% url 'update_project' project.id %}" class="btn btn-secondary btn-block">
-                                Update
+                                Update Info
                             </a>
-                            <a href="javascript:if(confirm('Do you want to delete {{ project.name }}')) location= '{% url 'delete_project' project.id %}'" class="btn btn-secondary btn-block">
+                            <!--<a href="javascript:if(confirm('Are you sure you want to delete {{ project.name }} ?')) location= '{% url 'delete_project' %}'" class="btn btn-secondary btn-block">-->
+                            <button class="btn btn-secondary btn-block" id="delete_{{ project.id }}"
+                                    onclick="deleteProject({{ project.id }}, '{{ project.name }}');">
                                 Delete
-                            </a>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -152,7 +158,9 @@
     </div>
 </section>
 
-
+<!-- Load scripts-->
+<script src="{% static '/js/projects.js' %}" type="text/javascript" async defer></script>
+<script src="{% static '/js/jquery.min.js' %}" type="text/javascript" async defer></script>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -164,5 +172,6 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+
 </body>
 </html>
