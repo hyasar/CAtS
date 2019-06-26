@@ -17,7 +17,7 @@
     {% load staticfiles %}
     <link href="{% static '/css/app.css' %}" rel="stylesheet" type="text/css">
 
-    <title mb-3>Update Project {{project.id}}</title mb-3>
+    <title mb-3>Update Project</title mb-3>
 </head>
 <body>
 
@@ -59,20 +59,18 @@
             <form method="POST" action="{% url 'update_project' project.id %}">
                 {% csrf_token %}
                 <div class="text-primary illustration"><i class="fas fa-cat mr-1"></i></div>
-                <h3>Update Project {{project.name}}</h3>
-                <h3>Project Id {{project.id}}</h3>
+                <h3>Update Information: {{project.name}}</h3>
 
                 <div class="form-group">
                     <label for="name">
                         Project Name
                     </label>
-                    <input class="form-control" id={{project.id}} name="name" value="{{project.name}}">
-
+                    <input class="form-control" id="name" name="name" value="{{project.name}}">
 
                     <label for="description">
                         Description
                     </label>
-                    <input type="text" class="form-control" id="description" name="description" value="{{project.description}}">
+                    <textarea class="form-control" id="description" name="description">{{project.description}}</textarea>
 
                 </div>
 
@@ -85,7 +83,7 @@
                     {% endfor %}
                 </div>
 
-                <button type="submit" class="btn btn-secondary btn-block">Save</button>
+                <button type="submit" class="btn btn-secondary btn-block">Update</button>
             </form>
         </div>
         <div class="col-md-4"></div>
