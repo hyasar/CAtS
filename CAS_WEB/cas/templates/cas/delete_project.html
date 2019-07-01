@@ -61,7 +61,7 @@
             </form>
         </div>
 
-        <form method="POST" action="{% url '__delete_project' project.id %}">
+        <form method="POST" action="{% url 'delete_project' project.id %}">
             {% csrf_token %}
             <div class="mb-2">
                 <div class="card">

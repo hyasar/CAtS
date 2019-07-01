@@ -26,6 +26,7 @@ class Control(models.Model):
     def __str__(self):
         return self.title
 
+
 class Project(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name="project")
     name = models.CharField(max_length=100)

@@ -30,8 +30,6 @@ urlpatterns = [
     path('controls', views.get_control_list_action, name='controls'),
     path('search/<int:id>/', views.search_project_by_id, name='search_project_by_id'),
     path('update/<int:id>/', views.update_project, name='update_project'),
-    path('update_info/<int:id>/', views.update_project_info, name='update_project_info'),
     path('delete/<int:id>/', views.delete_project, name='delete_project'),
-    path('__delete/<int:id>/', views.__delete_project, name='__delete_project')
-
+    path('setcontrols', views.configure_control_action, name='configure_controls')
 ]
