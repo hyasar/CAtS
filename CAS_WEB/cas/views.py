@@ -146,6 +146,7 @@ def configure_control_action(request):
     project_id = data.get("id", 0)
 
     project = get_object_or_404(Project, pk=project_id)
+    project.control.clear()
 
     cids = data.get("cids", [])
     for cid in cids:
