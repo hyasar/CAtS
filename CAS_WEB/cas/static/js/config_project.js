@@ -1,29 +1,20 @@
 var selected = new Set()
 
-// class ShowControl extends React.Component {
-//   render() {
-//     if(selected.size == 0)
-//     {
-//       return <div>No controls</div>
-//     }
-//     else
-//     {
-//       var str = '';
-//       let array_selected = Array.from(selected);
-
-//       for(let i = 0; i<array_selected.length; i++)
-//       {
-//         str += " <li> "+array_selected[i]+" </li> "
-//       }
-
-//       return(
-//         <ul>
-//           {str}
-//         </ul>
-//       );
-//     }
-//   }
-// }
+function getCookie(cname) {
+  var name = cname + "=";
+  var decodedCookie = decodeURIComponent(document.cookie);
+  var ca = decodedCookie.split(';');
+  for(var i = 0; i <ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
 
 class Control extends React.Component {
   constructor(props) {
@@ -57,6 +48,24 @@ class Control extends React.Component {
           });
         }
       )
+  }
+
+  commitControls = () => {
+    const url = new URL(window.location.href);
+    const query = new URLSearchParams(url.search);
+    const csrfToken = getCookie('csrftoken');
+    fetch("/setcontrols", {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': csrfToken,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: query.get('id'),
+        cids: Array.from(this.state.select),
+      })
+    })
   }
 
   checkboxClick = ({ target }) => {
@@ -116,7 +125,7 @@ class Control extends React.Component {
           <div class="col-6">
             <div class="container">
               <div class="mb-2">
-                <p>List of added controls</p>
+                <p>List of controls</p>
                 <ul class="list-group">
                   {Array.from(select).map(item => (
                     <li class="list-group-item">
@@ -201,7 +210,7 @@ class Control extends React.Component {
                 </ul>
               </div>
             </div>
-            <button type="button" class="btn btn-secondary btn-block">Add Controllers</button>
+            <button type="button" class="btn btn-secondary btn-block" onClick={this.commitControls.bind(this)}>Add Controllers</button>
           </div>
         </div>
       );
