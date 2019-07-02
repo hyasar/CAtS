@@ -135,9 +135,8 @@ def create_project_action(request):
 
     return render(request, 'cas/new_project.html', content)
 
-
-# @login_required
-@csrf_exempt
+# @csrf_exempt
+@login_required
 def configure_control_action(request):
     # json
     data = json.loads(request.body.decode("utf-8"))
@@ -150,7 +149,7 @@ def configure_control_action(request):
 
     cids = data.get("cids", [])
     for cid in cids:
-        control = get_object_or_404(Control, cid=cid)
+        control = get_object_or_404(Control, id=cid)
         project.control.add(control)
     project.save()
     content = dict()
