@@ -31,8 +31,8 @@ class Project(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name="project")
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True, max_length=600)
-    created_time = models.DateTimeField()
-    updated_time = models.DateTimeField()
+    created_time = models.DateTimeField(auto_now_add=True)
+    updated_time = models.DateTimeField(auto_now=True)
     control = models.ManyToManyField(Control)
 
     def __str__(self):

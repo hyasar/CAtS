@@ -85,7 +85,7 @@ def get_project_list_action(request):
     content = dict()
     content['user'] = request.user
 
-    project_list = Project.objects.filter(user=request.user)
+    project_list = Project.objects.filter(user=request.user).order_by('-updated_time')
     paginator = Paginator(project_list, 2)
     page = request.GET.get('page')
     if not page:
@@ -125,6 +125,7 @@ def create_project_action(request):
     if request.method == 'GET':
         content['user'] = request.user
         content['form'] = ProjectForm()
+        print(content['form'])
         return render(request, 'cas/new_project.html', content)
 
 
@@ -191,7 +192,7 @@ def search_projects_action(request):
     content['user'] = request.user
 
     query_name = request.GET.get('name')
-    project_list = Project.objects.filter(user=request.user).filter(name__contains=query_name)
+    project_list = Project.objects.filter(user=request.user).filter(name__contains=query_name).order_by('-updated_time')
     paginator = Paginator(project_list, 2)
     page = request.GET.get('page')
     if not page:
@@ -240,21 +241,30 @@ def update_project(request, id):
     content['user'] = request.user
     content['project'] = project
 
-    return render(request, 'cas/single_project.html', content)
+    return redirect(reverse('projects'))
 
 
 @login_required
-def delete_project(request, id):
-    if request.method == 'GET':
-        project = get_object_or_404(Project, pk=id)
-        content = {}
-        content['user'] = request.user
-        content['project'] = project
-        return render(request, 'cas/delete_project.html', content)
-    project = get_object_or_404(Project, pk=id)
-    project.delete()
+def delete_project(request):
+    # if request.method == 'GET':
+    #
+    #     content['user'] = request.user
+    #     content['project'] = project
+    #     return render(request, 'cas/delete_project.html', content)
 
-    return HttpResponse("the project has been delete successfully")
+    project_id = request.POST['project_id']
+
+    project = get_object_or_404(Project, pk=project_id, user = request.user)
+    content = dict()
+
+    if project:
+        project.delete()
+        message = "Successfully deleted."
+    else:
+        message = "This project doesn't exist or belong to you."
+
+    return HttpResponse(message)
+
 
 
 
