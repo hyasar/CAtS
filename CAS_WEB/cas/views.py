@@ -100,11 +100,24 @@ def get_project_configuration(request):
     content = dict()
     content['user'] = request.user
 
-    project = Project.objects.filter(user=request.user, id=request.GET.get('id'))
+    project = Project.objects.get(user=request.user, id=request.GET.get('id'))
 
     content['project'] = project
-    return render(request, 'cas/project.html', content)
+    # content['controls'] = get_control_list_action(request)
+    # print(content['controls'])
+    return render(request, 'cas/config_project.html', content)
 
+
+@login_required
+def get_project_controlls(request):
+    content = dict()
+
+    project = Project.objects.get(user=request.user, id=request.GET.get('id'))
+
+    content['controls'] = list(project.control.all().values('id'))
+    # print(list(project.control.all().values('id')))
+
+    return JsonResponse(content)
 
 @login_required
 def create_project_action(request):
@@ -134,9 +147,8 @@ def create_project_action(request):
 
     return render(request, 'cas/new_project.html', content)
 
-
-# @login_required
-@csrf_exempt
+# @csrf_exempt
+@login_required
 def configure_control_action(request):
     # json
     data = json.loads(request.body.decode("utf-8"))
@@ -146,10 +158,11 @@ def configure_control_action(request):
     project_id = data.get("id", 0)
 
     project = get_object_or_404(Project, pk=project_id)
+    project.control.clear()
 
     cids = data.get("cids", [])
     for cid in cids:
-        control = get_object_or_404(Control, cid=cid)
+        control = get_object_or_404(Control, id=cid)
         project.control.add(control)
     project.save()
     content = dict()
@@ -163,8 +176,8 @@ def get_control_list_action(request):
     content = {}
     # content['user'] = request.user
 
-    control_list = Control.objects.values('cid', 'title', 'id', 'gid', 'parameters', 'properties', 'classinfo')
-    paginator = Paginator(control_list, 2)
+    control_list = Control.objects.order_by('id').values('cid', 'title', 'id', 'gid', 'parameters', 'properties', 'classinfo')
+    paginator = Paginator(control_list, 10)
     page = request.GET.get('page')
     if not page:
         page = 1
