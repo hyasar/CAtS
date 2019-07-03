@@ -109,6 +109,17 @@ def get_project_configuration(request):
 
 
 @login_required
+def get_project_controlls(request):
+    content = dict()
+
+    project = Project.objects.get(user=request.user, id=request.GET.get('id'))
+
+    content['controls'] = list(project.control.all().values('id'))
+    # print(list(project.control.all().values('id')))
+
+    return JsonResponse(content)
+
+@login_required
 def create_project_action(request):
     content = dict()
     if request.method == 'GET':
@@ -164,8 +175,8 @@ def get_control_list_action(request):
     content = {}
     # content['user'] = request.user
 
-    control_list = Control.objects.values('cid', 'title', 'id', 'gid', 'parameters', 'properties', 'classinfo')
-    paginator = Paginator(control_list, 2)
+    control_list = Control.objects.order_by('id').values('cid', 'title', 'id', 'gid', 'parameters', 'properties', 'classinfo')
+    paginator = Paginator(control_list, 10)
     page = request.GET.get('page')
     if not page:
         page = 1

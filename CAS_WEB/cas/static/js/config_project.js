@@ -1,10 +1,13 @@
-var selected = new Set()
+// var selected = new Set()
+
+const url = new URL(window.location.href);
+const query = new URLSearchParams(url.search);
 
 function getCookie(cname) {
   var name = cname + "=";
   var decodedCookie = decodeURIComponent(document.cookie);
   var ca = decodedCookie.split(';');
-  for(var i = 0; i <ca.length; i++) {
+  for (var i = 0; i < ca.length; i++) {
     var c = ca[i];
     while (c.charAt(0) == ' ') {
       c = c.substring(1);
@@ -29,6 +32,12 @@ class Control extends React.Component {
   }
 
   componentDidMount() {
+    // this.loadControls.bind(this);
+    this.loadControls();
+    this.loadSelectedControls();
+  }
+
+  loadControls = () => {
     fetch("/controls?page=" + this.state.page)
       .then(res => res.json())
       .then(
@@ -50,10 +59,35 @@ class Control extends React.Component {
       )
   }
 
+  loadSelectedControls = () => {
+    fetch("/get_project_controlls?id=" + query.get("id"))
+      .then(res => res.json())
+      .then(
+        (result) => {
+          var selectedSet = new Set();
+          for (var c in result.controls) {
+            selectedSet.add(result.controls[c].id);
+          }
+          this.setState({
+            select: selectedSet
+          });
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          this.setState({
+            error
+          });
+          $("#updateControls").html("Update Error");
+        }
+      )
+  }
+
   commitControls = () => {
-    const url = new URL(window.location.href);
-    const query = new URLSearchParams(url.search);
     const csrfToken = getCookie('csrftoken');
+    $("#updateControls").html("updating");
+    $("#updateControls").attr("disabled", true);
     fetch("/setcontrols", {
       method: 'POST',
       headers: {
@@ -66,6 +100,19 @@ class Control extends React.Component {
         cids: Array.from(this.state.select),
       })
     })
+      .then(res => res.json())
+      .then(
+        (result) => {
+          $("#updateControls").html("Update Controls");
+          $("#updateControls").attr("disabled", false);
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          $("#updateControls").html("Update Error");
+        }
+      )
   }
 
   checkboxClick = ({ target }) => {
@@ -93,7 +140,7 @@ class Control extends React.Component {
     this.setState({
       isLoaded: false,
       page: newPage
-    }, () => { this.componentDidMount(); })
+    }, () => { this.loadControls(); })
   }
 
   deleteClick = ({ target }) => {
@@ -137,7 +184,7 @@ class Control extends React.Component {
                 </ul>
               </div>
             </div>
-            <button type="button" class="btn btn-secondary btn-block">Add Controllers</button>
+            <button type="button" class="btn btn-secondary btn-block">Update Controllers</button>
           </div>
         </div>
       );
@@ -210,7 +257,7 @@ class Control extends React.Component {
                 </ul>
               </div>
             </div>
-            <button type="button" class="btn btn-secondary btn-block" onClick={this.commitControls.bind(this)}>Add Controllers</button>
+            <button id="updateControls" type="button" class="btn btn-secondary btn-block" onClick={this.commitControls.bind(this)}>Update Controls</button>
           </div>
         </div>
       );
