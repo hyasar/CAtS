@@ -77,12 +77,12 @@
                     <div class="row">
                         <div class="col-10">
                             <!-- 标题点进去应该是显示result dashboard比较好吧 -->
-                            <h5 class="card-title mb-3"><a href="project?id={{project.id}}">{{ project.name }}</a></h5>
+                            <h5 class="card-title mb-3"><a href="config_project?id={{project.id}}">{{ project.name }}</a></h5>
                             <p class="card-text mt-3">{{ project.description }}</p>
                             <p class="font-weight-light card-date mb-0 pb-0">{{ project.updated_time }}</p>
                         </div>
                         <div class="col-2">
-                            <a href="project?id={{project.id}}" class="btn btn-info btn-secondary btn-block">
+                            <a href="config_project?id={{project.id}}" class="btn btn-info btn-secondary btn-block">
                                 Config Controls
                             </a>
                             <a href="{% url 'update_project' project.id %}" class="btn btn-secondary btn-block">
