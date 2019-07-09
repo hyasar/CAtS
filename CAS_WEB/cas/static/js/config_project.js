@@ -48,6 +48,7 @@ class Control extends React.Component {
             isLoaded: true,
             items: result.controls
           });
+          console.log(result.controls)
         },
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
@@ -85,6 +86,22 @@ class Control extends React.Component {
             isLoaded: true,
             error
           });
+        }
+      )
+  }
+
+  getControlById = (id) => {
+    fetch("/get_control_by_id?id=" + id)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          let control = result.control[0];
+          console.log(control);
+          let label = control.cid + ", " + control.title;
+          $("#label_"+id).html(label);
+        },
+        (error) => {
+          return ("query error");
         }
       )
   }
@@ -198,6 +215,31 @@ class Control extends React.Component {
                   <input type="checkbox" class="custom-control-input" id={item.id} cid={item.id}
                     onClick={this.checkboxClick.bind(this)} />
                   <label class="custom-control-label" for={item.id}>{item.cid}，{item.title}</label>
+                  <div class="btn-group float-right">
+                    <button class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" />
+                    <div class="dropdown-menu dropdown-menu-right">
+                      <table class="table">
+                        <tbody>
+                          <tr>
+                            <th>Classinfo</th>
+                            <td>{item.classinfo}</td>
+                          </tr>
+                          <tr>
+                            <th>Description</th>
+                            <td>
+                              {
+                                item.parts ?
+                                  item.parts[0].prose
+                                  :
+                                  "NULL"
+                              }
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+
+                    </div>
+                  </div>
                 </div>
               </li>
             ))}
@@ -209,27 +251,27 @@ class Control extends React.Component {
               </a>
             </li>
             <li class="page-item">
-              <a class="page-link" onClick={this.state.search ? this.setSearchPage.bind(this, searchPage-10) : this.setPage.bind(this, page-10)} aria-label="first">
+              <a class="page-link" onClick={this.state.search ? this.setSearchPage.bind(this, searchPage - 10) : this.setPage.bind(this, page - 10)} aria-label="first">
                 <span aria-hidden="true">&laquo;</span>
               </a>
             </li>
             <li class="page-item">
-              <a class="page-link" onClick={this.state.search ? this.setSearchPage.bind(this, searchPage-1) : this.setPage.bind(this, page-1)} aria-label="previous">
+              <a class="page-link" onClick={this.state.search ? this.setSearchPage.bind(this, searchPage - 1) : this.setPage.bind(this, page - 1)} aria-label="previous">
                 <span aria-hidden="true">previous</span>
               </a>
             </li>
             <li class="page-item">
               <a class="page-link" aria-label="next">
-                <span aria-hidden="true">{this.state.search? searchPage:page}</span>
+                <span aria-hidden="true">{this.state.search ? searchPage : page}</span>
               </a>
             </li>
             <li class="page-item">
-              <a class="page-link" onClick={this.state.search ? this.setSearchPage.bind(this, searchPage+1) : this.setPage.bind(this, page+1)} aria-label="next">
+              <a class="page-link" onClick={this.state.search ? this.setSearchPage.bind(this, searchPage + 1) : this.setPage.bind(this, page + 1)} aria-label="next">
                 <span aria-hidden="true">next</span>
               </a>
             </li>
             <li class="page-item">
-              <a class="page-link" onClick={this.state.search ? this.setSearchPage.bind(this, searchPage+10) : this.setPage.bind(this, page+10)} aria-label="last">
+              <a class="page-link" onClick={this.state.search ? this.setSearchPage.bind(this, searchPage + 10) : this.setPage.bind(this, page + 10)} aria-label="last">
                 <span aria-hidden="true">&raquo;</span>
               </a>
             </li>
@@ -267,7 +309,7 @@ class Control extends React.Component {
                   {Array.from(select).map(item => (
                     <li class="list-group-item">
                       <div class="custom-control">
-                        <label>{item}</label>
+                        <label id={"label_"+item}>{this.getControlById(item)}</label>
                         <button type="botton" class="btn btn-primary float-right"
                           cid={item} onClick={this.deleteClick.bind(this)}>delete</button>
                       </div>
