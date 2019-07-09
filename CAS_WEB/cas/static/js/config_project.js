@@ -27,7 +27,9 @@ class Control extends React.Component {
       isLoaded: false,
       items: [],
       page: 1,
-      select: new Set()
+      select: new Set(),
+      search: false,
+      searchPage: 1
     };
   }
 
@@ -39,6 +41,35 @@ class Control extends React.Component {
 
   loadControls = () => {
     fetch("/controls?page=" + this.state.page)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          this.setState({
+            isLoaded: true,
+            items: result.controls
+          });
+          console.log(result.controls)
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          this.setState({
+            isLoaded: true,
+            error
+          });
+        }
+      )
+  }
+
+  searchControls = () => {
+    if (!this.state.search) {
+      this.setState({
+        searchPage: 1,
+        search: true
+      })
+    }
+    fetch("/searchControls?page=" + this.state.searchPage + "&key=" + $("#searchKey").val())
       .then(res => res.json())
       .then(
         (result) => {
@@ -59,6 +90,22 @@ class Control extends React.Component {
       )
   }
 
+  getControlById = (id) => {
+    fetch("/get_control_by_id?id=" + id)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          let control = result.control[0];
+          console.log(control);
+          let label = control.cid + ", " + control.title;
+          $("#label_"+id).html(label);
+        },
+        (error) => {
+          return ("query error");
+        }
+      )
+  }
+
   loadSelectedControls = () => {
     fetch("/get_project_controlls?id=" + query.get("id"))
       .then(res => res.json())
@@ -72,9 +119,6 @@ class Control extends React.Component {
             select: selectedSet
           });
         },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
         (error) => {
           this.setState({
             error
@@ -106,24 +150,22 @@ class Control extends React.Component {
           $("#updateControls").html("Update Controls");
           $("#updateControls").attr("disabled", false);
         },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
         (error) => {
-          $("#updateControls").html("Update Error");
+          this.setState({
+            error
+          })
+          console.error(error);
         }
       )
   }
 
   checkboxClick = ({ target }) => {
     if (target.checked == true) {
-      // selected.add(parseInt(target.getAttribute("cid")));
       this.setState({
         select: this.state.select.add(parseInt(target.getAttribute("cid")))
       });
     }
     else {
-      // selected.delete(parseInt(target.getAttribute("cid")));
       var newSet = this.state.select;
       newSet.delete(parseInt(target.getAttribute("cid")));
       this.setState({
@@ -136,11 +178,20 @@ class Control extends React.Component {
     if (newPage <= 0) {
       newPage = 1;
     }
-    console.log(newPage);
     this.setState({
       isLoaded: false,
       page: newPage
     }, () => { this.loadControls(); })
+  }
+
+  setSearchPage = (newPage) => {
+    if (newPage <= 0) {
+      newPage = 1;
+    }
+    this.setState({
+      isLoaded: false,
+      searchPage: newPage
+    }, () => { this.searchControls(); })
   }
 
   deleteClick = ({ target }) => {
@@ -152,21 +203,102 @@ class Control extends React.Component {
   }
 
   render() {
-    const { error, isLoaded, items, page, select } = this.state;
+    const { error, isLoaded, items, page, searchPage, select } = this.state;
+    let list;
+    if (isLoaded) {
+      list =
+        <div class="mb-2">
+          <ul class="list-group">
+            {items.map(item => (
+              <li class="list-group-item">
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" id={item.id} cid={item.id}
+                    onClick={this.checkboxClick.bind(this)} />
+                  <label class="custom-control-label" for={item.id}>{item.cid}，{item.title}</label>
+                  <div class="btn-group float-right">
+                    <button class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" />
+                    <div class="dropdown-menu dropdown-menu-right">
+                      <table class="table">
+                        <tbody>
+                          <tr>
+                            <th>Classinfo</th>
+                            <td>{item.classinfo}</td>
+                          </tr>
+                          <tr>
+                            <th>Description</th>
+                            <td>
+                              {
+                                item.parts ?
+                                  item.parts[0].prose
+                                  :
+                                  "NULL"
+                              }
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+
+                    </div>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+          <ul class="pagination justify-content-center row">
+            <li class="page-item">
+              <a class="page-link" onClick={this.state.search ? this.setSearchPage.bind(this, 1) : this.setPage.bind(this, 1)} aria-label="first">
+                <span aria-hidden="true">First</span>
+              </a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" onClick={this.state.search ? this.setSearchPage.bind(this, searchPage - 10) : this.setPage.bind(this, page - 10)} aria-label="first">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" onClick={this.state.search ? this.setSearchPage.bind(this, searchPage - 1) : this.setPage.bind(this, page - 1)} aria-label="previous">
+                <span aria-hidden="true">previous</span>
+              </a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" aria-label="next">
+                <span aria-hidden="true">{this.state.search ? searchPage : page}</span>
+              </a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" onClick={this.state.search ? this.setSearchPage.bind(this, searchPage + 1) : this.setPage.bind(this, page + 1)} aria-label="next">
+                <span aria-hidden="true">next</span>
+              </a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" onClick={this.state.search ? this.setSearchPage.bind(this, searchPage + 10) : this.setPage.bind(this, page + 10)} aria-label="last">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+    }
+    else {
+      list =
+        <div class="mb-2">
+          Loading...
+    </div>
+    }
+
     if (error) {
       return (
         <div>Error: {error.message}</div>
       );
-    } else if (!isLoaded) {
+    } else { //loading finished
       return (
         <div class="row">
           <div class="col-6">
-            <div class="container">
-              <div class="mb-2">
-                <ul class="list-group">
-                  <div>Loading...</div>
-                </ul>
-              </div>
+            <div class="input-group md-form form-sm mb-2">
+              <input id="searchKey" class="form-control my-0 py-1" type="text" placeholder="Search" aria-label="Search" />
+              <button class="btn btn-primary" onClick={this.setSearchPage.bind(this, 1)}>Search</button>
+            </div>
+            <div class="container" style={{ marginTop: 5 + "px" }}>
+              {list}
             </div>
           </div>
           <div class="col-6">
@@ -177,78 +309,7 @@ class Control extends React.Component {
                   {Array.from(select).map(item => (
                     <li class="list-group-item">
                       <div class="custom-control">
-                        <label>{item}</label>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-            <button type="button" class="btn btn-secondary btn-block">Update Controllers</button>
-          </div>
-        </div>
-      );
-    } else {
-      return (
-        <div class="row">
-          <div class="col-6">
-            <div class="container">
-              <div class="mb-2">
-                <ul class="list-group">
-                  {items.map(item => (
-                    <li class="list-group-item">
-                      <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id={item.id} cid={item.id}
-                          onClick={this.checkboxClick.bind(this)} />
-                        <label class="custom-control-label" for={item.id}>{item.cid}，{item.title}</label>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-                <ul class="pagination justify-content-center row">
-                  <li class="page-item">
-                    <a class="page-link" onClick={this.setPage.bind(this, 1)} aria-label="first">
-                      <span aria-hidden="true">First</span>
-                    </a>
-                  </li>
-                  <li class="page-item">
-                    <a class="page-link" onClick={this.setPage.bind(this, page - 10)} aria-label="first">
-                      <span aria-hidden="true">&laquo;</span>
-                    </a>
-                  </li>
-                  <li class="page-item">
-                    <a class="page-link" onClick={this.setPage.bind(this, page - 1)} aria-label="previous">
-                      <span aria-hidden="true">previous</span>
-                    </a>
-                  </li>
-                  <li class="page-item">
-                    <a class="page-link" aria-label="next">
-                      <span aria-hidden="true">{page}</span>
-                    </a>
-                  </li>
-                  <li class="page-item">
-                    <a class="page-link" onClick={this.setPage.bind(this, page + 1)} aria-label="next">
-                      <span aria-hidden="true">next</span>
-                    </a>
-                  </li>
-                  <li class="page-item">
-                    <a class="page-link" onClick={this.setPage.bind(this, page + 10)} aria-label="last">
-                      <span aria-hidden="true">&raquo;</span>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div class="col-6">
-            <div class="container">
-              <div class="mb-2">
-                <p>List of added controls</p>
-                <ul class="list-group">
-                  {Array.from(select).map(item => (
-                    <li class="list-group-item">
-                      <div class="custom-control">
-                        <label>{item}</label>
+                        <label id={"label_"+item}>{this.getControlById(item)}</label>
                         <button type="botton" class="btn btn-primary float-right"
                           cid={item} onClick={this.deleteClick.bind(this)}>delete</button>
                       </div>
@@ -269,8 +330,3 @@ ReactDOM.render(
   <Control />,
   document.getElementById('controls')
 );
-
-// ReactDOM.render(
-//   <ShowControl />,
-//   document.getElementById('show_controls')
-// );

@@ -7,6 +7,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect, JsonResponse, Http404, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Q
 
 
 from .forms import *
@@ -171,12 +172,37 @@ def configure_control_action(request):
     return JsonResponse(content)
 
 
-# @login_required
+@login_required
+def get_control_by_id_action(request):
+    content = {}
+
+    control = Control.objects.filter(id=request.GET.get('id')).\
+        order_by('id').values('cid', 'title', 'id', 'gid', 'parameters', 'properties', 'classinfo', 'parts')
+    content['control'] = list(control)
+    return JsonResponse(content)
+
+@login_required
 def get_control_list_action(request):
     content = {}
     # content['user'] = request.user
 
-    control_list = Control.objects.order_by('id').values('cid', 'title', 'id', 'gid', 'parameters', 'properties', 'classinfo')
+    control_list = Control.objects.order_by('id').values('cid', 'title', 'id', 'gid', 'parameters', 'properties', 'classinfo', 'parts')
+    paginator = Paginator(control_list, 10)
+    page = request.GET.get('page')
+    if not page:
+        page = 1
+    controls = paginator.page(page)
+    content['controls'] = list(controls)
+    return JsonResponse(content)
+
+@login_required
+def search_control_list_action(request):
+    content = {}
+    # content['user'] = request.user
+    keyword = request.GET.get('key')
+
+    control_list = Control.objects.filter(Q(title__icontains=keyword) | Q(cid__icontains=keyword)).\
+        order_by('id').values('cid', 'title', 'id', 'gid', 'parameters', 'properties', 'classinfo', 'parts')
     paginator = Paginator(control_list, 10)
     page = request.GET.get('page')
     if not page:
