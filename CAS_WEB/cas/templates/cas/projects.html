@@ -82,6 +82,11 @@
             </form>
         </div>
 
+        <script>
+            let project_ids = []
+            let control_lists = {}
+        </script>
+
         {% for project in projects %}
 
 
@@ -95,11 +100,11 @@
                             <p class="card-text mt-3">{{ project.description }}</p>
                             <p class="font-weight-light card-date mb-3 pb-0">{{ project.updated_time }}</p>
                             <p>
-                                <a class="btn btn-info" id="get-controls" data-toggle="collapse" href="#collapseExample"
+                                <a class="btn btn-info" id="get-controls-{{project.id}}" data-toggle="collapse" href="#collapseControls-{{project.id}}"
                                    role="button" aria-expanded="false" aria-controls="collapseExample">
-                                    Controls Selected<span id="control-cnt"></span>
+                                    Controls Selected<span id="control-cnt-{{ project.id }}"></span>
                                 </a>
-                            <div class="collapse" id="collapseExample">
+                            <div class="collapse" id="collapseControls-{{project.id}}">
                                 <div class="card card-body">
                                     <table class="table">
                                         <thead>
@@ -109,49 +114,16 @@
                                             <th scope="col">Title</th>
                                         </tr>
                                         </thead>
-                                        <tbody id="controls">
+                                        <tbody id="controls-{{project.id}}">
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
                             </p>
                             <script>
-                                let project_id = {{ project.id }}
-                                let control_list = []
-
-                                $(document).ready(function () {
-                                    setInterval(function () {
-                                        $.ajax({
-                                            url: '/get_project_controlls?id=' + project_id,
-                                            type: 'get',
-                                            dataType: 'json',
-                                            success: function (data) {
-                                                control_list = data.controls
-                                                $('#control-cnt').html(': ' + control_list.length)
-                                            }
-                                        });
-                                    }, 2000);
-
-                                    $('#get-controls').click(function () {
-                                        $('#controls').empty();
-                                        let idx = 1;
-                                        $.each(control_list, function (index, control) {
-                                            console.log(control.id);
-                                            $.ajax({
-                                                url: '/get_control_by_id?id=' + control.id,
-                                                type: 'get',
-                                                dataType: 'json',
-                                                success: function (data) {
-                                                    let title = data.control[0].title;
-                                                    let cid = data.control[0].cid;
-                                                    let res = '<tr><th scope="row">' + idx + '</th><td>' + cid + '</td><td>' + title + '</td></tr>>'
-                                                    idx += 1
-                                                    $('#controls').append(res);
-                                                }
-                                            });
-                                        });
-                                    });
-                                });
+                                // let project_id = {{ project.id }}
+                                project_ids.push({{project.id}})
+                                console.log(project_ids)
                             </script>
 
 
@@ -232,6 +204,47 @@
         </nav>
     </div>
 </section>
+
+<script>
+    $(document).ready(function () {
+        // setInterval(function () {
+        $.each(project_ids, function (index, id) {
+            $.ajax({
+                url: '/get_project_controlls?id=' + id,
+                type: 'get',
+                dataType: 'json',
+                success: function (data) {
+                    control_lists[id] = data.controls;
+                    $('#control-cnt-' + id).html(': ' + control_lists[id].length)
+                }
+            });
+
+        });
+
+        // }, 2000);
+
+        $.each(project_ids, function (index, id) {
+            $('#get-controls-' + id).click(function () {
+                $('#controls-' + id).empty();
+                let idx = 1;
+                $.each(control_lists[id], function (index, control) {
+                    $.ajax({
+                        url: '/get_control_by_id?id=' + control.id,
+                        type: 'get',
+                        dataType: 'json',
+                        success: function (data) {
+                            let title = data.control[0].title;
+                            let cid = data.control[0].cid;
+                            let res = '<tr><th scope="row">' + idx + '</th><td>' + cid + '</td><td>' + title + '</td></tr>>'
+                            idx += 1;
+                            $('#controls-' + id).append(res);
+                        }
+                    });
+                });
+            });
+        });
+    });
+</script>
 
 </body>
 </html>
