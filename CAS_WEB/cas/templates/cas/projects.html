@@ -121,13 +121,11 @@
 
                                 $(document).ready(function () {
                                     setInterval(function () {
-                                        console.log("function")
                                         $.ajax({
                                             url: '/get_project_controlls?id=' + project_id,
                                             type: 'get',
                                             dataType: 'json',
                                             success: function (data) {
-                                                console.log(data.controls.length);
                                                 control_list = data.controls
                                                 $('#control-cnt').html(': ' + control_list.length)
                                             }
@@ -137,7 +135,6 @@
                                     $('#get-controls').click(function () {
                                         $('#controls').empty();
                                         let idx = 1;
-                                        console.log('clicked')
                                         $.each(control_list, function (index, control) {
                                             console.log(control.id);
                                             $.ajax({
@@ -145,7 +142,6 @@
                                                 type: 'get',
                                                 dataType: 'json',
                                                 success: function (data) {
-                                                    console.log(data.control[0].title);
                                                     let title = data.control[0].title;
                                                     let cid = data.control[0].cid;
                                                     let res = '<tr><th scope="row">' + idx + '</th><td>' + cid + '</td><td>' + title + '</td></tr>>'
