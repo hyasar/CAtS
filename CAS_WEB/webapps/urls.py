@@ -34,5 +34,6 @@ urlpatterns = [
     path('search/<int:id>/', views.search_project_by_id, name='search_project_by_id'),
     path('update/<int:id>/', views.update_project, name='update_project'),
     path('delete', views.delete_project, name='delete_project'),
-    path('setcontrols', views.configure_control_action, name='configure_controls')
+    path('setcontrols', views.configure_control_action, name='configure_controls'),
+    path('project_dashboard', views.project_dashboard, name='project_dashboard'),
 ]
