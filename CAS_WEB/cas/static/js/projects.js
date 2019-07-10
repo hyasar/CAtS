@@ -1,3 +1,6 @@
+// let project_ids = []
+// let control_lists = {}
+
 function getCSRFToken() {
     var cookies = document.cookie.split(";");
     for (var i = 0; i < cookies.length; i++) {
@@ -8,6 +11,12 @@ function getCSRFToken() {
     }
     return "unknown";
 }
+
+// function initialize(){
+//     $("input[id^='project_id']").each(function(i, element){
+//         project_ids.push(element.value);
+//     });
+// }
 
 function deleteProject(project_id, project_name) {
     var result = confirm("Are you sure you want to delete " + project_name + "?");
@@ -25,3 +34,5 @@ function deleteProject(project_id, project_name) {
 
     }
 }
+
+// window.onload = initialize();
