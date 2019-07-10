@@ -292,6 +292,13 @@ def delete_project(request):
     return HttpResponse(message)
 
 
+@login_required
+def project_dashboard(request):
+    return HttpResponse("dashboard")
+
+
+
+
 
 
 
