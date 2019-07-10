@@ -61,6 +61,60 @@
     </div>
 </nav>
 
+<section class="bg-light py-4">
+    <div class="container" id="project_{{project.id}}">
+        <div class = "row">
+            <div class="card col-12">
+                <div class="card-body">
+                    <p class="card-title mb-3">{{ project.name }}</p>
+                    <h4># It's a dashboard prototype under development</h4>
+                    <p class="card-text mt-3">{{ project.description }}</p>
+                    <p class="font-weight-light card-date mb-3 pb-0">{{ project.updated_time }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-between mt-3">
+            <div class="card col-4">
+                <div class="card-body">
+                    <p class="card-title">Test History</p>
+                    <table class="table">
+                        <tbody>
+                        <tr><td><a href="#">Test 1</a></td></tr>
+                        <tr><td><a href="#">Test 2</a></td></tr>
+                        <tr><td><a href="#">Test 3</a></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card col-8">
+                <div class="card-body">
+                    <p class="card-title">Test Report</p>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>Control</th>
+                                <th>Message</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>ac-1</td>
+                                <td>ldkjsfoeiw</td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+
+
+                </div>
+            </div>
+            <div class="col-8">
+
+            </div>
+        </div>
+    </div>
+</section>
+
 
 </body>
 </html>

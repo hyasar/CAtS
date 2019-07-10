@@ -87,7 +87,7 @@ def get_project_list_action(request):
     content['user'] = request.user
 
     project_list = Project.objects.filter(user=request.user).order_by('-updated_time')
-    paginator = Paginator(project_list, 2)
+    paginator = Paginator(project_list, 5)
     page = request.GET.get('page')
     if not page:
         page = 1
@@ -146,7 +146,9 @@ def create_project_action(request):
     # project.save()
     #### ####
 
-    return render(request, 'cas/new_project.html', content)
+    return redirect('/config_project?id='+str(project.id))
+
+    # return render(request, 'cas/new_project.html', content)
 
 # @csrf_exempt
 @login_required
@@ -203,7 +205,7 @@ def search_control_list_action(request):
 
     control_list = Control.objects.filter(Q(title__icontains=keyword) | Q(cid__icontains=keyword)).\
         order_by('id').values('cid', 'title', 'id', 'gid', 'parameters', 'properties', 'classinfo', 'parts')
-    paginator = Paginator(control_list, 10)
+    paginator = Paginator(control_list, 5)
     page = request.GET.get('page')
     if not page:
         page = 1
@@ -219,7 +221,7 @@ def search_projects_action(request):
 
     query_name = request.GET.get('name')
     project_list = Project.objects.filter(user=request.user).filter(name__contains=query_name).order_by('-updated_time')
-    paginator = Paginator(project_list, 2)
+    paginator = Paginator(project_list, 10)
     page = request.GET.get('page')
     if not page:
         page = 1
@@ -288,13 +290,17 @@ def delete_project(request):
         message = "Successfully deleted."
     else:
         message = "This project doesn't exist or belong to you."
-
     return HttpResponse(message)
 
 
 @login_required
 def project_dashboard(request):
-    return HttpResponse("dashboard")
+    project_id = request.GET.get('id')
+    project = get_object_or_404(Project, pk=project_id, user = request.user)
+    content = dict()
+    content['project'] = project
+
+    return render(request, 'cas/project_dashboard.html', content)
 
 
 
