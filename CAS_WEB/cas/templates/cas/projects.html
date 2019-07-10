@@ -22,6 +22,20 @@
     <script src="https://unpkg.com/react@16/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js" crossorigin></script>
 
+    <!-- Load scripts-->
+    <script src="{% static '/js/jquery.min.js' %}" type="text/javascript" async defer></script>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+
     <title mb-3>Projects</title>
 </head>
 <body>
@@ -68,6 +82,11 @@
             </form>
         </div>
 
+        <script>
+            let project_ids = []
+            let control_lists = {}
+        </script>
+
         {% for project in projects %}
 
 
@@ -79,7 +98,35 @@
                             <!-- 标题点进去应该是显示result dashboard比较好吧 -->
                             <h5 class="card-title mb-3"><a href="config_project?id={{project.id}}">{{ project.name }}</a></h5>
                             <p class="card-text mt-3">{{ project.description }}</p>
-                            <p class="font-weight-light card-date mb-0 pb-0">{{ project.updated_time }}</p>
+                            <p class="font-weight-light card-date mb-3 pb-0">{{ project.updated_time }}</p>
+                            <p>
+                                <a class="btn btn-info" id="get-controls-{{project.id}}" data-toggle="collapse" href="#collapseControls-{{project.id}}"
+                                   role="button" aria-expanded="false" aria-controls="collapseExample">
+                                    Controls Selected<span id="control-cnt-{{ project.id }}"></span>
+                                </a>
+                            <div class="collapse" id="collapseControls-{{project.id}}">
+                                <div class="card card-body">
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">ID</th>
+                                            <th scope="col">Title</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="controls-{{project.id}}">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            </p>
+                            <script>
+                                // let project_id = {{ project.id }}
+                                project_ids.push({{project.id}})
+                                console.log(project_ids)
+                            </script>
+
+
                         </div>
                         <div class="col-2">
                             <a href="config_project?id={{project.id}}" class="btn btn-info btn-secondary btn-block">
@@ -158,10 +205,54 @@
     </div>
 </section>
 
+
 <!-- Load scripts-->
     <script src="static/js/jquery.min.js"></script>
     <script src="static/js/popper.min.js"></script>
     <script src="static/js/bootstrap.min.js"></script>
 
+    <script>
+        $(document).ready(function () {
+            // setInterval(function () {
+            $.each(project_ids, function (index, id) {
+                $.ajax({
+                    url: '/get_project_controlls?id=' + id,
+                    type: 'get',
+                    dataType: 'json',
+                    success: function (data) {
+                        control_lists[id] = data.controls;
+                        $('#control-cnt-' + id).html(': ' + control_lists[id].length)
+                    }
+                });
+
+            });
+
+            // }, 2000);
+
+            $.each(project_ids, function (index, id) {
+                $('#get-controls-' + id).click(function () {
+                    $('#controls-' + id).empty();
+                    let idx = 1;
+                    $.each(control_lists[id], function (index, control) {
+                        $.ajax({
+                            url: '/get_control_by_id?id=' + control.id,
+                            type: 'get',
+                            dataType: 'json',
+                            success: function (data) {
+                                let title = data.control[0].title;
+                                let cid = data.control[0].cid;
+                                let res = '<tr><th scope="row">' + idx + '</th><td>' + cid + '</td><td>' + title + '</td></tr>>'
+                                idx += 1;
+                                $('#controls-' + id).append(res);
+                            }
+                        });
+                    });
+                });
+            });
+        });
+    </script>
+
 </body>
 </html>
+
+
