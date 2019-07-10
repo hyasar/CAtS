@@ -295,7 +295,12 @@ def delete_project(request):
 
 @login_required
 def project_dashboard(request):
-    return render(request, 'cas/project_dashboard.html')
+    project_id = request.GET.get('id')
+    project = get_object_or_404(Project, pk=project_id, user = request.user)
+    content = dict()
+    content['project'] = project
+
+    return render(request, 'cas/project_dashboard.html', content)
 
 
 
