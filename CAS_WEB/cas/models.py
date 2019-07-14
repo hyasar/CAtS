@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.postgres.fields import JSONField
 
 
 # Create your models here.
@@ -38,3 +39,14 @@ class Project(models.Model):
     def __str__(self):
         # return 'Project(id=' + str(self.id) + ', name=' + str(self.name) + ')'
         return self.name
+
+
+class Report(models.Model):
+    project_name = models.CharField(max_length=100)
+    report_id = models.CharField(max_length=10, blank=True, null=True)
+    pid = models.ForeignKey(Project, on_delete=models.PROTECT, related_name="project")
+    time_stamp = models.DateTimeField(auto_now=False)
+    data = JSONField()
+
+    def __str__(self):
+        return self.project_name + "_" + self.time_stamp
