@@ -7,6 +7,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect, JsonResponse, Http404, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Q
 
 
 from .forms import *
@@ -86,7 +87,7 @@ def get_project_list_action(request):
     content['user'] = request.user
 
     project_list = Project.objects.filter(user=request.user).order_by('-updated_time')
-    paginator = Paginator(project_list, 2)
+    paginator = Paginator(project_list, 5)
     page = request.GET.get('page')
     if not page:
         page = 1
@@ -100,11 +101,24 @@ def get_project_configuration(request):
     content = dict()
     content['user'] = request.user
 
-    project = Project.objects.filter(user=request.user, id=request.GET.get('id'))
+    project = Project.objects.get(user=request.user, id=request.GET.get('id'))
 
     content['project'] = project
-    return render(request, 'cas/project.html', content)
+    # content['controls'] = get_control_list_action(request)
+    # print(content['controls'])
+    return render(request, 'cas/config_project.html', content)
 
+
+@login_required
+def get_project_controlls(request):
+    content = dict()
+
+    project = Project.objects.get(user=request.user, id=request.GET.get('id'))
+
+    content['controls'] = list(project.control.all().values('id'))
+    # print(list(project.control.all().values('id')))
+
+    return JsonResponse(content)
 
 @login_required
 def create_project_action(request):
@@ -132,11 +146,12 @@ def create_project_action(request):
     # project.save()
     #### ####
 
-    return render(request, 'cas/new_project.html', content)
+    return redirect('/config_project?id='+str(project.id))
 
+    # return render(request, 'cas/new_project.html', content)
 
-# @login_required
-@csrf_exempt
+# @csrf_exempt
+@login_required
 def configure_control_action(request):
     # json
     data = json.loads(request.body.decode("utf-8"))
@@ -146,10 +161,11 @@ def configure_control_action(request):
     project_id = data.get("id", 0)
 
     project = get_object_or_404(Project, pk=project_id)
+    project.control.clear()
 
     cids = data.get("cids", [])
     for cid in cids:
-        control = get_object_or_404(Control, cid=cid)
+        control = get_object_or_404(Control, id=cid)
         project.control.add(control)
     project.save()
     content = dict()
@@ -158,13 +174,38 @@ def configure_control_action(request):
     return JsonResponse(content)
 
 
-# @login_required
+@login_required
+def get_control_by_id_action(request):
+    content = {}
+
+    control = Control.objects.filter(id=request.GET.get('id')).\
+        order_by('id').values('cid', 'title', 'id', 'gid', 'parameters', 'properties', 'classinfo', 'parts')
+    content['control'] = list(control)
+    return JsonResponse(content)
+
+@login_required
 def get_control_list_action(request):
     content = {}
     # content['user'] = request.user
 
-    control_list = Control.objects.values('cid', 'title', 'id', 'gid', 'parameters', 'properties', 'classinfo')
-    paginator = Paginator(control_list, 2)
+    control_list = Control.objects.order_by('id').values('cid', 'title', 'id', 'gid', 'parameters', 'properties', 'classinfo', 'parts')
+    paginator = Paginator(control_list, 10)
+    page = request.GET.get('page')
+    if not page:
+        page = 1
+    controls = paginator.page(page)
+    content['controls'] = list(controls)
+    return JsonResponse(content)
+
+@login_required
+def search_control_list_action(request):
+    content = {}
+    # content['user'] = request.user
+    keyword = request.GET.get('key')
+
+    control_list = Control.objects.filter(Q(title__icontains=keyword) | Q(cid__icontains=keyword)).\
+        order_by('id').values('cid', 'title', 'id', 'gid', 'parameters', 'properties', 'classinfo', 'parts')
+    paginator = Paginator(control_list, 5)
     page = request.GET.get('page')
     if not page:
         page = 1
@@ -180,7 +221,7 @@ def search_projects_action(request):
 
     query_name = request.GET.get('name')
     project_list = Project.objects.filter(user=request.user).filter(name__contains=query_name).order_by('-updated_time')
-    paginator = Paginator(project_list, 2)
+    paginator = Paginator(project_list, 10)
     page = request.GET.get('page')
     if not page:
         page = 1
@@ -249,8 +290,19 @@ def delete_project(request):
         message = "Successfully deleted."
     else:
         message = "This project doesn't exist or belong to you."
-
     return HttpResponse(message)
+
+
+@login_required
+def project_dashboard(request):
+    project_id = request.GET.get('id')
+    project = get_object_or_404(Project, pk=project_id, user = request.user)
+    content = dict()
+    content['project'] = project
+
+    return render(request, 'cas/project_dashboard.html', content)
+
+
 
 
 

@@ -1,18 +1,5 @@
-// class Project extends React.Component {
-//   render() {
-//     return (
-//       <div>
-//         Hello {this.props.name}
-//       </div>
-//     );
-//   }
-// }
-//
-// ReactDOM.render(
-//   <Project name="Taylor" />,
-//   document.getElementById('hello-example')
-// );
-//
+// let project_ids = []
+// let control_lists = {}
 
 function getCSRFToken() {
     var cookies = document.cookie.split(";");
@@ -25,6 +12,12 @@ function getCSRFToken() {
     return "unknown";
 }
 
+// function initialize(){
+//     $("input[id^='project_id']").each(function(i, element){
+//         project_ids.push(element.value);
+//     });
+// }
+
 function deleteProject(project_id, project_name) {
     var result = confirm("Are you sure you want to delete " + project_name + "?");
     if (result) {
@@ -36,13 +29,10 @@ function deleteProject(project_id, project_name) {
             success: function (message) {
                 location.reload();
                 alert(message);
-
-                // var div_id = "section_form_" + num;
-                // var div = document.getElementById(div_id);
-                // div.parentNode.removeChild(div);
             }
-            // dataType: "json"
         });
 
     }
 }
+
+// window.onload = initialize();
