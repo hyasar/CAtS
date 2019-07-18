@@ -9,6 +9,9 @@ from django.http import HttpResponseRedirect, JsonResponse, Http404, HttpRespons
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 
+from os.path import expanduser, join
+from django.core.files.storage import FileSystemStorage
+
 
 from .forms import *
 from .models import *
@@ -302,8 +305,22 @@ def project_dashboard(request):
 
     return render(request, 'cas/project_dashboard.html', content)
 
+@csrf_exempt
+def simple_upload(request):
+    if request.method == 'POST' and request.FILES['myfile']:
+        myfile = request.FILES['myfile']
 
+        save_path = 'Files'
 
+        myfile = request.FILES['myfile']
+        fs = FileSystemStorage(location=save_path)  # defaults to   MEDIA_ROOT
+        filename = fs.save(myfile.name, myfile)
+        file_url = fs.url(filename)
+
+        message = file_url
+    else:
+        message = "No file."
+    return HttpResponse(message)
 
 
 
