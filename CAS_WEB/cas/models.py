@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
+from django_mysql.models import SetTextField
 
 
 # Create your models here.
@@ -19,6 +20,9 @@ class Control(models.Model):
     high = models.BooleanField()
     moderate = models.BooleanField()
     low = models.BooleanField()
+    keywords = SetTextField(
+        base_field=models.CharField(max_length=32),
+    )
 
     class Meta:
         managed = False ## This means that Django won't manage the lifecycle of this table
@@ -42,11 +46,40 @@ class Project(models.Model):
 
 
 class Report(models.Model):
-    project_name = models.CharField(max_length=100)
-    report_id = models.CharField(max_length=10, blank=True, null=True)
-    pid = models.ForeignKey(Project, on_delete=models.PROTECT, related_name="project")
-    time_stamp = models.DateTimeField(auto_now=False)
-    data = JSONField()
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    version = models.CharField(max_length=32)
 
-    def __str__(self):
-        return self.project_name + "_" + self.time_stamp
+
+class Issue(models.Model):
+    report = models.ForeignKey(Report, on_delte=models.CASCADE)
+    version = models.CharField(max_length=32)
+    controls = models.ManyToManyField(Control)
+    created_time = models.DateTimeField(auto_now=False)
+    updated_time = models.DateTimeField(auto_now=False)
+    severity = models.CharField(max_length=10)
+    status = models.CharField(max_length=20)
+    cwe = models.IntegerField(blank=True)
+    rule = SetTextField(
+        base_field=models.CharField(max_length=32),
+    )
+    tool = models.CharField(max_length=32)
+    location = models.TextField()
+    element = models.charField(max_length=32)
+    path = models.TextField()
+    line = models.IntegerField()
+
+
+class ControlConfigure(models.Model):
+    project = models.OneToOneField(
+        Project,
+        on_delete=models.PROTECT,
+    )
+
+    control = models.OneToOneField(
+        Control,
+        on_delete=models.PROTECT,
+    )
+
+    keywords = SetTextField(
+        base_field=models.CharField(max_length=32),
+    )
