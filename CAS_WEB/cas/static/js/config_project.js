@@ -19,6 +19,108 @@ function getCookie(cname) {
   return "";
 }
 
+class Description extends React.Component {
+  key2TR(key, value) {
+    return (<tr>
+      <td scope="col">{key}</td>
+      <td scope="col">{value}</td>
+    </tr>)
+  }
+
+  array2TR(array, key, id) {
+    if (key != "parts")
+      return (
+        <tr>
+          <td colspan={2}>
+            <a data-toggle="collapse" data-target={"#child-collapese-array" + key + id} href="#">{key}</a>
+            <div id={"child-collapese-array" + key + id} class="collapse">
+              <table class="table">
+                <thead>
+                </thead>
+                <tbody>
+                  {
+                    array.map((item) => {
+                      if (typeof (item) != "string")
+                        return (<tr><td>{JSON.stringify(item)}</td></tr>)
+                      else
+                        return (<tr><td>{item}</td></tr>)
+                    })
+                  }
+                </tbody>
+              </table>
+            </div>
+          </td>
+        </tr>
+      )
+  }
+
+  replaceDot(str) {
+    if (typeof str != "string") {
+      return str;
+    }
+    return str.toString().replace(new RegExp("\\.", 'g'), "_")
+  }
+
+  render() {
+    return (
+      <table class="table">
+        <thead>
+        </thead>
+        <tbody>
+          {this.props.parts.map(
+            part => (
+              <tr>
+                <td>
+                  <a data-toggle="collapse" data-target={"#child-collapese" + this.replaceDot(part.id)} href="#">{part.id ? part.id : part.name}</a>
+                  <div id={"child-collapese" + this.replaceDot(part.id)} class="collapse">
+                    <table class="table">
+                      <thead>
+                      </thead>
+                      <tbody>
+                        {
+                          Object.keys(part).map((key) => { // map all the key-value pairs with string value
+                            if (typeof part[key] == "string")
+                              return this.key2TR(key, part[key])
+                          })
+                        }
+                        {
+                          Object.keys(part).map((key) => { // map all the key-value pairs with array value (except parts)
+                            if (Array.isArray(part[key]))
+                              return this.array2TR(part[key], key, this.replaceDot(part.id))
+                          })
+                        }
+                        {
+                          Object.keys(part).map((key) => { // map the child parts
+                            if (key == "parts")
+                              return (
+                                <tr>
+                                  <td colspan={2}>
+                                    <div>
+                                      <a data-toggle="collapse" data-target={"#collapseControls-" + this.replaceDot(part.id)} href="#">parts</a>
+                                    </div>
+                                    <div class="collapse" id={"collapseControls-" + this.replaceDot(part.id)}>
+                                      <div class="card card-body">
+                                        <Description parts={part[key]} />
+                                      </div>
+                                    </div>
+                                  </td>
+                                </tr>
+                              )
+                          })
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                </td>
+              </tr>
+            )
+          )}
+        </tbody>
+      </table>
+    );
+  }
+}
+
 class Control extends React.Component {
   constructor(props) {
     super(props);
@@ -34,9 +136,50 @@ class Control extends React.Component {
   }
 
   componentDidMount() {
-    // this.loadControls.bind(this);
     this.loadControls();
     this.loadSelectedControls();
+  }
+
+  key2TR(key, value) {
+    return (<tr>
+      <td scope="col">{key}</td>
+      <td scope="col">{value}</td>
+    </tr>)
+  }
+
+  array2TR(array, key, id) {
+    if (key != "parts")
+      return (
+        <tr>
+          <td colspan={2}>
+            <a data-toggle="collapse" data-target={"#child-collapese-array" + key + id} href="#">{key}</a>
+            <div id={"child-collapese-array" + key + id} class="collapse">
+              <table class="table">
+                <thead>
+                </thead>
+                <tbody>
+                  {
+                    array.map((item) => {
+                      if (typeof (item) != "string")
+                        return (<tr><td>{JSON.stringify(item)}</td></tr>)
+                      // return this.array2TR(item, key)
+                      else
+                        return (<tr><td>{item}</td></tr>)
+                    })
+                  }
+                </tbody>
+              </table>
+            </div>
+          </td>
+        </tr>
+      )
+  }
+
+  replaceDot(str) {
+    if (typeof str != "string") {
+      return str;
+    }
+    return str.toString().replace(new RegExp("\\.", 'g'), "_")
   }
 
   loadControls = () => {
@@ -96,9 +239,8 @@ class Control extends React.Component {
       .then(
         (result) => {
           let control = result.control[0];
-          console.log(control);
           let label = control.cid + ", " + control.title;
-          $("#label_"+id).html(label);
+          $("#label_" + id).html(label);
         },
         (error) => {
           return ("query error");
@@ -215,30 +357,45 @@ class Control extends React.Component {
                   <input type="checkbox" class="custom-control-input" id={item.id} cid={item.id}
                     onClick={this.checkboxClick.bind(this)} />
                   <label class="custom-control-label" for={item.id}>{item.cid}，{item.title}</label>
-                  <div class="btn-group float-right">
-                    <button class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" />
-                    <div class="dropdown-menu dropdown-menu-right">
-                      <table class="table">
-                        <tbody>
-                          <tr>
-                            <th>Classinfo</th>
-                            <td>{item.classinfo}</td>
-                          </tr>
-                          <tr>
-                            <th>Description</th>
-                            <td>
-                              {
-                                item.parts ?
-                                  item.parts[0].prose
-                                  :
-                                  "NULL"
-                              }
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-
-                    </div>
+                  <a class="btn dropdown-toggle float-right" id={"get-controls-" + item.id} data-toggle="collapse" href={"#collapseControls-" + item.id}
+                    role="button" aria-expanded="false" aria-controls="collapseExample" />
+                </div>
+                <div class="collapse" id={"collapseControls-" + item.id}>
+                  <div class="card card-body">
+                    <table class="table">
+                      <thead></thead>
+                      <tbody>
+                        {
+                          Object.keys(item).map((key) => { // map all the key-value pairs with string value
+                            if (typeof item[key] == "string")
+                              return this.key2TR(key, item[key])
+                          })
+                        }
+                        {
+                          Object.keys(item).map((key) => { // map all the key-value pairs with array value (except parts)
+                            if (Array.isArray(item[key]))
+                              return this.array2TR(item[key], key, this.replaceDot(item.id))
+                          })
+                        }
+                        {item.parts ?
+                          (
+                            <tr>
+                              <td colspan={2}>
+                                <div>
+                                  <a data-toggle="collapse" data-target={"#collapseControlsParts-" + this.replaceDot(item.id)} href="#">parts</a>
+                                </div>
+                                <div class="collapse" id={"collapseControlsParts-" + this.replaceDot(item.id)}>
+                                  <div class="card card-body">
+                                    <Description parts={item.parts} />
+                                  </div>
+                                </div>
+                              </td>
+                            </tr>
+                          )
+                          :
+                          (<span>NULL</span>)}
+                      </tbody>
+                    </table>
                   </div>
                 </div>
               </li>
@@ -309,7 +466,7 @@ class Control extends React.Component {
                   {Array.from(select).map(item => (
                     <li class="list-group-item">
                       <div class="custom-control">
-                        <label id={"label_"+item}>{this.getControlById(item)}</label>
+                        <label id={"label_" + item}>{this.getControlById(item)}</label>
                         <button type="botton" class="btn btn-primary float-right"
                           cid={item} onClick={this.deleteClick.bind(this)}>delete</button>
                       </div>
