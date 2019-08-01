@@ -77,7 +77,6 @@
 
         <script>
             let project_ids = []
-            let control_lists = {}
         </script>
 
         {% for project in projects %}
@@ -198,41 +197,24 @@
 
 <script>
     $(document).ready(function () {
-        // setInterval(function () {
         $.each(project_ids, function (index, id) {
             $.ajax({
                 url: '/get_project_controlls?id=' + id,
                 type: 'get',
                 dataType: 'json',
                 success: function (data) {
-                    control_lists[id] = data.controls;
-                    $('#control-cnt-' + id).html(': ' + control_lists[id].length)
+                    let controls = data.controls;
+                    let num_controls = controls.length
+                    $('#control-cnt-' + id).html(': ' + num_controls)
+                    for (let i=0; i < num_controls; i++) {
+                        let title = controls[i].title;
+                        let cid = controls[i].cid;
+                        let res = '<tr><th scope="row">' + (i+1) + '</th><td>' + cid + '</td><td>' + title + '</td></tr>>'
+                        $('#controls-' + id).append(res);
+                    }
                 }
             });
 
-        });
-
-        // }, 2000);
-
-        $.each(project_ids, function (index, id) {
-            $('#get-controls-' + id).click(function () {
-                $('#controls-' + id).empty();
-                let idx = 1;
-                $.each(control_lists[id], function (index, control) {
-                    $.ajax({
-                        url: '/get_control_by_id?id=' + control.id,
-                        type: 'get',
-                        dataType: 'json',
-                        success: function (data) {
-                            let title = data.control[0].title;
-                            let cid = data.control[0].cid;
-                            let res = '<tr><th scope="row">' + idx + '</th><td>' + cid + '</td><td>' + title + '</td></tr>>'
-                            idx += 1;
-                            $('#controls-' + id).append(res);
-                        }
-                    });
-                });
-            });
         });
     });
 </script>
