@@ -117,9 +117,7 @@ def get_project_controlls(request):
     content = dict()
 
     project = Project.objects.get(user=request.user, id=request.GET.get('id'))
-    content['controls'] = list(Control.objects.filter(controlconfigure__in=ControlConfigure.objects.filter()).values())
-
-    print(content['controls'])
+    content['controls'] = list(Control.objects.filter(controlconfigure__in=ControlConfigure.objects.filter(project=project)).values())
 
     return JsonResponse(content)
 
@@ -164,7 +162,7 @@ def configure_control_action(request):
 
 @login_required
 def get_control_by_id_action(request):
-    content = {}
+    content = dict()
 
     control = Control.objects.filter(id=request.GET.get('id')).\
         order_by('id').values('cid', 'title', 'id', 'gid', 'parameters', 'properties', 'classinfo', 'parts')
@@ -173,7 +171,7 @@ def get_control_by_id_action(request):
 
 @login_required
 def get_control_list_action(request):
-    content = {}
+    content = dict()
     control_list = Control.objects.order_by('id').values('cid', 'title', 'id', 'gid', 'parameters', 'properties', 'classinfo', 'parts')
     paginator = Paginator(control_list, 10)
     page = request.GET.get('page')
@@ -185,7 +183,7 @@ def get_control_list_action(request):
 
 @login_required
 def search_control_list_action(request):
-    content = {}
+    content = dict()
     keyword = request.GET.get('key')
 
     control_list = Control.objects.filter(Q(title__icontains=keyword) | Q(cid__icontains=keyword)).\
