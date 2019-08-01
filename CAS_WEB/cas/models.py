@@ -20,9 +20,7 @@ class Control(models.Model):
     high = models.BooleanField()
     moderate = models.BooleanField()
     low = models.BooleanField()
-    keywords = SetTextField(
-        base_field=models.CharField(max_length=32),
-    )
+
 
     class Meta:
         managed = False ## This means that Django won't manage the lifecycle of this table
@@ -38,7 +36,7 @@ class Project(models.Model):
     description = models.TextField(blank=True, null=True, max_length=600)
     created_time = models.DateTimeField(auto_now_add=True)
     updated_time = models.DateTimeField(auto_now=True)
-    control = models.ManyToManyField(Control)
+    # control = models.ManyToManyField(Control)
 
     def __str__(self):
         # return 'Project(id=' + str(self.id) + ', name=' + str(self.name) + ')'
@@ -51,7 +49,7 @@ class Report(models.Model):
 
 
 class Issue(models.Model):
-    report = models.ForeignKey(Report, on_delte=models.CASCADE)
+    report = models.ForeignKey(Report, on_delete=models.CASCADE)
     version = models.CharField(max_length=32)
     controls = models.ManyToManyField(Control)
     created_time = models.DateTimeField(auto_now=False)
@@ -64,21 +62,24 @@ class Issue(models.Model):
     )
     tool = models.CharField(max_length=32)
     location = models.TextField()
-    element = models.charField(max_length=32)
+    element = models.CharField(max_length=32)
     path = models.TextField()
     line = models.IntegerField()
 
 
 class ControlConfigure(models.Model):
-    project = models.OneToOneField(
-        Project,
-        on_delete=models.PROTECT,
-    )
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    control = models.ForeignKey(Control, on_delete=models.CASCADE)
 
-    control = models.OneToOneField(
-        Control,
-        on_delete=models.PROTECT,
-    )
+    # project = models.OneToOneField(
+    #     Project,
+    #     on_delete=models.PROTECT,
+    # )
+
+    # control = models.OneToOneField(
+    #     Control,
+    #     on_delete=models.PROTECT,
+    # )
 
     keywords = SetTextField(
         base_field=models.CharField(max_length=32),

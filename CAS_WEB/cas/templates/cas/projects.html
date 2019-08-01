@@ -198,7 +198,6 @@
 
 <script>
     $(document).ready(function () {
-        // setInterval(function () {
         $.each(project_ids, function (index, id) {
             $.ajax({
                 url: '/get_project_controlls?id=' + id,
@@ -211,8 +210,7 @@
             });
 
         });
-
-        // }, 2000);
+        console.log('control_lists', control_lists)
 
         $.each(project_ids, function (index, id) {
             $('#get-controls-' + id).click(function () {
