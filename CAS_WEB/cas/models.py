@@ -51,7 +51,6 @@ class Report(models.Model):
 class Issue(models.Model):
     report = models.ForeignKey(Report, on_delete=models.CASCADE)
     version = models.CharField(max_length=32)
-    controls = models.ManyToManyField(Control)
     created_time = models.DateTimeField(auto_now=False)
     updated_time = models.DateTimeField(auto_now=False)
     severity = models.CharField(max_length=10)
@@ -65,6 +64,21 @@ class Issue(models.Model):
     element = models.CharField(max_length=32)
     path = models.TextField()
     line = models.IntegerField()
+
+
+class XMLIssue(models.Model):
+    report = models.ForeignKey(Report, on_delete=models.CASCADE)
+    version = models.CharField(max_length=32)
+    created_time = models.DateTimeField(auto_now=False)
+    sourcefile = models.CharField(max_length=50)
+    startLine = models.IntegerField()
+    endLine = models.IntegerField()
+    group = models.CharField(max_length=20)
+    code = models.CharField(max_length=100)
+    severity = models.CharField(max_length=10)
+    rule = SetTextField(
+        base_field=models.CharField(max_length=32),
+    )
 
 
 class ControlConfigure(models.Model):
