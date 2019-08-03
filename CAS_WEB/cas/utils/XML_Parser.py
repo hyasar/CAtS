@@ -1,12 +1,12 @@
 from ..models import *
 from xml.etree import ElementTree as ET
 
-def parseReportXML(csv_file, project, report_version):
+def parseReportXML(file, project, report_version):
 
     report = Report(project=project, report_version=report_version)
     report.save()
 
-    tree = ET.parse('test.xml')
+    tree = ET.parse(file)
     root = tree.getroot()
 
     date_info = root.attrib['package_version']
