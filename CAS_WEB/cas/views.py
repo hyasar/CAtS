@@ -117,7 +117,13 @@ def get_project_controlls(request):
     content = dict()
 
     project = Project.objects.get(user=request.user, id=request.GET.get('id'))
-    content['controls'] = list(Control.objects.filter(controlconfigure__in=ControlConfigure.objects.filter(project=project)).values())
+    controls = list(Control.objects.filter(controlconfigure__in=ControlConfigure.objects.filter(project=project)).values("cid", "id", "title"))
+    content['controls'] = []
+    for control in controls:
+        control_obj = get_object_or_404(Control, id=control['id'])
+        keywords = ','.join(ControlConfigure.objects.filter(project=project, control=control_obj).first().keywords)
+        control['keywords'] = keywords
+        content['controls'].append(control)
 
     return JsonResponse(content)
 
@@ -143,6 +149,7 @@ def configure_control_action(request):
     data = json.loads(request.body.decode("utf-8"))
 
     project_id = data.get("id", 0)
+    controlconfigs = data.get("controlconfigs", [])
 
     project = get_object_or_404(Project, pk=project_id)
     ControlConfigure.objects.filter(project=project).delete()
@@ -150,13 +157,16 @@ def configure_control_action(request):
     content = dict()
     content['id'] = project_id
     content['controls'] = []
+    ids = []
 
-    cids = data.get("cids", [])
-    for cid in cids:
-        control = get_object_or_404(Control, id=cid)
-        ControlConfigure.objects.create(project=project, control=control, keywords="")
+    for config in controlconfigs:
+        id = config['id']
+        ids.append(id)
+        keywords = config['keywords']
+        control = get_object_or_404(Control, id=id)
+        ControlConfigure.objects.create(project=project, control=control, keywords=keywords)
 
-    content['controls'] = list(Control.objects.filter(id__in=cids).values())
+    content['controls'] = list(Control.objects.filter(id__in=ids).values())
     return JsonResponse(content)
 
 
@@ -196,7 +206,7 @@ def search_control_list_action(request):
     content['controls'] = list(controls)
     return JsonResponse(content)
 
-  
+
 @login_required
 def search_projects_action(request):
     content = dict()
@@ -301,6 +311,25 @@ def simple_upload(request):
     else:
         message = "No file."
     return HttpResponse(message)
+
+@login_required
+def get_controlconfig_by_id(request):
+    content = dict()
+    project_id = request.GET.get('project_id')
+    control_id = request.GET.get('control_id')
+    project_obj = get_object_or_404(Project, id=project_id)
+    control_obj = get_object_or_404(Control, id=control_id)
+    try:
+        controlconfig_obj = ControlConfigure.objects.get(project=project_obj, control=control_obj)
+        keywords = ','.join(controlconfig_obj.keywords)
+        print("controlconfig_obj", controlconfig_obj)
+        print("keywords", keywords)
+        content['control'] = {'id': control_id, 'title': control_obj.title, 'cid': control_obj.cid,
+                              'keywords': keywords}
+    except ControlConfigure.DoesNotExist:
+        content['control'] = {'id': control_id, 'title': control_obj.title, 'cid': control_obj.cid,
+                              'keywords': ''}
+    return JsonResponse(content)
 
 
 
