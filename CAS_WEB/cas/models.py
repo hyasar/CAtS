@@ -5,7 +5,6 @@ from django_mysql.models import SetTextField
 
 
 # Create your models here.
-
 class Control(models.Model):
     id = models.IntegerField(primary_key=True)
     cid = models.CharField(unique=True, max_length=10)
@@ -21,14 +20,12 @@ class Control(models.Model):
     moderate = models.BooleanField()
     low = models.BooleanField()
 
-
     class Meta:
         managed = False ## This means that Django won't manage the lifecycle of this table
         db_table = 'controls'
 
     def __str__(self):
         return self.title
-
 
 class Project(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name="project")
@@ -42,15 +39,13 @@ class Project(models.Model):
         # return 'Project(id=' + str(self.id) + ', name=' + str(self.name) + ')'
         return self.name
 
-
 class Report(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     version = models.CharField(max_length=32)
+    date = models.DateTimeField(auto_now=True)
 
-
-class Issue(models.Model):
+class CSVIssue(models.Model):
     report = models.ForeignKey(Report, on_delete=models.CASCADE)
-    version = models.CharField(max_length=32)
     created_time = models.DateTimeField(auto_now=False)
     updated_time = models.DateTimeField(auto_now=False)
     severity = models.CharField(max_length=10)
@@ -65,10 +60,8 @@ class Issue(models.Model):
     path = models.TextField()
     line = models.IntegerField()
 
-
 class XMLIssue(models.Model):
     report = models.ForeignKey(Report, on_delete=models.CASCADE)
-    version = models.CharField(max_length=32)
     created_time = models.DateTimeField(auto_now=False)
     sourcefile = models.CharField(max_length=50)
     startLine = models.IntegerField()
@@ -80,21 +73,9 @@ class XMLIssue(models.Model):
         base_field=models.CharField(max_length=32),
     )
 
-
 class ControlConfigure(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     control = models.ForeignKey(Control, on_delete=models.CASCADE)
-
-    # project = models.OneToOneField(
-    #     Project,
-    #     on_delete=models.PROTECT,
-    # )
-
-    # control = models.OneToOneField(
-    #     Control,
-    #     on_delete=models.PROTECT,
-    # )
-
     keywords = SetTextField(
         base_field=models.CharField(max_length=32),
     )
