@@ -129,9 +129,10 @@ class Control extends React.Component {
       isLoaded: false,
       items: [],
       page: 1,
-      select: new Set(),
+      select: {},
       search: false,
-      searchPage: 1
+      searchPage: 1,
+      newKeywordDict: {}
     };
   }
 
@@ -162,7 +163,6 @@ class Control extends React.Component {
                     array.map((item) => {
                       if (typeof (item) != "string")
                         return (<tr><td>{JSON.stringify(item)}</td></tr>)
-                      // return this.array2TR(item, key)
                       else
                         return (<tr><td>{item}</td></tr>)
                     })
@@ -253,12 +253,12 @@ class Control extends React.Component {
       .then(res => res.json())
       .then(
         (result) => {
-          var selectedSet = new Set();
+          var selectedDict = {};
           for (var c in result.controls) {
-            selectedSet.add(result.controls[c].id);
+            selectedDict[result.controls[c].id] = result.controls[c];
           }
           this.setState({
-            select: selectedSet
+            select: selectedDict
           });
         },
         (error) => {
@@ -271,6 +271,14 @@ class Control extends React.Component {
   }
 
   commitControls = () => {
+    let controlconfigs = []
+    let selected = this.state.select
+    for (let id in selected) {
+      controlconfigs.push({'id': id, 'keywords': selected[id].keywords})
+    }
+    console.log('select ', this.state.select)
+    console.log('controlconfigs ', controlconfigs)
+
     const csrfToken = getCookie('csrftoken');
     $("#updateControls").html("updating");
     $("#updateControls").attr("disabled", true);
@@ -283,7 +291,8 @@ class Control extends React.Component {
       },
       body: JSON.stringify({
         id: query.get('id'),
-        cids: Array.from(this.state.select),
+        // cids: Array.from(this.state.select),
+        controlconfigs: controlconfigs
       })
     })
       .then(res => res.json())
@@ -302,18 +311,32 @@ class Control extends React.Component {
   }
 
   checkboxClick = ({ target }) => {
+    let control_id = parseInt(target.getAttribute("cid"));
     if (target.checked == true) {
-      this.setState({
-        select: this.state.select.add(parseInt(target.getAttribute("cid")))
-      });
+      let newSet = this.state.select;
+      let newKeywordDictRender = this.state.newKeywordDict;
+      fetch("/get_controlconfig_by_id?project_id=" + query.get("id") + '&control_id=' + control_id)
+          .then(res => res.json())
+          .then(
+              (result) => {
+
+                newSet[control_id] = result.control;
+                newKeywordDictRender[control_id] = '';
+                console.log("newSet", newSet)
+                this.setState({
+                  select: newSet,
+                  newKeywordDict: newKeywordDictRender
+                });
+              }
+          )
     }
-    else {
-      var newSet = this.state.select;
-      newSet.delete(parseInt(target.getAttribute("cid")));
-      this.setState({
-        select: newSet
-      });
-    }
+    // } else {
+    //   let newSet = this.state.select;
+    //   delete newSet[control_id];
+    //   this.setState({
+    //     select: newSet
+    //   });
+    // }
   }
 
   setPage = (newPage) => {
@@ -337,15 +360,46 @@ class Control extends React.Component {
   }
 
   deleteClick = ({ target }) => {
-    var newSet = this.state.select;
-    newSet.delete(parseInt(target.getAttribute("cid")));
+    let newSet = this.state.select;
+    delete newSet[parseInt(target.getAttribute("cid"))];
     this.setState({
       select: newSet
     });
   }
 
+  addKeyword = (id) => {
+    console.log('addkeyword id: ', id)
+    console.log('new keyword dict: ', this.state.newKeywordDict)
+    let keyword = this.state.newKeywordDict[id] || '';
+    if (keyword == '') {
+      return;
+    }
+    let newSet = this.state.select;
+    let keywords = newSet[id].keywords;
+    if (keywords.length > 0) {
+      keywords += ',';
+    }
+    keywords += keyword;
+    newSet[id].keywords = keywords;
+    console.log('addkeyword ', newSet[id]);
+    let newKeywordDictRender = this.state.newKeywordDict;
+    newKeywordDictRender[id] = ''
+    this.setState({
+      select: newSet,
+      newKeywordDict: newKeywordDictRender
+    })
+  };
+
+  updateInputKeyword = ({ target }) => {
+    let newKeywordDictRender = this.state.newKeywordDict;
+    newKeywordDictRender[parseInt(target.getAttribute("cid"))] = target.value;
+    this.setState({
+        newKeywordDict: newKeywordDictRender
+    });
+  }
+
   render() {
-    const { error, isLoaded, items, page, searchPage, select } = this.state;
+    const { error, isLoaded, items, page, searchPage, select, newKeywordDict } = this.state;
     let list;
     if (isLoaded) {
       list =
@@ -463,12 +517,22 @@ class Control extends React.Component {
               <div class="mb-2">
                 <p>List of controls</p>
                 <ul class="list-group">
-                  {Array.from(select).map(item => (
+                  {Object.keys(select).map((control_id) => (
                     <li class="list-group-item">
                       <div class="custom-control">
-                        <label id={"label_" + item}>{this.getControlById(item)}</label>
-                        <button type="botton" class="btn btn-primary float-right"
-                          cid={item} onClick={this.deleteClick.bind(this)}>delete</button>
+                        <label id={"label_" + control_id}>{select[control_id].cid}, {select[control_id].title}</label>
+                        <button type="button" class="btn btn-primary float-right"
+                          cid={control_id} onClick={this.deleteClick.bind(this)}>delete</button>
+                        <div class="keywords">keywords: {select[control_id].keywords}</div>
+
+
+                        <label>
+                          new keyword:
+                          <input type="text" cid={control_id} value={this.state.newKeywordDict[control_id]} onChange={this.updateInputKeyword}/>
+                        </label>
+                        <button type="button" onClick={this.addKeyword.bind(this, control_id)}>+</button>
+
+
                       </div>
                     </li>
                   ))}
