@@ -117,9 +117,13 @@ def get_project_controlls(request):
     content = dict()
 
     project = Project.objects.get(user=request.user, id=request.GET.get('id'))
-
-    content['controls'] = list(project.control.all().values('id'))
-    # print(list(project.control.all().values('id')))
+    controls = list(Control.objects.filter(controlconfigure__in=ControlConfigure.objects.filter(project=project)).values("cid", "id", "title"))
+    content['controls'] = []
+    for control in controls:
+        control_obj = get_object_or_404(Control, id=control['id'])
+        keywords = ','.join(ControlConfigure.objects.filter(project=project, control=control_obj).first().keywords)
+        control['keywords'] = keywords
+        content['controls'].append(control)
 
     return JsonResponse(content)
 
@@ -132,54 +136,43 @@ def create_project_action(request):
         print(content['form'])
         return render(request, 'cas/new_project.html', content)
 
-
-    #### Example: create new project ####
     project = Project(name=request.POST['name'], description=request.POST['description'], user=request.user,
                        created_time=datetime.datetime.now(), updated_time=datetime.datetime.now())
     project.save()
-    #### ####
-
-    #### Example: configure control of project ####
-    # control1 = Control.objects.get(cid='ac-1')
-    # control2 = Control.objects.get(cid='ac-2')
-    # project=Project.objects.get(name='project1')
-    # ## add item into manyToMany field
-    # project.control.add(control1)
-    # project.control.add(control2)
-    # project.save()
-    #### ####
 
     return redirect('/config_project?id='+str(project.id))
 
-    # return render(request, 'cas/new_project.html', content)
 
-# @csrf_exempt
 @login_required
 def configure_control_action(request):
     # json
     data = json.loads(request.body.decode("utf-8"))
-    # else
-    # data = request.POST
 
     project_id = data.get("id", 0)
+    controlconfigs = data.get("controlconfigs", [])
 
     project = get_object_or_404(Project, pk=project_id)
-    project.control.clear()
+    ControlConfigure.objects.filter(project=project).delete()
 
-    cids = data.get("cids", [])
-    for cid in cids:
-        control = get_object_or_404(Control, id=cid)
-        project.control.add(control)
-    project.save()
     content = dict()
     content['id'] = project_id
-    content['controls'] = list(project.control.all().values())
+    content['controls'] = []
+    ids = []
+
+    for config in controlconfigs:
+        id = config['id']
+        ids.append(id)
+        keywords = config['keywords']
+        control = get_object_or_404(Control, id=id)
+        ControlConfigure.objects.create(project=project, control=control, keywords=keywords)
+
+    content['controls'] = list(Control.objects.filter(id__in=ids).values())
     return JsonResponse(content)
 
 
 @login_required
 def get_control_by_id_action(request):
-    content = {}
+    content = dict()
 
     control = Control.objects.filter(id=request.GET.get('id')).\
         order_by('id').values('cid', 'title', 'id', 'gid', 'parameters', 'properties', 'classinfo', 'parts')
@@ -188,9 +181,7 @@ def get_control_by_id_action(request):
 
 @login_required
 def get_control_list_action(request):
-    content = {}
-    # content['user'] = request.user
-
+    content = dict()
     control_list = Control.objects.order_by('id').values('cid', 'title', 'id', 'gid', 'parameters', 'properties', 'classinfo', 'parts')
     paginator = Paginator(control_list, 10)
     page = request.GET.get('page')
@@ -202,8 +193,7 @@ def get_control_list_action(request):
 
 @login_required
 def search_control_list_action(request):
-    content = {}
-    # content['user'] = request.user
+    content = dict()
     keyword = request.GET.get('key')
 
     control_list = Control.objects.filter(Q(title__icontains=keyword) | Q(cid__icontains=keyword)).\
@@ -216,7 +206,7 @@ def search_control_list_action(request):
     content['controls'] = list(controls)
     return JsonResponse(content)
 
-  
+
 @login_required
 def search_projects_action(request):
     content = dict()
@@ -321,6 +311,25 @@ def simple_upload(request):
     else:
         message = "No file."
     return HttpResponse(message)
+
+@login_required
+def get_controlconfig_by_id(request):
+    content = dict()
+    project_id = request.GET.get('project_id')
+    control_id = request.GET.get('control_id')
+    project_obj = get_object_or_404(Project, id=project_id)
+    control_obj = get_object_or_404(Control, id=control_id)
+    try:
+        controlconfig_obj = ControlConfigure.objects.get(project=project_obj, control=control_obj)
+        keywords = ','.join(controlconfig_obj.keywords)
+        print("controlconfig_obj", controlconfig_obj)
+        print("keywords", keywords)
+        content['control'] = {'id': control_id, 'title': control_obj.title, 'cid': control_obj.cid,
+                              'keywords': keywords}
+    except ControlConfigure.DoesNotExist:
+        content['control'] = {'id': control_id, 'title': control_obj.title, 'cid': control_obj.cid,
+                              'keywords': ''}
+    return JsonResponse(content)
 
 
 

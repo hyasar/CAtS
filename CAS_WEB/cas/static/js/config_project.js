@@ -19,6 +19,108 @@ function getCookie(cname) {
   return "";
 }
 
+class Description extends React.Component {
+  key2TR(key, value) {
+    return (<tr>
+      <td scope="col">{key}</td>
+      <td scope="col">{value}</td>
+    </tr>)
+  }
+
+  array2TR(array, key, id) {
+    if (key != "parts")
+      return (
+        <tr>
+          <td colspan={2}>
+            <a data-toggle="collapse" data-target={"#child-collapese-array" + key + id} href="#">{key}</a>
+            <div id={"child-collapese-array" + key + id} class="collapse">
+              <table class="table">
+                <thead>
+                </thead>
+                <tbody>
+                  {
+                    array.map((item) => {
+                      if (typeof (item) != "string")
+                        return (<tr><td>{JSON.stringify(item)}</td></tr>)
+                      else
+                        return (<tr><td>{item}</td></tr>)
+                    })
+                  }
+                </tbody>
+              </table>
+            </div>
+          </td>
+        </tr>
+      )
+  }
+
+  replaceDot(str) {
+    if (typeof str != "string") {
+      return str;
+    }
+    return str.toString().replace(new RegExp("\\.", 'g'), "_")
+  }
+
+  render() {
+    return (
+      <table class="table">
+        <thead>
+        </thead>
+        <tbody>
+          {this.props.parts.map(
+            part => (
+              <tr>
+                <td>
+                  <a data-toggle="collapse" data-target={"#child-collapese" + this.replaceDot(part.id)} href="#">{part.id ? part.id : part.name}</a>
+                  <div id={"child-collapese" + this.replaceDot(part.id)} class="collapse">
+                    <table class="table">
+                      <thead>
+                      </thead>
+                      <tbody>
+                        {
+                          Object.keys(part).map((key) => { // map all the key-value pairs with string value
+                            if (typeof part[key] == "string")
+                              return this.key2TR(key, part[key])
+                          })
+                        }
+                        {
+                          Object.keys(part).map((key) => { // map all the key-value pairs with array value (except parts)
+                            if (Array.isArray(part[key]))
+                              return this.array2TR(part[key], key, this.replaceDot(part.id))
+                          })
+                        }
+                        {
+                          Object.keys(part).map((key) => { // map the child parts
+                            if (key == "parts")
+                              return (
+                                <tr>
+                                  <td colspan={2}>
+                                    <div>
+                                      <a data-toggle="collapse" data-target={"#collapseControls-" + this.replaceDot(part.id)} href="#">parts</a>
+                                    </div>
+                                    <div class="collapse" id={"collapseControls-" + this.replaceDot(part.id)}>
+                                      <div class="card card-body">
+                                        <Description parts={part[key]} />
+                                      </div>
+                                    </div>
+                                  </td>
+                                </tr>
+                              )
+                          })
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                </td>
+              </tr>
+            )
+          )}
+        </tbody>
+      </table>
+    );
+  }
+}
+
 class Control extends React.Component {
   constructor(props) {
     super(props);
@@ -27,16 +129,57 @@ class Control extends React.Component {
       isLoaded: false,
       items: [],
       page: 1,
-      select: new Set(),
+      select: {},
       search: false,
-      searchPage: 1
+      searchPage: 1,
+      newKeywordDict: {}
     };
   }
 
   componentDidMount() {
-    // this.loadControls.bind(this);
     this.loadControls();
     this.loadSelectedControls();
+  }
+
+  key2TR(key, value) {
+    return (<tr>
+      <td scope="col">{key}</td>
+      <td scope="col">{value}</td>
+    </tr>)
+  }
+
+  array2TR(array, key, id) {
+    if (key != "parts")
+      return (
+        <tr>
+          <td colspan={2}>
+            <a data-toggle="collapse" data-target={"#child-collapese-array" + key + id} href="#">{key}</a>
+            <div id={"child-collapese-array" + key + id} class="collapse">
+              <table class="table">
+                <thead>
+                </thead>
+                <tbody>
+                  {
+                    array.map((item) => {
+                      if (typeof (item) != "string")
+                        return (<tr><td>{JSON.stringify(item)}</td></tr>)
+                      else
+                        return (<tr><td>{item}</td></tr>)
+                    })
+                  }
+                </tbody>
+              </table>
+            </div>
+          </td>
+        </tr>
+      )
+  }
+
+  replaceDot(str) {
+    if (typeof str != "string") {
+      return str;
+    }
+    return str.toString().replace(new RegExp("\\.", 'g'), "_")
   }
 
   loadControls = () => {
@@ -96,9 +239,8 @@ class Control extends React.Component {
       .then(
         (result) => {
           let control = result.control[0];
-          console.log(control);
           let label = control.cid + ", " + control.title;
-          $("#label_"+id).html(label);
+          $("#label_" + id).html(label);
         },
         (error) => {
           return ("query error");
@@ -111,12 +253,12 @@ class Control extends React.Component {
       .then(res => res.json())
       .then(
         (result) => {
-          var selectedSet = new Set();
+          var selectedDict = {};
           for (var c in result.controls) {
-            selectedSet.add(result.controls[c].id);
+            selectedDict[result.controls[c].id] = result.controls[c];
           }
           this.setState({
-            select: selectedSet
+            select: selectedDict
           });
         },
         (error) => {
@@ -129,6 +271,14 @@ class Control extends React.Component {
   }
 
   commitControls = () => {
+    let controlconfigs = []
+    let selected = this.state.select
+    for (let id in selected) {
+      controlconfigs.push({'id': id, 'keywords': selected[id].keywords})
+    }
+    console.log('select ', this.state.select)
+    console.log('controlconfigs ', controlconfigs)
+
     const csrfToken = getCookie('csrftoken');
     $("#updateControls").html("updating");
     $("#updateControls").attr("disabled", true);
@@ -141,7 +291,8 @@ class Control extends React.Component {
       },
       body: JSON.stringify({
         id: query.get('id'),
-        cids: Array.from(this.state.select),
+        // cids: Array.from(this.state.select),
+        controlconfigs: controlconfigs
       })
     })
       .then(res => res.json())
@@ -160,18 +311,32 @@ class Control extends React.Component {
   }
 
   checkboxClick = ({ target }) => {
+    let control_id = parseInt(target.getAttribute("cid"));
     if (target.checked == true) {
-      this.setState({
-        select: this.state.select.add(parseInt(target.getAttribute("cid")))
-      });
+      let newSet = this.state.select;
+      let newKeywordDictRender = this.state.newKeywordDict;
+      fetch("/get_controlconfig_by_id?project_id=" + query.get("id") + '&control_id=' + control_id)
+          .then(res => res.json())
+          .then(
+              (result) => {
+
+                newSet[control_id] = result.control;
+                newKeywordDictRender[control_id] = '';
+                console.log("newSet", newSet)
+                this.setState({
+                  select: newSet,
+                  newKeywordDict: newKeywordDictRender
+                });
+              }
+          )
     }
-    else {
-      var newSet = this.state.select;
-      newSet.delete(parseInt(target.getAttribute("cid")));
-      this.setState({
-        select: newSet
-      });
-    }
+    // } else {
+    //   let newSet = this.state.select;
+    //   delete newSet[control_id];
+    //   this.setState({
+    //     select: newSet
+    //   });
+    // }
   }
 
   setPage = (newPage) => {
@@ -195,15 +360,46 @@ class Control extends React.Component {
   }
 
   deleteClick = ({ target }) => {
-    var newSet = this.state.select;
-    newSet.delete(parseInt(target.getAttribute("cid")));
+    let newSet = this.state.select;
+    delete newSet[parseInt(target.getAttribute("cid"))];
     this.setState({
       select: newSet
     });
   }
 
+  addKeyword = (id) => {
+    console.log('addkeyword id: ', id)
+    console.log('new keyword dict: ', this.state.newKeywordDict)
+    let keyword = this.state.newKeywordDict[id] || '';
+    if (keyword == '') {
+      return;
+    }
+    let newSet = this.state.select;
+    let keywords = newSet[id].keywords;
+    if (keywords.length > 0) {
+      keywords += ',';
+    }
+    keywords += keyword;
+    newSet[id].keywords = keywords;
+    console.log('addkeyword ', newSet[id]);
+    let newKeywordDictRender = this.state.newKeywordDict;
+    newKeywordDictRender[id] = ''
+    this.setState({
+      select: newSet,
+      newKeywordDict: newKeywordDictRender
+    })
+  };
+
+  updateInputKeyword = ({ target }) => {
+    let newKeywordDictRender = this.state.newKeywordDict;
+    newKeywordDictRender[parseInt(target.getAttribute("cid"))] = target.value;
+    this.setState({
+        newKeywordDict: newKeywordDictRender
+    });
+  }
+
   render() {
-    const { error, isLoaded, items, page, searchPage, select } = this.state;
+    const { error, isLoaded, items, page, searchPage, select, newKeywordDict } = this.state;
     let list;
     if (isLoaded) {
       list =
@@ -215,30 +411,45 @@ class Control extends React.Component {
                   <input type="checkbox" class="custom-control-input" id={item.id} cid={item.id}
                     onClick={this.checkboxClick.bind(this)} />
                   <label class="custom-control-label" for={item.id}>{item.cid}，{item.title}</label>
-                  <div class="btn-group float-right">
-                    <button class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" />
-                    <div class="dropdown-menu dropdown-menu-right">
-                      <table class="table">
-                        <tbody>
-                          <tr>
-                            <th>Classinfo</th>
-                            <td>{item.classinfo}</td>
-                          </tr>
-                          <tr>
-                            <th>Description</th>
-                            <td>
-                              {
-                                item.parts ?
-                                  item.parts[0].prose
-                                  :
-                                  "NULL"
-                              }
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-
-                    </div>
+                  <a class="btn dropdown-toggle float-right" id={"get-controls-" + item.id} data-toggle="collapse" href={"#collapseControls-" + item.id}
+                    role="button" aria-expanded="false" aria-controls="collapseExample" />
+                </div>
+                <div class="collapse" id={"collapseControls-" + item.id}>
+                  <div class="card card-body">
+                    <table class="table">
+                      <thead></thead>
+                      <tbody>
+                        {
+                          Object.keys(item).map((key) => { // map all the key-value pairs with string value
+                            if (typeof item[key] == "string")
+                              return this.key2TR(key, item[key])
+                          })
+                        }
+                        {
+                          Object.keys(item).map((key) => { // map all the key-value pairs with array value (except parts)
+                            if (Array.isArray(item[key]))
+                              return this.array2TR(item[key], key, this.replaceDot(item.id))
+                          })
+                        }
+                        {item.parts ?
+                          (
+                            <tr>
+                              <td colspan={2}>
+                                <div>
+                                  <a data-toggle="collapse" data-target={"#collapseControlsParts-" + this.replaceDot(item.id)} href="#">parts</a>
+                                </div>
+                                <div class="collapse" id={"collapseControlsParts-" + this.replaceDot(item.id)}>
+                                  <div class="card card-body">
+                                    <Description parts={item.parts} />
+                                  </div>
+                                </div>
+                              </td>
+                            </tr>
+                          )
+                          :
+                          (<span>NULL</span>)}
+                      </tbody>
+                    </table>
                   </div>
                 </div>
               </li>
@@ -306,12 +517,22 @@ class Control extends React.Component {
               <div class="mb-2">
                 <p>List of controls</p>
                 <ul class="list-group">
-                  {Array.from(select).map(item => (
+                  {Object.keys(select).map((control_id) => (
                     <li class="list-group-item">
                       <div class="custom-control">
-                        <label id={"label_"+item}>{this.getControlById(item)}</label>
-                        <button type="botton" class="btn btn-primary float-right"
-                          cid={item} onClick={this.deleteClick.bind(this)}>delete</button>
+                        <label id={"label_" + control_id}>{select[control_id].cid}, {select[control_id].title}</label>
+                        <button type="button" class="btn btn-primary float-right"
+                          cid={control_id} onClick={this.deleteClick.bind(this)}>delete</button>
+                        <div class="keywords">keywords: {select[control_id].keywords}</div>
+
+
+                        <label>
+                          new keyword:
+                          <input type="text" cid={control_id} value={this.state.newKeywordDict[control_id]} onChange={this.updateInputKeyword}/>
+                        </label>
+                        <button type="button" onClick={this.addKeyword.bind(this, control_id)}>+</button>
+
+
                       </div>
                     </li>
                   ))}
