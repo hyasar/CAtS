@@ -1,5 +1,6 @@
 from ..models import *
 import re
+from django.core import serializers
 
 COMA_SPACE = re.compile('[,|\\s|_]')
 REX = re.compile('[^a-z0-9]+')
@@ -27,19 +28,18 @@ def parseReport(csv_file, project, report_version):
             temp = REX.sub("", j.lower())
             rule.add(temp)
 
-        issue = Issue(report=report, created_time=created_time, \
-                      updated_time=updated_time, severity=severity, \
-                      status=status, cwe=cwe, rule=rule, tool=tool, \
-                      location=location, element=element, path=path, \
-                      line=line)
+        issue = CSVIssue(report=report, created_time=created_time, \
+                         updated_time=updated_time, severity=severity, \
+                         status=status, cwe=cwe, rule=rule, tool=tool, \
+                         location=location, element=element, path=path, \
+                         line=line)
         issue.save()
 
     return report
 
 
-def searchIssue(ControlConfigure, version):
-    target_report = Report.objects.filter(project=ControlConfigure.project, version=version)
-    all_issues = Issue.objects.filter(report=target_report)
+def searchIssue(ControlConfigure, report):
+    all_issues = CSVIssue.objects.filter(report=report)
 
     issues = []
     for issue in all_issues:
@@ -48,8 +48,8 @@ def searchIssue(ControlConfigure, version):
             if word in ControlConfigure.keywords:
                 count += 1
             if count == 3:
-                issue.controls.add(ControlConfigure.control)
-                issues.append(issue)
+                issue_json = serializers.serialize('json', issue)
+                issues.append(issue_json)
                 break
 
     return issues
