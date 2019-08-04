@@ -11,10 +11,16 @@
     tags they use. Views are always organized according to its owner class,
     so it should be straightforward to find them.
   -->
-  <f:section title="Say Meow Publisher">
-    <f:entry title="French" field="useFrench"
-      description="Check if we should say hello in French">
-      <f:checkbox />
+  <f:section title="CAtS Plugin">
+    <!--<f:entry title="French" field="useFrench"-->
+      <!--description="Check if we should say hello in French">-->
+      <!--<f:checkbox />-->
+    <!--</f:entry>-->
+    <f:entry title="CAS Host URL" field="casUrl">
+      <f:textbox />
+    </f:entry>
+    <f:entry title="CAS Port" field="casPort">
+      <f:textbox />
     </f:entry>
   </f:section>
 </j:jelly>

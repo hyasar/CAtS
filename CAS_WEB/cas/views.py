@@ -12,7 +12,7 @@ from django.db.models import Q
 from os.path import expanduser, join
 from django.core.files.storage import FileSystemStorage
 
-
+from cas.utils.xml_parser import *
 from .forms import *
 from .models import *
 
@@ -60,7 +60,7 @@ def register_action(request):
 
     # Validates the form.
     if not form.is_valid():
-        print("Errors:"+form.non_field_errors())
+        print("Errors:" + form.non_field_errors())
         return render(request, 'cas/register.html', context)
 
     # At this point, the form data is valid.  Register and login the user.
@@ -117,7 +117,10 @@ def get_project_controlls(request):
     content = dict()
 
     project = Project.objects.get(user=request.user, id=request.GET.get('id'))
-    controls = list(Control.objects.filter(controlconfigure__in=ControlConfigure.objects.filter(project=project)).values("cid", "id", "title"))
+    controls = list(
+        Control.objects.filter(controlconfigure__in=ControlConfigure.objects.filter(project=project)).values("cid",
+                                                                                                             "id",
+                                                                                                             "title"))
     content['controls'] = []
     for control in controls:
         control_obj = get_object_or_404(Control, id=control['id'])
@@ -126,6 +129,7 @@ def get_project_controlls(request):
         content['controls'].append(control)
 
     return JsonResponse(content)
+
 
 @login_required
 def create_project_action(request):
@@ -137,10 +141,10 @@ def create_project_action(request):
         return render(request, 'cas/new_project.html', content)
 
     project = Project(name=request.POST['name'], description=request.POST['description'], user=request.user,
-                       created_time=datetime.datetime.now(), updated_time=datetime.datetime.now())
+                      created_time=datetime.datetime.now(), updated_time=datetime.datetime.now())
     project.save()
 
-    return redirect('/config_project?id='+str(project.id))
+    return redirect('/config_project?id=' + str(project.id))
 
 
 @login_required
@@ -174,15 +178,17 @@ def configure_control_action(request):
 def get_control_by_id_action(request):
     content = dict()
 
-    control = Control.objects.filter(id=request.GET.get('id')).\
+    control = Control.objects.filter(id=request.GET.get('id')). \
         order_by('id').values('cid', 'title', 'id', 'gid', 'parameters', 'properties', 'classinfo', 'parts')
     content['control'] = list(control)
     return JsonResponse(content)
 
+
 @login_required
 def get_control_list_action(request):
     content = dict()
-    control_list = Control.objects.order_by('id').values('cid', 'title', 'id', 'gid', 'parameters', 'properties', 'classinfo', 'parts')
+    control_list = Control.objects.order_by('id').values('cid', 'title', 'id', 'gid', 'parameters', 'properties',
+                                                         'classinfo', 'parts')
     paginator = Paginator(control_list, 10)
     page = request.GET.get('page')
     if not page:
@@ -191,12 +197,13 @@ def get_control_list_action(request):
     content['controls'] = list(controls)
     return JsonResponse(content)
 
+
 @login_required
 def search_control_list_action(request):
     content = dict()
     keyword = request.GET.get('key')
 
-    control_list = Control.objects.filter(Q(title__icontains=keyword) | Q(cid__icontains=keyword)).\
+    control_list = Control.objects.filter(Q(title__icontains=keyword) | Q(cid__icontains=keyword)). \
         order_by('id').values('cid', 'title', 'id', 'gid', 'parameters', 'properties', 'classinfo', 'parts')
     paginator = Paginator(control_list, 5)
     page = request.GET.get('page')
@@ -275,7 +282,7 @@ def delete_project(request):
 
     project_id = request.POST['project_id']
 
-    project = get_object_or_404(Project, pk=project_id, user = request.user)
+    project = get_object_or_404(Project, pk=project_id, user=request.user)
     content = dict()
 
     if project:
@@ -289,28 +296,35 @@ def delete_project(request):
 @login_required
 def project_dashboard(request):
     project_id = request.GET.get('id')
-    project = get_object_or_404(Project, pk=project_id, user = request.user)
+    project = get_object_or_404(Project, pk=project_id, user=request.user)
     content = dict()
     content['project'] = project
 
     return render(request, 'cas/project_dashboard.html', content)
 
+
 @csrf_exempt
-def simple_upload(request):
-    if request.method == 'POST' and request.FILES['myfile']:
-        myfile = request.FILES['myfile']
+def parse_testing_report(request):
+    if request.method == 'POST' and request.FILES['testingReport']:
+        username = request.POST['username']
+        project_id = request.POST['projectId']
+        build_number = request.POST['buildNumber']
 
-        save_path = 'Files'
+        project = get_object_or_404(Project, pk=project_id)
+        user = User.objects.get(username=username)
+        if user != project.user:
+            print(user)
+            print(project.user)
+            message = "This user doesn't own this project"
+            return HttpResponse(message)
 
-        myfile = request.FILES['myfile']
-        fs = FileSystemStorage(location=save_path)  # defaults to   MEDIA_ROOT
-        filename = fs.save(myfile.name, myfile)
-        file_url = fs.url(filename)
-
-        message = file_url
+        testing_report = request.FILES['testingReport']
+        parseReportXML(testing_report, project, build_number)
+        message = "Report parsed successfully"
     else:
         message = "No file."
     return HttpResponse(message)
+
 
 @login_required
 def get_controlconfig_by_id(request):
@@ -330,10 +344,3 @@ def get_controlconfig_by_id(request):
         content['control'] = {'id': control_id, 'title': control_obj.title, 'cid': control_obj.cid,
                               'keywords': ''}
     return JsonResponse(content)
-
-
-
-
-
-
-

@@ -36,7 +36,7 @@ urlpatterns = [
     path('delete', views.delete_project, name='delete_project'),
     path('setcontrols', views.configure_control_action, name='configure_controls'),
     path('project_dashboard', views.project_dashboard, name='project_dashboard'),
-    path('get_files', views.simple_upload, name='get_files'),
+    path('parse_report', views.parse_testing_report, name='parse_report'),
     path('get_controlconfig_by_id', views.get_controlconfig_by_id, name='get_controlconfig_by_id'),
     # path('get_keyword', )
 
