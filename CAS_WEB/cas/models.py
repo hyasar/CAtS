@@ -39,10 +39,12 @@ class Project(models.Model):
         # return 'Project(id=' + str(self.id) + ', name=' + str(self.name) + ')'
         return self.name
 
+
 class Report(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     version = models.CharField(max_length=32)
     date = models.DateTimeField(auto_now=True)
+
 
 class CSVIssue(models.Model):
     report = models.ForeignKey(Report, on_delete=models.CASCADE)
@@ -60,6 +62,7 @@ class CSVIssue(models.Model):
     path = models.TextField()
     line = models.IntegerField()
 
+
 class XMLIssue(models.Model):
     report = models.ForeignKey(Report, on_delete=models.CASCADE)
     created_time = models.DateTimeField(auto_now=False)
@@ -72,6 +75,7 @@ class XMLIssue(models.Model):
     rule = SetTextField(
         base_field=models.CharField(max_length=32),
     )
+
 
 class ControlConfigure(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
