@@ -12,8 +12,8 @@ def parseReportXML(file, project, report_version):
     tree = ET.parse(file)
     root = tree.getroot()
 
-    date_info = root.attrib['package_version']
-    date = date_info[13:23]
+    # date_info = root.attrib['package_version']
+    # date = date_info[13:23]
 
     for bug in root:
 
@@ -26,7 +26,7 @@ def parseReportXML(file, project, report_version):
                                          location.find('StartLine'), location.find('EndLine')
 
         rule = message.text.strip('.').split(' ')
-        issue = XMLIssue(report=report, created_time=date, sourcefile=sourcefile.text, \
+        issue = XMLIssue(report=report, sourcefile=sourcefile.text, \
                          startLine=startLine.text, endLine=endLine.text, group=group.text, code=code.text, \
                          severity=severity.text, rule=rule)
         issue.save()

@@ -62,7 +62,7 @@ class CSVIssue(models.Model):
 
 class XMLIssue(models.Model):
     report = models.ForeignKey(Report, on_delete=models.CASCADE)
-    created_time = models.DateTimeField(auto_now=False)
+    created_time = models.DateTimeField(auto_now=True)
     sourcefile = models.TextField()
     startLine = models.IntegerField()
     endLine = models.IntegerField()
