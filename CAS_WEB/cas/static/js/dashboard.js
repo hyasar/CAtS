@@ -18,33 +18,26 @@ function getCookie(cname) {
 }
 
 class Dashboard extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {
-      reports: [],
-      selctedReport: null
+      report_id: this.props.report_id
+      issues: []
     };
   }
 
-  componentDidMount() {
-    this.loadReports();
-    this.loadSelectedControls();
-  }
-
-  loadReports = () => {
-    fetch("/get_reports?id=" + query.get('id'))
+  loadIssues = () => {
+    fetch("/get_issues?report_id=" + this.report_id)
       .then(res => res.json())
       .then(
         (result) => {
           this.setState({
-            isLoaded: true,
-            items: result.controls
+            issues: result.issues,
           });
-          console.log(result.controls)
         },
         (error) => {
           this.setState({
-            isLoaded: true,
             error
           });
         }
@@ -76,7 +69,41 @@ class Dashboard extends React.Component {
 
 class Reports extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      reports: [],
+      selctedReport: null
+    };
+  }
+
+  componentDidMount() {
+    this.loadReports();
+  }
+
+  loadReports = () => {
+    fetch("/get_reports?id=" + query.get('id'))
+      .then(res => res.json())
+      .then(
+        (result) => {
+          this.setState({
+            reports: result.reports,
+          });
+        },
+        (error) => {
+          this.setState({
+            error
+          });
+        }
+      ).then(res =>
+          this.selctedReport = this.report[0] || null
+      )
+  }
+
+
   render() {
+    const { reports, selctedReport } = this.state
+
     return (
       <div className="row justify-content-between mt-3">
         <div className="card col-4">
@@ -84,21 +111,19 @@ class Reports extends React.Component {
             <p className="card-title">Test History</p>
             <table className="table">
               <tbody>
-              <tr>
-                <td><a href="#">Test 1</a></td>
-              </tr>
-              <tr>
-                <td><a href="#">Test 2</a></td>
-              </tr>
-              <tr>
-                <td><a href="#">Test 3</a></td>
-              </tr>
+              {
+                reports.map(report => (
+                  <tr>
+                    <td><a href="#">Test-{report.date}</a></td>
+                  </tr>)
+                )
+              }
               </tbody>
             </table>
           </div>
         </div>
         <div className="card col-8">
-          <Dashboard />
+          <Dashboard report_id={selctedReport.id}/>
         </div>
       </div>
     );
