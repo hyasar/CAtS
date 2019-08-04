@@ -1,5 +1,6 @@
 from ..models import *
 from xml.etree import ElementTree as ET
+from django.core import serializers
 
 def parseReportXML(file, project, report_version):
 
@@ -19,7 +20,7 @@ def parseReportXML(file, project, report_version):
                                          location.find('StartLine'), location.find('EndLine')
 
         rule = message.text.strip('.').split(' ')
-        issue = XMLIssue(report=report, version=report_version, created_time=date, sourcefile=sourcefile.text, \
+        issue = XMLIssue(report=report, created_time=date, sourcefile=sourcefile.text, \
                          startLine=startLine.text, endLine=endLine.text, group=group.text, code=code.text, \
                          severity=severity.text, rule=rule)
         issue.save()
@@ -27,9 +28,9 @@ def parseReportXML(file, project, report_version):
     return report
 
 
-def searchIssueXML(ControlConfigure, version):
-    target_report = Report.objects.filter(project=ControlConfigure.project, version=version)
-    all_issues = Issue.objects.filter(report=target_report)
+def searchIssueXML(ControlConfigure, report):
+
+    all_issues = XMLIssue.objects.filter(report=report)
 
     issues = []
     for issue in all_issues:
@@ -38,8 +39,8 @@ def searchIssueXML(ControlConfigure, version):
             if word in ControlConfigure.keywords:
                 count += 1
             if count == 3:
-                issue.controls.add(ControlConfigure.control)
-                issues.append(issue)
+                issue_json = serializers.serialize('json', issue)
+                issues.append(issue_json)
                 break
 
     return issues
