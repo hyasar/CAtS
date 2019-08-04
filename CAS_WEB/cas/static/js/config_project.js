@@ -1,5 +1,3 @@
-// var selected = new Set()
-
 const url = new URL(window.location.href);
 const query = new URLSearchParams(url.search);
 
