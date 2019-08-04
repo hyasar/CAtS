@@ -336,11 +336,49 @@ def get_controlconfig_by_id(request):
     try:
         controlconfig_obj = ControlConfigure.objects.get(project=project_obj, control=control_obj)
         keywords = ','.join(controlconfig_obj.keywords)
-        print("controlconfig_obj", controlconfig_obj)
-        print("keywords", keywords)
         content['control'] = {'id': control_id, 'title': control_obj.title, 'cid': control_obj.cid,
                               'keywords': keywords}
     except ControlConfigure.DoesNotExist:
         content['control'] = {'id': control_id, 'title': control_obj.title, 'cid': control_obj.cid,
                               'keywords': ''}
     return JsonResponse(content)
+
+
+@login_required
+def get_reports(request):
+    content = dict()
+    project_id = request.GET.get('id')
+    project_obj = get_object_or_404(Project, id=project_id)
+    print(project_obj)
+    reports = list(Report.objects.filter(project=project_obj).order_by('version').values())
+    print(reports)
+    content['reports'] = reports
+    return JsonResponse(content)
+
+
+@login_required
+def get_issues(request):
+    report_id = request.GET.get('report_id')
+    project_id = request.GET.get('project_id')
+    if report_id == -1:
+        issues = {}
+        return issues
+
+    report_obj = get_object_or_404(Report, id=report_id)
+    project_obj = get_object_or_404(Project, id=project_id)
+
+    try:
+        controlconfigs = ControlConfigure.objects.filter(project=project_obj)
+        issues = {}
+        for controlconfig in controlconfigs:
+            issues_tmp = searchIssueXML(controlconfig, report_obj)
+            issues[controlconfig.control.cid] = issues_tmp
+    except ControlConfigure.DoesNotExist:
+        issues = {}
+    content = dict()
+    content['issues'] = issues
+    return JsonResponse(content)
+
+
+
+

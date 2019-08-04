@@ -3,30 +3,34 @@
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="dashboard" content="Project dashboard">
+    <title mb-3>Project Dashboard</title>
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
-          integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+        integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
 
     <!-- Customized stylesheet -->
-    {% load staticfiles %}
-    <link href="{% static '/css/app.css' %}" rel="stylesheet" type="text/css">
-
+    <link rel="stylesheet" href="static/css/app.css" type="text/css">
+    <link rel="stylesheet" href="static/css/dashboard.css" type="text/css">
+    <link rel="stylesheet" href="static/css/projectConfigure.css" type="txet/css">
 
     <!-- Load react -->
     <script src="https://unpkg.com/react@16/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js" crossorigin></script>
 
     <script src="static/js/jquery.min.js"></script>
     <script src="static/js/popper.min.js"></script>
     <script src="static/js/bootstrap.min.js"></script>
 
-    <title mb-3>Project Dashboard</title>
+    <script type="text/jsx" src="static/js/dashboard.js"></script>
+
+
 </head>
 <body>
 
@@ -67,51 +71,12 @@
             <div class="card col-12">
                 <div class="card-body">
                     <p class="card-title mb-3">{{ project.name }}</p>
-                    <h4># It's a dashboard prototype under development</h4>
                     <p class="card-text mt-3">{{ project.description }}</p>
                     <p class="font-weight-light card-date mb-3 pb-0">{{ project.updated_time }}</p>
                 </div>
             </div>
         </div>
-        <div class="row justify-content-between mt-3">
-            <div class="card col-4">
-                <div class="card-body">
-                    <p class="card-title">Test History</p>
-                    <table class="table">
-                        <tbody>
-                        <tr><td><a href="#">Test 1</a></td></tr>
-                        <tr><td><a href="#">Test 2</a></td></tr>
-                        <tr><td><a href="#">Test 3</a></td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="card col-8">
-                <div class="card-body">
-                    <p class="card-title">Test Report</p>
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th>Control</th>
-                                <th>Message</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td>ac-1</td>
-                                <td>ldkjsfoeiw</td>
-                            </tr>
-                            </tbody>
-                        </table>
-
-
-
-                </div>
-            </div>
-            <div class="col-8">
-
-            </div>
-        </div>
+        <div id="reports"></div>
     </div>
 </section>
 
