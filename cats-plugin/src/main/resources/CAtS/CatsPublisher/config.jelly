@@ -15,7 +15,7 @@
   <f:entry title="Project ID" field="projectId">
     <f:textbox />
   </f:entry>
-  <f:entry title="Output Directory Name:" field="outputDir">
+  <f:entry title="Assessment Output Directory" field="outputDir">
     <f:textbox default="Assessment_Output"/>
   </f:entry>
 </j:jelly>

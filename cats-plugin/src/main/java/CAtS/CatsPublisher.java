@@ -100,8 +100,7 @@ public class CatsPublisher extends Recorder {
         }
 
 //        Call API of Cas web service to receive testing reports
-//        String url = "http://ec2-3-83-173-156.compute-1.amazonaws.com:8000/get_files";
-        String url = "http://" + casUrl + ":" + casPort + "/receive_report";
+        String url = "http://" + casUrl + ":" + casPort + "/parse_report";
         listener.getLogger().println("[Send to]" + url);
 
         String charset = "UTF-8";
