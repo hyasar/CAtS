@@ -1,6 +1,5 @@
 from ..models import *
 from xml.etree import ElementTree as ET
-from django.core import serializers
 from django.forms.models import model_to_dict
 
 
