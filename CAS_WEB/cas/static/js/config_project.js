@@ -533,6 +533,7 @@ class Control extends React.Component {
               </div>
             </div>
             <button id="updateControls" type="button" class="btn btn-secondary btn-block" onClick={this.commitControls.bind(this)}>Update Controls</button>
+
           </div>
         </div>
       );

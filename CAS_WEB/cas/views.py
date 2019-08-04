@@ -359,11 +359,22 @@ def get_reports(request):
 @login_required
 def get_issues(request):
     report_id = request.GET.get('report_id')
+    project_id = request.GET.get('project_id')
+    if report_id == -1:
+        issues = {}
+        return issues
+
     report_obj = get_object_or_404(Report, id=report_id)
+    project_obj = get_object_or_404(Project, id=project_id)
+
     try:
-        issues = XMLIssue.objects.filter(report=report_obj).values()
-    except XMLIssue.DoesNotExist:
-        issues = []
+        controlconfigs = ControlConfigure.objects.filter(project=project_obj)
+        issues = {}
+        for controlconfig in controlconfigs:
+            issues_tmp = searchIssueXML(controlconfig, report_obj)
+            issues[controlconfig.control.cid] = issues_tmp
+    except ControlConfigure.DoesNotExist:
+        issues = {}
     content = dict()
     content['issues'] = issues
     return JsonResponse(content)

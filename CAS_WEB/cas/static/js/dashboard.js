@@ -2,136 +2,157 @@ const url = new URL(window.location.href);
 const query = new URLSearchParams(url.search);
 
 function getCookie(cname) {
-  var name = cname + "=";
-  var decodedCookie = decodeURIComponent(document.cookie);
-  var ca = decodedCookie.split(';');
-  for (var i = 0; i < ca.length; i++) {
-    var c = ca[i];
-    while (c.charAt(0) == ' ') {
-      c = c.substring(1);
-    }
-    if (c.indexOf(name) == 0) {
-      return c.substring(name.length, c.length);
-    }
-  }
-  return "";
-}
-
-class Dashboard extends React.Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      report_id: this.props.report_id
-      issues: []
-    };
-  }
-
-  loadIssues = () => {
-    fetch("/get_issues?report_id=" + this.report_id)
-      .then(res => res.json())
-      .then(
-        (result) => {
-          this.setState({
-            issues: result.issues,
-          });
-        },
-        (error) => {
-          this.setState({
-            error
-          });
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
         }
-      )
-  }
-
-  render() {
-    return (
-      <div className="card-body">
-        <p className="card-title">Test Report</p>
-        <table className="table">
-          <thead>
-          <tr>
-            <th>Control</th>
-            <th>Message</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr>
-            <td>ac-1</td>
-            <td>ldkjsfoeiw</td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-    );
-  }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
 }
+
 
 class Reports extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      reports: [],
-      selctedReport: null
-    };
-  }
+    constructor(props) {
+        super(props);
+        this.state = {
+            reports: [],
+            selectedReportId: -1,
+            issues: {}
+        };
+    }
 
-  componentDidMount() {
-    this.loadReports();
-  }
+    componentDidMount() {
+        this.loadReports();
+    }
 
-  loadReports = () => {
-    fetch("/get_reports?id=" + query.get('id'))
-      .then(res => res.json())
-      .then(
-        (result) => {
-          this.setState({
-            reports: result.reports,
-          });
-        },
-        (error) => {
-          this.setState({
-            error
-          });
-        }
-      ).then(res =>
-          this.selctedReport = this.report[0] || null
-      )
-  }
+    loadReports = () => {
+        fetch("/get_reports?id=" + query.get('id'))
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    let newReport = -1;
+                    let reports = result.reports;
+                    if (reports.length > 0) {
+                        newReport = reports[0].id
+                    }
+                    this.setState({
+                        reports: reports,
+                        selectedReportId: newReport
+                    });
+                    this.loadIssues(newReport)
+                },
+                (error) => {
+                    this.setState({
+                        error
+                    });
+                }
+            )
+    }
+
+    loadIssues(report_id) {
+        fetch("/get_issues?project_id=" + query.get("id") + "&report_id=" + report_id)
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    let newIssues = []
+                    for (let cid in result.issues) {
+                        let issuelst = result.issues[cid]
+                        for (let issue of issuelst) {
+                            issue.cid = cid
+                            newIssues.push(issue)
+                        }
+                    }
+                    this.setState({
+                        issues: newIssues,
+                    });
+                },
+                (error) => {
+                    this.setState({
+                        error
+                    });
+                }
+            )
+
+    }
+
+    selectReportAction = ({target}) => {
+        let report_id = target.getAttribute("report_id")
+        this.setState({
+            selectedReportId: report_id
+        });
+        this.loadIssues(report_id)
+    }
 
 
-  render() {
-    const { reports, selctedReport } = this.state
+    render() {
+        let {reports, issues} = this.state;
 
-    return (
-      <div className="row justify-content-between mt-3">
-        <div className="card col-4">
-          <div className="card-body">
-            <p className="card-title">Test History</p>
-            <table className="table">
-              <tbody>
-              {
-                reports.map(report => (
-                  <tr>
-                    <td><a href="#">Test-{report.date}</a></td>
-                  </tr>)
-                )
-              }
-              </tbody>
-            </table>
-          </div>
-        </div>
-        <div className="card col-8">
-          <Dashboard report_id={selctedReport.id}/>
-        </div>
-      </div>
-    );
-  }
+        return (
+            <div className="row justify-content-between mt-3">
+                <div className="card col-2">
+                    <div className="card-body">
+                        <p className="card-title">Test History</p>
+                        <table className="table">
+                            <tbody>
+                            {
+                                reports.map(report => (
+                                    <tr>
+                                        <td>
+                                            <a href="#" onClick={this.selectReportAction.bind(this)} report_id={report.id}>Test-{report.date}</a>
+                                        </td>
+                                    </tr>)
+                                )
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div className="card col-10">
+                    <div className="card-body">
+
+                        <p className="card-title">Issues Found</p>
+                        <table className="table" id='issuetable'>
+                            <thead>
+                            <tr>
+                                <th>Control</th>
+                                <th>Message</th>
+                                <th >Source</th>
+                                <th>Start line</th>
+                                <th>End line</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {Object.values(issues).map(item => {
+                                return (
+                                    <tr>
+                                        <td>{item.cid}</td>
+                                        <td>{item.rule}</td>
+                                        <td >{item.sourcefile}</td>
+                                        <td>{item.startLine}</td>
+                                        <td>{item.endLine}</td>
+                                    </tr>
+                                )}
+                            )}
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 }
 
 ReactDOM.render(
-  <Reports />,
-  document.getElementById('reports')
+    <Reports/>,
+    document.getElementById('reports')
 );
 
