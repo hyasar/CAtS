@@ -63,11 +63,11 @@ class CSVIssue(models.Model):
 class XMLIssue(models.Model):
     report = models.ForeignKey(Report, on_delete=models.CASCADE)
     created_time = models.DateTimeField(auto_now=False)
-    sourcefile = models.CharField(max_length=50)
+    sourcefile = models.TextField()
     startLine = models.IntegerField()
     endLine = models.IntegerField()
     group = models.CharField(max_length=20)
-    code = models.CharField(max_length=100)
+    code = models.TextField()
     severity = models.CharField(max_length=10)
     rule = SetTextField(
         base_field=models.CharField(max_length=32),
