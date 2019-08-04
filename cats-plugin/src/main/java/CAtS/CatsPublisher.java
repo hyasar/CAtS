@@ -27,48 +27,64 @@ import java.nio.file.Files;
  * {@link DescriptorImpl#newInstance(StaplerRequest)} is invoked
  * and a new {@link CatsPublisher} is created. The created
  * instance is persisted to the project configuration XML by using
- * XStream, so this allows you to use instance fields (like {@link #name})
+ * XStream, so this allows you to use instance fields (like {@link #projectId})
  * to remember the configuration.
  *
  * <p>
  * When a build is performed, the {@link #perform(AbstractBuild, Launcher, BuildListener)}
  * method will be invoked. 
  *
- * @author Kohsuke Kawaguchi
  */
+
 public class CatsPublisher extends Recorder {
 
-    private final String name;
+    private final String username;
+    private final String projectId;
+    private final String outputDir;
+
 
     // Fields in config.jelly must match the parameter names in the "DataBoundConstructor"
     @DataBoundConstructor
-    public CatsPublisher(String name) {
-        this.name = name;
+    public CatsPublisher(String username, String projectId, String outputDir) {
+        this.username = username;
+        this.projectId = projectId;
+        this.outputDir = outputDir;
     }
 
     /**
      * We'll use this from the <tt>config.jelly</tt>.
      */
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
+    }
+
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public String getOutputDir() {
+        return outputDir;
     }
 
     @Override
     public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener) throws IOException {
         // This is where you 'build' the project.
-        // Since this is a dummy, we just say 'hello world' and call that a build.
+        // Here we will retrieve the testing report
 
         // This also shows how you can consult the global configuration of the builder
-        if (getDescriptor().getUseFrench())
-            listener.getLogger().println("Bonjour, "+name+"!");
-        else
-            listener.getLogger().println("Hello, "+name+"!");
+        String casUrl = getDescriptor().getCasUrl();
+        String casPort = getDescriptor().getCasPort();
+        if (casUrl != null)
+            listener.getLogger().println("CAS Host Url is "+casUrl+"!");
+            listener.getLogger().println("Project id is "+projectId+"!");
+
 
         listener.getLogger().println("[Build Dir]" + build.getWorkspace());
-
         listener.getLogger().println("[Print file list] for build #" + build.getNumber());
+
+
         final int buildNumber = build.getNumber();
-        String workspace = build.getWorkspace() + "/Assessment_Output";
+        String workspace = build.getWorkspace() + "/" + outputDir;
 
         File dir = new File(workspace);
         String pattern = "Assessment.*build-"+buildNumber+".*.xml";
@@ -83,10 +99,13 @@ public class CatsPublisher extends Recorder {
             listener.getLogger().println(file);
         }
 
-        // Call API of Cas web service to receive testing reports
-        String url = "http://ec2-3-83-173-156.compute-1.amazonaws.com:8000/get_files";
+//        Call API of Cas web service to receive testing reports
+//        String url = "http://ec2-3-83-173-156.compute-1.amazonaws.com:8000/get_files";
+        String url = "http://" + casUrl + ":" + casPort + "/get_files";
+        listener.getLogger().println("[Send to]" + url);
+
         String charset = "UTF-8";
-        String param = "value";
+
         File firstFile = files[0];
         String boundary = Long.toHexString(System.currentTimeMillis()); // Just generate some unique random value.
         String CRLF = "\r\n"; // Line separator required by multipart/form-data.
@@ -96,35 +115,35 @@ public class CatsPublisher extends Recorder {
         connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
 
         try (
-                OutputStream output = connection.getOutputStream();
-                PrintWriter writer = new PrintWriter(new OutputStreamWriter(output, charset), true);
+            OutputStream output = connection.getOutputStream();
+            PrintWriter writer = new PrintWriter(new OutputStreamWriter(output, charset), true);
         ) {
             // Send normal param.
             writer.append("--" + boundary).append(CRLF);
-            writer.append("Content-Disposition: form-data; name=\"param\"").append(CRLF);
+            writer.append("Content-Disposition: form-data; name=\"username\"").append(CRLF);
             writer.append("Content-Type: text/plain; charset=" + charset).append(CRLF);
-            writer.append(CRLF).append(param).append(CRLF).flush();
+            writer.append(CRLF).append(username).append(CRLF).flush();
+
+            writer.append("--" + boundary).append(CRLF);
+            writer.append("Content-Disposition: form-data; name=\"projectId\"").append(CRLF);
+            writer.append("Content-Type: text/plain; charset=" + charset).append(CRLF);
+            writer.append(CRLF).append(projectId).append(CRLF).flush();
+
+            writer.append("--" + boundary).append(CRLF);
+            writer.append("Content-Disposition: form-data; name=\"buildNumber\"").append(CRLF);
+            writer.append("Content-Type: text/plain; charset=" + charset).append(CRLF);
+            writer.append(CRLF).append(String.valueOf(buildNumber)).append(CRLF).flush();
 
             // Send text file.
             writer.append("--" + boundary).append(CRLF);
-            writer.append("Content-Disposition: form-data; name=\"myfile\"; filename=\"" + firstFile.getName() + "\"").append(CRLF);
+            writer.append("Content-Disposition: form-data; name=\"testingReport\"; filename=\"" + firstFile.getName() + "\"").append(CRLF);
             writer.append("Content-Type: text/plain; charset=" + charset).append(CRLF); // Text file itself must be saved in this charset!
             writer.append(CRLF).flush();
             Files.copy(firstFile.toPath(), output);
             output.flush(); // Important before continuing with writer!
             writer.append(CRLF).flush(); // CRLF is important! It indicates end of boundary.
 
-//            // Send binary file.
-//            writer.append("--" + boundary).append(CRLF);
-//            writer.append("Content-Disposition: form-data; name=\"binaryFile\"; filename=\"" + binaryFile.getName() + "\"").append(CRLF);
-//            writer.append("Content-Type: " + URLConnection.guessContentTypeFromName(binaryFile.getName())).append(CRLF);
-//            writer.append("Content-Transfer-Encoding: binary").append(CRLF);
-//            writer.append(CRLF).flush();
-//            Files.copy(binaryFile.toPath(), output);
-//            output.flush(); // Important before continuing with writer!
-//            writer.append(CRLF).flush(); // CRLF is important! It indicates end of boundary.
 
-            // End of multipart/form-data.
             writer.append("--" + boundary + "--").append(CRLF).flush();
         }
 
@@ -166,7 +185,10 @@ public class CatsPublisher extends Recorder {
          * <p>
          * If you don't want fields to be persisted, use <tt>transient</tt>.
          */
-        private boolean useFrench;
+//        private boolean useFrench;
+
+        private String casUrl;
+        private String casPort;
 
         /**
          * Performs on-the-fly validation of the form field 'name'.
@@ -194,14 +216,15 @@ public class CatsPublisher extends Recorder {
          * This human readable name is used in the configuration screen.
          */
         public String getDisplayName() {
-            return "Say Meow to the World";
+            return "Send Testing Report to CAS";
         }
 
         @Override
         public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
             // To persist global configuration information,
             // set that to properties and call save().
-            useFrench = formData.getBoolean("useFrench");
+            casUrl = formData.getString("casUrl");
+            casPort = formData.getString("casPort");
             // ^Can also use req.bindJSON(this, formData);
             //  (easier when there are many fields; need set* methods for this, like setUseFrench)
             save();
@@ -214,9 +237,11 @@ public class CatsPublisher extends Recorder {
          * The method name is bit awkward because global.jelly calls this method to determine
          * the initial state of the checkbox by the naming convention.
          */
-        public boolean getUseFrench() {
-            return useFrench;
+        public String getCasUrl() {
+            return casUrl;
         }
+
+        public String getCasPort() {return casPort;}
     }
 }
 
