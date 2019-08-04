@@ -4,16 +4,12 @@ from django.core import serializers
 from django.forms.models import model_to_dict
 
 
-
 def parseReportXML(file, project, report_version):
     report = Report(project=project, version=report_version)
     report.save()
 
     tree = ET.parse(file)
     root = tree.getroot()
-
-    date_info = root.attrib['package_version']
-    date = date_info[13:23]
 
     for bug in root:
         if bug.tag != 'BugInstance':
@@ -24,7 +20,6 @@ def parseReportXML(file, project, report_version):
         sourcefile, startLine, endLine = location.find('SourceFile'), \
                                          location.find('StartLine'), location.find('EndLine')
 
-        # rule = ','.join(message.text.strip('.').split(' '))
         rule = message.text
         issue = XMLIssue(report=report, created_time=date, sourcefile=sourcefile.text, \
                          startLine=startLine.text, endLine=endLine.text, group=group.text, code=code.text, \
