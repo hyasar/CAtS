@@ -70,17 +70,6 @@ class Issue(models.Model):
 class ControlConfigure(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     control = models.ForeignKey(Control, on_delete=models.CASCADE)
-
-    # project = models.OneToOneField(
-    #     Project,
-    #     on_delete=models.PROTECT,
-    # )
-
-    # control = models.OneToOneField(
-    #     Control,
-    #     on_delete=models.PROTECT,
-    # )
-
     keywords = SetTextField(
         base_field=models.CharField(max_length=32),
     )

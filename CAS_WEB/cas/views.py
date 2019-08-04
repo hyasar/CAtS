@@ -322,14 +322,26 @@ def get_controlconfig_by_id(request):
     try:
         controlconfig_obj = ControlConfigure.objects.get(project=project_obj, control=control_obj)
         keywords = ','.join(controlconfig_obj.keywords)
-        print("controlconfig_obj", controlconfig_obj)
-        print("keywords", keywords)
         content['control'] = {'id': control_id, 'title': control_obj.title, 'cid': control_obj.cid,
                               'keywords': keywords}
     except ControlConfigure.DoesNotExist:
         content['control'] = {'id': control_id, 'title': control_obj.title, 'cid': control_obj.cid,
                               'keywords': ''}
     return JsonResponse(content)
+
+
+@login_required
+def get_reports(request):
+    content = dict()
+    project_id = request.GET.get('id')
+    project_obj = get_object_or_404(Project, id=project_id)
+    print(project_obj)
+    reports = list(Report.objects.filter(project=project_obj).order_by('version').values())
+    print(reports)
+    content['reports'] = reports
+    return JsonResponse(content)
+
+
 
 
 

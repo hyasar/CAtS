@@ -38,6 +38,6 @@ urlpatterns = [
     path('project_dashboard', views.project_dashboard, name='project_dashboard'),
     path('get_files', views.simple_upload, name='get_files'),
     path('get_controlconfig_by_id', views.get_controlconfig_by_id, name='get_controlconfig_by_id'),
-    # path('get_keyword', )
+    path('get_reports', views.get_reports, name='get_reports'),
 
 ]

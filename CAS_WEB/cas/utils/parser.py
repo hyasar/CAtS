@@ -4,6 +4,7 @@ import re
 COMA_SPACE = re.compile('[,|\\s|_]')
 REX = re.compile('[^a-z0-9]+')
 
+
 def parseReport(csv_file, project, report_version):
 
     report = Report(project=project, report_version=report_version)
