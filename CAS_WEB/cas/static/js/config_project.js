@@ -1,5 +1,3 @@
-// var selected = new Set()
-
 const url = new URL(window.location.href);
 const query = new URLSearchParams(url.search);
 
@@ -330,13 +328,6 @@ class Control extends React.Component {
               }
           )
     }
-    // } else {
-    //   let newSet = this.state.select;
-    //   delete newSet[control_id];
-    //   this.setState({
-    //     select: newSet
-    //   });
-    // }
   }
 
   setPage = (newPage) => {
@@ -399,7 +390,7 @@ class Control extends React.Component {
   }
 
   render() {
-    const { error, isLoaded, items, page, searchPage, select, newKeywordDict } = this.state;
+    const { error, isLoaded, items, page, searchPage, select } = this.state;
     let list;
     if (isLoaded) {
       list =
@@ -540,6 +531,7 @@ class Control extends React.Component {
               </div>
             </div>
             <button id="updateControls" type="button" class="btn btn-secondary btn-block" onClick={this.commitControls.bind(this)}>Update Controls</button>
+
           </div>
         </div>
       );
