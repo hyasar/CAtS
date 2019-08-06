@@ -305,11 +305,17 @@ def project_dashboard(request):
 
 @csrf_exempt
 def parse_testing_report(request):
-    if request.method == 'POST' and request.FILES['testingReport']:
+    if request.method == 'POST':
+        # Authentication
         username = request.POST['username']
-        project_id = request.POST['projectId']
-        build_number = request.POST['buildNumber']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+        if not user:
+            message = "Invalid username/password"
+            return HttpResponse(message)
 
+        # Validate project authorization
+        project_id = request.POST['projectId']
         project = get_object_or_404(Project, pk=project_id)
         user = User.objects.get(username=username)
         if user != project.user:
@@ -318,11 +324,15 @@ def parse_testing_report(request):
             message = "This user doesn't own this project"
             return HttpResponse(message)
 
+        # Parse report
+        build_number = request.POST['buildNumber']
         testing_report = request.FILES['testingReport']
+        if not testing_report:
+            message = "No report sent"
+            return HttpResponse(message)
+
         parseReportXML(testing_report, project, build_number)
         message = "Report parsed successfully"
-    else:
-        message = "No file."
     return HttpResponse(message)
 
 
