@@ -333,7 +333,7 @@ def parse_testing_report(request):
 
         parseReportXML(testing_report, project, build_number)
         message = "Report parsed successfully"
-    return HttpResponse(message)
+        return HttpResponse(message)
 
 
 @login_required
