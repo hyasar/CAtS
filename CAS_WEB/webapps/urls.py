@@ -40,5 +40,6 @@ urlpatterns = [
     path('get_controlconfig_by_id', views.get_controlconfig_by_id, name='get_controlconfig_by_id'),
     path('get_reports', views.get_reports, name='get_reports'),
     path('get_issues', views.get_issues, name='get_issues'),
+    path('logout', views.logout_action, name='logout'),
 
 ]
