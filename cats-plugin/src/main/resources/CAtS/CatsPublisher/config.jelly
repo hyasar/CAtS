@@ -9,13 +9,20 @@
     Creates a text field that shows the value of the "name" property.
     When submitted, it will be passed to the corresponding constructor parameter.
   -->
-  <f:entry title="Username" field="username">
-    <f:textbox />
-  </f:entry>
-  <f:entry title="Project ID" field="projectId">
-    <f:textbox />
-  </f:entry>
-  <f:entry title="Assessment Output Directory" field="outputDir">
-    <f:textbox default="Assessment_Output"/>
-  </f:entry>
+  <f:section title="CAS Account">
+    <f:entry title="Username" field="username">
+      <f:textbox />
+    </f:entry>
+    <f:entry title="Password" field="password">
+      <f:textbox />
+    </f:entry>
+  </f:section>
+  <f:section title="Project Configuration">
+    <f:entry title="Project ID" field="projectId">
+      <f:textbox />
+    </f:entry>
+    <f:entry title="Assessment Output Directory" field="outputDir">
+      <f:textbox default="Assessment_Output"/>
+    </f:entry>
+  </f:section>
 </j:jelly>
