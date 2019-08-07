@@ -82,6 +82,9 @@ DATABASES = {
         'PASSWORD': 'miao',
         'HOST': 'ec2-54-162-139-224.compute-1.amazonaws.com',
         'PORT': '',
+        'TEST': {
+          'NAME': 'cats_test'
+        },
     # 'default': {
     #     'ENGINE': 'django.db.backends.postgresql',
     #     'NAME': 'cas',

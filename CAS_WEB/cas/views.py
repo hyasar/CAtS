@@ -205,7 +205,7 @@ def search_control_list_action(request):
 
     control_list = Control.objects.filter(Q(title__icontains=keyword) | Q(cid__icontains=keyword)). \
         order_by('id').values('cid', 'title', 'id', 'gid', 'parameters', 'properties', 'classinfo', 'parts')
-    paginator = Paginator(control_list, 5)
+    paginator = Paginator(control_list, 10)
     page = request.GET.get('page')
     if not page:
         page = 1
