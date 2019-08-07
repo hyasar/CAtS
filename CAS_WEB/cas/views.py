@@ -305,11 +305,17 @@ def project_dashboard(request):
 
 @csrf_exempt
 def parse_testing_report(request):
-    if request.method == 'POST' and request.FILES['testingReport']:
+    if request.method == 'POST':
+        # Authentication
         username = request.POST['username']
-        project_id = request.POST['projectId']
-        build_number = request.POST['buildNumber']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+        if not user:
+            message = "Invalid username/password"
+            return HttpResponse(message)
 
+        # Validate project authorization
+        project_id = request.POST['projectId']
         project = get_object_or_404(Project, pk=project_id)
         user = User.objects.get(username=username)
         if user != project.user:
@@ -318,12 +324,16 @@ def parse_testing_report(request):
             message = "This user doesn't own this project"
             return HttpResponse(message)
 
+        # Parse report
+        build_number = request.POST['buildNumber']
         testing_report = request.FILES['testingReport']
+        if not testing_report:
+            message = "No report sent"
+            return HttpResponse(message)
+
         parseReportXML(testing_report, project, build_number)
         message = "Report parsed successfully"
-    else:
-        message = "No file."
-    return HttpResponse(message)
+        return HttpResponse(message)
 
 
 @login_required
@@ -336,11 +346,49 @@ def get_controlconfig_by_id(request):
     try:
         controlconfig_obj = ControlConfigure.objects.get(project=project_obj, control=control_obj)
         keywords = ','.join(controlconfig_obj.keywords)
-        print("controlconfig_obj", controlconfig_obj)
-        print("keywords", keywords)
         content['control'] = {'id': control_id, 'title': control_obj.title, 'cid': control_obj.cid,
                               'keywords': keywords}
     except ControlConfigure.DoesNotExist:
         content['control'] = {'id': control_id, 'title': control_obj.title, 'cid': control_obj.cid,
                               'keywords': ''}
     return JsonResponse(content)
+
+
+@login_required
+def get_reports(request):
+    content = dict()
+    project_id = request.GET.get('id')
+    project_obj = get_object_or_404(Project, id=project_id)
+    print(project_obj)
+    reports = list(Report.objects.filter(project=project_obj).order_by('version').values())
+    print(reports)
+    content['reports'] = reports
+    return JsonResponse(content)
+
+
+@login_required
+def get_issues(request):
+    report_id = request.GET.get('report_id')
+    project_id = request.GET.get('project_id')
+    if report_id == -1:
+        issues = {}
+        return issues
+
+    report_obj = get_object_or_404(Report, id=report_id)
+    project_obj = get_object_or_404(Project, id=project_id)
+
+    try:
+        controlconfigs = ControlConfigure.objects.filter(project=project_obj)
+        issues = {}
+        for controlconfig in controlconfigs:
+            issues_tmp = searchIssueXML(controlconfig, report_obj)
+            issues[controlconfig.control.cid] = issues_tmp
+    except ControlConfigure.DoesNotExist:
+        issues = {}
+    content = dict()
+    content['issues'] = issues
+    return JsonResponse(content)
+
+
+
+

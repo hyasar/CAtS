@@ -38,6 +38,8 @@ urlpatterns = [
     path('project_dashboard', views.project_dashboard, name='project_dashboard'),
     path('parse_report', views.parse_testing_report, name='parse_report'),
     path('get_controlconfig_by_id', views.get_controlconfig_by_id, name='get_controlconfig_by_id'),
-    # path('get_keyword', )
+    path('get_reports', views.get_reports, name='get_reports'),
+    path('get_issues', views.get_issues, name='get_issues'),
+    path('logout', views.logout_action, name='logout'),
 
 ]

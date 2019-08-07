@@ -1,4 +1,5 @@
 package CAtS;
+
 import hudson.Launcher;
 import hudson.Extension;
 import hudson.tasks.*;
@@ -32,21 +33,22 @@ import java.nio.file.Files;
  *
  * <p>
  * When a build is performed, the {@link #perform(AbstractBuild, Launcher, BuildListener)}
- * method will be invoked. 
- *
+ * method will be invoked.
  */
 
 public class CatsPublisher extends Recorder {
 
     private final String username;
+    private final String password;
     private final String projectId;
     private final String outputDir;
 
 
     // Fields in config.jelly must match the parameter names in the "DataBoundConstructor"
     @DataBoundConstructor
-    public CatsPublisher(String username, String projectId, String outputDir) {
+    public CatsPublisher(String username, String password, String projectId, String outputDir) {
         this.username = username;
+        this.password = password;
         this.projectId = projectId;
         this.outputDir = outputDir;
     }
@@ -56,6 +58,10 @@ public class CatsPublisher extends Recorder {
      */
     public String getUsername() {
         return username;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public String getProjectId() {
@@ -75,8 +81,8 @@ public class CatsPublisher extends Recorder {
         String casUrl = getDescriptor().getCasUrl();
         String casPort = getDescriptor().getCasPort();
         if (casUrl != null)
-            listener.getLogger().println("CAS Host Url is "+casUrl+"!");
-            listener.getLogger().println("Project id is "+projectId+"!");
+            listener.getLogger().println("CAS Host Url is " + casUrl + "!");
+        listener.getLogger().println("Project id is " + projectId + "!");
 
 
         listener.getLogger().println("[Build Dir]" + build.getWorkspace());
@@ -87,21 +93,20 @@ public class CatsPublisher extends Recorder {
         String workspace = build.getWorkspace() + "/" + outputDir;
 
         File dir = new File(workspace);
-        String pattern = "Assessment.*build-"+buildNumber+".*.xml";
+        String pattern = "Assessment.*build-" + buildNumber + ".*.xml";
         FileFilter filter = new RegexFileFilter(pattern);
         File[] files = dir.listFiles(filter);
 
 
-        if(files == null)
+        if (files == null)
             return true;
 
-        for(File file :files){
+        for (File file : files) {
             listener.getLogger().println(file);
         }
 
 //        Call API of Cas web service to receive testing reports
-//        String url = "http://ec2-3-83-173-156.compute-1.amazonaws.com:8000/get_files";
-        String url = "http://" + casUrl + ":" + casPort + "/get_files";
+        String url = "http://" + casUrl + ":" + casPort + "/parse_report";
         listener.getLogger().println("[Send to]" + url);
 
         String charset = "UTF-8";
@@ -115,14 +120,19 @@ public class CatsPublisher extends Recorder {
         connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
 
         try (
-            OutputStream output = connection.getOutputStream();
-            PrintWriter writer = new PrintWriter(new OutputStreamWriter(output, charset), true);
+                OutputStream output = connection.getOutputStream();
+                PrintWriter writer = new PrintWriter(new OutputStreamWriter(output, charset), true);
         ) {
             // Send normal param.
             writer.append("--" + boundary).append(CRLF);
             writer.append("Content-Disposition: form-data; name=\"username\"").append(CRLF);
             writer.append("Content-Type: text/plain; charset=" + charset).append(CRLF);
             writer.append(CRLF).append(username).append(CRLF).flush();
+
+            writer.append("--" + boundary).append(CRLF);
+            writer.append("Content-Disposition: form-data; name=\"password\"").append(CRLF);
+            writer.append("Content-Type: text/plain; charset=" + charset).append(CRLF);
+            writer.append(CRLF).append(password).append(CRLF).flush();
 
             writer.append("--" + boundary).append(CRLF);
             writer.append("Content-Disposition: form-data; name=\"projectId\"").append(CRLF);
@@ -150,9 +160,6 @@ public class CatsPublisher extends Recorder {
 // Request is lazily fired whenever you need to obtain information about response.
         int responseCode = ((HttpURLConnection) connection).getResponseCode();
         System.out.println(responseCode); // Should be 200
-
-
-
         return true;
     }
 
@@ -161,7 +168,7 @@ public class CatsPublisher extends Recorder {
     // you don't have to do this.
     @Override
     public DescriptorImpl getDescriptor() {
-        return (DescriptorImpl)super.getDescriptor();
+        return (DescriptorImpl) super.getDescriptor();
     }
 
     public BuildStepMonitor getRequiredMonitorService() {
@@ -193,10 +200,8 @@ public class CatsPublisher extends Recorder {
         /**
          * Performs on-the-fly validation of the form field 'name'.
          *
-         * @param value
-         *      This parameter receives the value that the user has typed.
-         * @return
-         *      Indicates the outcome of the validation. This is sent to the browser.
+         * @param value This parameter receives the value that the user has typed.
+         * @return Indicates the outcome of the validation. This is sent to the browser.
          */
         public FormValidation doCheckName(@QueryParameter String value)
                 throws IOException, ServletException {
@@ -228,12 +233,12 @@ public class CatsPublisher extends Recorder {
             // ^Can also use req.bindJSON(this, formData);
             //  (easier when there are many fields; need set* methods for this, like setUseFrench)
             save();
-            return super.configure(req,formData);
+            return super.configure(req, formData);
         }
 
         /**
          * This method returns true if the global configuration says we should speak French.
-         *
+         * <p>
          * The method name is bit awkward because global.jelly calls this method to determine
          * the initial state of the checkbox by the naming convention.
          */
@@ -241,7 +246,9 @@ public class CatsPublisher extends Recorder {
             return casUrl;
         }
 
-        public String getCasPort() {return casPort;}
+        public String getCasPort() {
+            return casPort;
+        }
     }
 }
 

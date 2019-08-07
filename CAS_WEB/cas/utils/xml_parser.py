@@ -1,6 +1,6 @@
 from ..models import *
 from xml.etree import ElementTree as ET
-from django.core import serializers
+from django.forms.models import model_to_dict
 
 
 def parseReportXML(file, project, report_version):
@@ -10,11 +10,7 @@ def parseReportXML(file, project, report_version):
     tree = ET.parse(file)
     root = tree.getroot()
 
-    date_info = root.attrib['package_version']
-    date = date_info[13:23]
-
     for bug in root:
-
         if bug.tag != 'BugInstance':
             continue
         method, location, group, code, severity, message, _ = bug
@@ -23,26 +19,32 @@ def parseReportXML(file, project, report_version):
         sourcefile, startLine, endLine = location.find('SourceFile'), \
                                          location.find('StartLine'), location.find('EndLine')
 
-        rule = message.text.strip('.').split(' ')
-        issue = XMLIssue(report=report, created_time=date, sourcefile=sourcefile.text, \
+        rule = message.text
+        issue = XMLIssue(report=report, sourcefile=sourcefile.text, \
                          startLine=startLine.text, endLine=endLine.text, group=group.text, code=code.text, \
                          severity=severity.text, rule=rule)
+        # created_time=date
         issue.save()
 
     return report
 
-def searchIssueXML(ControlConfigure, report):
 
-    all_issues = XMLIssue.objects.filter(report=report)
-    issues = []
-    for issue in all_issues:
-        count = 0
-        for word in issue.rule:
-            if word in ControlConfigure.keywords:
-                count += 1
-            if count == 3:
-                issue_json = serializers.serialize('json', issue)
-                issues.append(issue_json)
-                break
+def searchIssueXML(controlconfig, report):
+    try:
+        all_issues = XMLIssue.objects.filter(report=report)
+        issues = []
+        for issue in all_issues:
+            count = 0
+            rule = ' '.join(issue.rule)
+            for word in rule.strip('.').split(' '):
+                if word in controlconfig.keywords:
+                    count += 1
+                if count == 1:
+                    dict_issue = model_to_dict(issue, fields=['severity', 'sourcefile', 'startLine', 'endLine', 'code'])
+                    dict_issue['rule'] = rule
+                    issues.append(dict_issue)
+                    break
+    except XMLIssue.DoesNotExist:
+        issues = []
 
     return issues
