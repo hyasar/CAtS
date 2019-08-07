@@ -538,7 +538,7 @@ class Control extends React.Component {
                                   cid={control_id}
                                   onClick={this.delInputKeyword.bind(this)}
                               >
-                                {keyword}
+                                {keyword} <img width='15' height='15' src="static/img/x.png"/>
                               </button>
                           ))
                           }
