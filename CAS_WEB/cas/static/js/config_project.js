@@ -130,7 +130,8 @@ class Control extends React.Component {
       select: {},
       search: false,
       searchPage: 1,
-      newKeywordDict: {}
+      newKeywordDictAdd: {},
+      newKeywordDictDel: {}
     };
   }
 
@@ -189,11 +190,7 @@ class Control extends React.Component {
             isLoaded: true,
             items: result.controls
           });
-          console.log(result.controls)
         },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
         (error) => {
           this.setState({
             isLoaded: true,
@@ -231,20 +228,20 @@ class Control extends React.Component {
       )
   }
 
-  getControlById = (id) => {
-    fetch("/get_control_by_id?id=" + id)
-      .then(res => res.json())
-      .then(
-        (result) => {
-          let control = result.control[0];
-          let label = control.cid + ", " + control.title;
-          $("#label_" + id).html(label);
-        },
-        (error) => {
-          return ("query error");
-        }
-      )
-  }
+  // getControlById = (id) => {
+  //   fetch("/get_control_by_id?id=" + id)
+  //     .then(res => res.json())
+  //     .then(
+  //       (result) => {
+  //         let control = result.control[0];
+  //         let label = control.cid + ", " + control.title;
+  //         $("#label_" + id).html(label);
+  //       },
+  //       (error) => {
+  //         return ("query error");
+  //       }
+  //     )
+  // }
 
   loadSelectedControls = () => {
     fetch("/get_project_controlls?id=" + query.get("id"))
@@ -254,6 +251,13 @@ class Control extends React.Component {
           var selectedDict = {};
           for (var c in result.controls) {
             selectedDict[result.controls[c].id] = result.controls[c];
+            let keywords = selectedDict[result.controls[c].id].keywords;
+            console.log('keywords loadselected: ', keywords)
+            if (keywords.length > 0) {
+              selectedDict[result.controls[c].id].keywords = new Set(keywords.split(','))
+            } else {
+              selectedDict[result.controls[c].id].keywords = new Set()
+            }
           }
           this.setState({
             select: selectedDict
@@ -272,10 +276,8 @@ class Control extends React.Component {
     let controlconfigs = []
     let selected = this.state.select
     for (let id in selected) {
-      controlconfigs.push({'id': id, 'keywords': selected[id].keywords})
+      controlconfigs.push({'id': id, 'keywords': Array.from(selected[id].keywords).join(',')})
     }
-    console.log('select ', this.state.select)
-    console.log('controlconfigs ', controlconfigs)
 
     const csrfToken = getCookie('csrftoken');
     $("#updateControls").html("updating");
@@ -312,18 +314,25 @@ class Control extends React.Component {
     let control_id = parseInt(target.getAttribute("cid"));
     if (target.checked == true) {
       let newSet = this.state.select;
-      let newKeywordDictRender = this.state.newKeywordDict;
+      let newKeywordDictRender = this.state.newKeywordDictAdd;
       fetch("/get_controlconfig_by_id?project_id=" + query.get("id") + '&control_id=' + control_id)
           .then(res => res.json())
           .then(
               (result) => {
 
                 newSet[control_id] = result.control;
+                let keywords = newSet[control_id].keywords;
+                console.log('keywords checkbox: ', keywords)
+                if (keywords.length > 0) {
+                  newSet[control_id].keywords = new Set(keywords.split(','));
+                } else {
+                  newSet[control_id].keywords = new Set();
+                }
                 newKeywordDictRender[control_id] = '';
                 console.log("newSet", newSet)
                 this.setState({
                   select: newSet,
-                  newKeywordDict: newKeywordDictRender
+                  newKeywordDictAdd: newKeywordDictRender
                 });
               }
           )
@@ -359,35 +368,50 @@ class Control extends React.Component {
   }
 
   addKeyword = (id) => {
-    console.log('addkeyword id: ', id)
-    console.log('new keyword dict: ', this.state.newKeywordDict)
-    let keyword = this.state.newKeywordDict[id] || '';
-    if (keyword == '') {
-      return;
-    }
+    let keywordAdd = this.state.newKeywordDictAdd[id] || '';
     let newSet = this.state.select;
-    let keywords = newSet[id].keywords;
-    if (keywords.length > 0) {
-      keywords += ',';
+    let newKeywordDictAddRender = this.state.newKeywordDictAdd;
+
+    if (keywordAdd.length > 0) {
+      newSet[id].keywords.add(keywordAdd);
+      newKeywordDictAddRender[id] = '';
     }
-    keywords += keyword;
-    newSet[id].keywords = keywords;
-    console.log('addkeyword ', newSet[id]);
-    let newKeywordDictRender = this.state.newKeywordDict;
-    newKeywordDictRender[id] = ''
+
     this.setState({
       select: newSet,
-      newKeywordDict: newKeywordDictRender
+      newKeywordDictAdd: newKeywordDictAddRender,
     })
   };
 
-  updateInputKeyword = ({ target }) => {
-    let newKeywordDictRender = this.state.newKeywordDict;
-    newKeywordDictRender[parseInt(target.getAttribute("cid"))] = target.value;
+  addInputKeyword = ({ target }) => {
+    let newKeywordDictAddRender = this.state.newKeywordDictAdd;
+    newKeywordDictAddRender[parseInt(target.getAttribute("cid"))] = target.value;
     this.setState({
-        newKeywordDict: newKeywordDictRender
+        newKeywordDictAdd: newKeywordDictAddRender
     });
+  };
+
+  delInputKeyword = ({ target }) => {
+    let id = parseInt(target.getAttribute("cid"));
+    let keywordDel = target.getAttribute("keyword");
+    let newSet = this.state.select;
+    if (keywordDel.length > 0) {
+      newSet[id].keywords.delete(keywordDel)
+    }
+    this.setState({
+        select: newSet
+    });
+  };
+
+  sortKeywords(keywords) {
+    let lstKeywords = Array.from(keywords);
+    lstKeywords.sort();
+    return lstKeywords;
   }
+
+
+
+
 
   render() {
     const { error, isLoaded, items, page, searchPage, select } = this.state;
@@ -514,12 +538,24 @@ class Control extends React.Component {
                         <label id={"label_" + control_id}>{select[control_id].cid}, {select[control_id].title}</label>
                         <button type="button" class="btn btn-primary float-right"
                           cid={control_id} onClick={this.deleteClick.bind(this)}>delete</button>
-                        <div class="keywords">keywords: {select[control_id].keywords}</div>
+                        <div class="keywords my-1">
+                        {this.sortKeywords(select[control_id].keywords).map((keyword)=>(
+                            <button
+                                class="mx-1 my-1 btn btn-light"
+                                keyword={keyword}
+                                cid={control_id}
+                                onClick={this.delInputKeyword.bind(this)}
+                            >
+                              {keyword}
+                            </button>
+                        ))
+                        }
+                        </div>
 
 
                         <label>
                           new keyword:
-                          <input type="text" cid={control_id} value={this.state.newKeywordDict[control_id]} onChange={this.updateInputKeyword}/>
+                          <input type="text" cid={control_id} value={this.state.newKeywordDictAdd[control_id]} onChange={this.addInputKeyword}/>
                         </label>
                         <button type="button" onClick={this.addKeyword.bind(this, control_id)}>+</button>
 
@@ -530,8 +566,7 @@ class Control extends React.Component {
                 </ul>
               </div>
             </div>
-            <button id="updateControls" type="button" class="btn btn-secondary btn-block" onClick={this.commitControls.bind(this)}>Update Controls</button>
-
+            <button id="updateControls" type="button" class="btn btn-secondary btn-block" onClick={this.commitControls.bind(this) }>Update Controls</button>
           </div>
         </div>
       );
@@ -543,3 +578,4 @@ ReactDOM.render(
   <Control />,
   document.getElementById('controls')
 );
+
