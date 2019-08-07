@@ -131,7 +131,8 @@ class Control extends React.Component {
       search: false,
       searchPage: 1,
       newKeywordDictAdd: {},
-      newKeywordDictDel: {}
+      newKeywordDictDel: {},
+      isAdding: {}
     };
   }
 
@@ -228,21 +229,6 @@ class Control extends React.Component {
       )
   }
 
-  // getControlById = (id) => {
-  //   fetch("/get_control_by_id?id=" + id)
-  //     .then(res => res.json())
-  //     .then(
-  //       (result) => {
-  //         let control = result.control[0];
-  //         let label = control.cid + ", " + control.title;
-  //         $("#label_" + id).html(label);
-  //       },
-  //       (error) => {
-  //         return ("query error");
-  //       }
-  //     )
-  // }
-
   loadSelectedControls = () => {
     fetch("/get_project_controlls?id=" + query.get("id"))
       .then(res => res.json())
@@ -252,7 +238,6 @@ class Control extends React.Component {
           for (var c in result.controls) {
             selectedDict[result.controls[c].id] = result.controls[c];
             let keywords = selectedDict[result.controls[c].id].keywords;
-            console.log('keywords loadselected: ', keywords)
             if (keywords.length > 0) {
               selectedDict[result.controls[c].id].keywords = new Set(keywords.split(','))
             } else {
@@ -322,14 +307,12 @@ class Control extends React.Component {
 
                 newSet[control_id] = result.control;
                 let keywords = newSet[control_id].keywords;
-                console.log('keywords checkbox: ', keywords)
                 if (keywords.length > 0) {
                   newSet[control_id].keywords = new Set(keywords.split(','));
                 } else {
                   newSet[control_id].keywords = new Set();
                 }
                 newKeywordDictRender[control_id] = '';
-                console.log("newSet", newSet)
                 this.setState({
                   select: newSet,
                   newKeywordDictAdd: newKeywordDictRender
@@ -377,9 +360,13 @@ class Control extends React.Component {
       newKeywordDictAddRender[id] = '';
     }
 
+    let newIsAdding = this.state.isAdding;
+    newIsAdding[id] = false;
+
     this.setState({
       select: newSet,
       newKeywordDictAdd: newKeywordDictAddRender,
+      isAdding: newIsAdding
     })
   };
 
@@ -409,13 +396,18 @@ class Control extends React.Component {
     return lstKeywords;
   }
 
-
-
-
+  startAddingKeyword = (id) => {
+    let newIsAdding = this.state.isAdding;
+    newIsAdding[id] = true
+    this.setState({
+      isAdding: newIsAdding
+    })
+  }
 
   render() {
-    const { error, isLoaded, items, page, searchPage, select } = this.state;
+    const { error, isLoaded, items, page, searchPage, select, isAdding } = this.state;
     let list;
+
     if (isLoaded) {
       list =
         <div class="mb-2">
@@ -539,26 +531,38 @@ class Control extends React.Component {
                         <button type="button" class="btn btn-primary float-right"
                           cid={control_id} onClick={this.deleteClick.bind(this)}>delete</button>
                         <div class="keywords my-1">
-                        {this.sortKeywords(select[control_id].keywords).map((keyword)=>(
-                            <button
-                                class="mx-1 my-1 btn btn-light"
-                                keyword={keyword}
-                                cid={control_id}
-                                onClick={this.delInputKeyword.bind(this)}
-                            >
-                              {keyword}
-                            </button>
-                        ))
-                        }
+                          {this.sortKeywords(select[control_id].keywords).map((keyword)=>(
+                              <button
+                                  class="mx-1 my-1 btn btn-light"
+                                  keyword={keyword}
+                                  cid={control_id}
+                                  onClick={this.delInputKeyword.bind(this)}
+                              >
+                                {keyword}
+                              </button>
+                          ))
+                          }
+                          <button className="btn btn-md btn-outline-primary" onClick={this.startAddingKeyword.bind(this, control_id)}>Add keyword</button>
+
+                          <div>
+                            {/*{ isAdding && <input type="text" cid={control_id} value={this.state.newKeywordDictAdd[control_id]} onChange={this.addInputKeyword}/> }*/}
+                            {/*{ isAdding && <button type="button" onClick={this.addKeyword.bind(this, control_id)}>+</button> }*/}
+
+                            { isAdding[control_id] &&
+                              <div className="input-group mb-3">
+                                <input type="text" className="form-control" placeholder="Keyword"
+                                       aria-describedby="button-addon2" cid={control_id} value={this.state.newKeywordDictAdd[control_id]}
+                                       onChange={this.addInputKeyword}/>
+                                  <div className="input-group-append">
+                                    <button className="btn btn-outline-secondary" type="button" onClick={this.addKeyword.bind(this, control_id)}
+                                            id="button-addon2">Confirm</button>
+                                  </div>
+                              </div>
+                            }
+
+                          </div>
+
                         </div>
-
-
-                        <label>
-                          new keyword:
-                          <input type="text" cid={control_id} value={this.state.newKeywordDictAdd[control_id]} onChange={this.addInputKeyword}/>
-                        </label>
-                        <button type="button" onClick={this.addKeyword.bind(this, control_id)}>+</button>
-
 
                       </div>
                     </li>
