@@ -21,7 +21,8 @@
     left: 975px;
 }
 html {
-    background-color: grey
+    background-color: grey;
+    background-size: auto;
 }
 
 #issuetable {

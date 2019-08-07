@@ -20,9 +20,10 @@ def parseReportXML(file, project, report_version):
                                          location.find('StartLine'), location.find('EndLine')
 
         rule = message.text
-        issue = XMLIssue(report=report, created_time=date, sourcefile=sourcefile.text, \
+        issue = XMLIssue(report=report, sourcefile=sourcefile.text, \
                          startLine=startLine.text, endLine=endLine.text, group=group.text, code=code.text, \
                          severity=severity.text, rule=rule)
+        # created_time=date
         issue.save()
 
     return report
