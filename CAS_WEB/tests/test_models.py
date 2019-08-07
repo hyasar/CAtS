@@ -2,15 +2,16 @@ from django.test import TestCase
 from cas.models import *
 import datetime
 
+
 # Create your tests here.
 class UserTestCase(TestCase):
     def setUp(self):
-        self.users = buildTestUsers('./tests/Test_Users.csv')
+        self.users = buildTestUsers('./tests/resource/Test_Users.csv')
         # self.controls = buildTestControls('Controls.csv')
 
     def test_User(self):
         """Animals that can speak are correctly identified"""
-        with open('./tests/Test_Users.csv') as f:
+        with open('./tests/resource/Test_Users.csv') as f:
             user_data = f.readlines()
         f.close()
         user_data = user_data[1:]
@@ -25,13 +26,14 @@ class UserTestCase(TestCase):
             self.assertEqual(user.last_name, last_name)
             self.assertEqual(user.email, email)
 
+
 class ProjectTestCase(TestCase):
     def setUp(self):
-        self.users = buildTestUsers('./tests/Test_Users.csv')
-        self.projects = buildTestProjects('./tests/Test_Projects.csv', self.users)
+        self.users = buildTestUsers('./tests/resource/Test_Users.csv')
+        self.projects = buildTestProjects('./tests/resource/Test_Projects.csv', self.users)
 
     def test_Project(self):
-        with open('./tests/Test_Projects.csv') as f:
+        with open('./tests/resource/Test_Projects.csv') as f:
             project_data = f.readlines()
         f.close()
         project_data = project_data[1:]
@@ -44,6 +46,7 @@ class ProjectTestCase(TestCase):
             self.assertEqual(project.name, name)
             self.assertEqual(project.description, description)
             self.assertEqual(project.user, self.users[int(index)])
+
 
 def buildTestUsers(user_file):
     with open(user_file) as f:
