@@ -2,8 +2,9 @@ import sqlalchemy as db
 import psycopg2
 import json
 import collections
+import os
 
-engine = db.create_engine('postgresql://cats:miao@54.162.139.224:5432/cats')
+engine = os.environ['POSTGRES_DATABASE_URL']
 connection = engine.connect()
 metadata = db.MetaData()
 groups_table = db.Table('groups', metadata, autoload=True, autoload_with=engine)

@@ -8,7 +8,7 @@ class UserTestCase(TestCase):
     def setUp(self):
         self.users = build_test_users('./tests/resource/Test_Users.csv')
 
-    def test_User(self):
+    def test_user(self):
         """Animals that can speak are correctly identified"""
         with open('./tests/resource/Test_Users.csv') as f:
             user_data = f.readlines()
@@ -82,23 +82,3 @@ def build_test_projects(project_file, users):
 
     return projects
 
-
-# def buildTestControls(control_file):
-#     with open(control_file) as f:
-#         control_data = f.readlines()
-#     f.close()
-#
-#     controls = []
-#     for i in control_data:
-#         cid, gid, title, parameters, properties, links, parts, \
-#         class_info, pid, high, moderate, low, iid = i
-#
-#         control = Control(id=iid, cid=cid, gid=gid, title=title, \
-#                           parameters=parameters, properties=properties, \
-#                           links=links, parts=parts, class_info=class_info, \
-#                           pid=pid, high=high, moderate=moderate, low=low)
-#
-#         # control.save()
-#         controls.append(control)
-#
-#     return controls
