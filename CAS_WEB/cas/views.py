@@ -266,16 +266,9 @@ def update_project(request, id):
 
 @login_required
 def delete_project(request):
-    # if request.method == 'GET':
-    #
-    #     content['user'] = request.user
-    #     content['project'] = project
-    #     return render(request, 'cas/delete_project.html', content)
-
     project_id = request.POST['project_id']
 
     project = get_object_or_404(Project, pk=project_id, user=request.user)
-    content = dict()
 
     if project:
         project.delete()
@@ -323,7 +316,7 @@ def parse_testing_report(request):
             message = "No report sent"
             return HttpResponse(message)
 
-        parseReportXML(testing_report, project, build_number)
+        parse_report_xml(testing_report, project, build_number)
         message = "Report parsed successfully"
         return HttpResponse(message)
 
@@ -371,7 +364,7 @@ def get_issues(request):
         controlconfigs = ControlConfigure.objects.filter(project=project_obj)
         issues = {}
         for controlconfig in controlconfigs:
-            issues_tmp = searchIssueXML(controlconfig, report_obj)
+            issues_tmp = search_issue_xml(controlconfig, report_obj)
             issues[controlconfig.control.cid] = issues_tmp
     except ControlConfigure.DoesNotExist:
         issues = {}

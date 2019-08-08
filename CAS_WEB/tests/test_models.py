@@ -6,8 +6,7 @@ import datetime
 # Create your tests here.
 class UserTestCase(TestCase):
     def setUp(self):
-        self.users = buildTestUsers('./tests/resource/Test_Users.csv')
-        # self.controls = buildTestControls('Controls.csv')
+        self.users = build_test_users('./tests/resource/Test_Users.csv')
 
     def test_User(self):
         """Animals that can speak are correctly identified"""
@@ -29,10 +28,10 @@ class UserTestCase(TestCase):
 
 class ProjectTestCase(TestCase):
     def setUp(self):
-        self.users = buildTestUsers('./tests/resource/Test_Users.csv')
-        self.projects = buildTestProjects('./tests/resource/Test_Projects.csv', self.users)
+        self.users = build_test_users('./tests/resource/Test_Users.csv')
+        self.projects = build_test_projects('./tests/resource/Test_Projects.csv', self.users)
 
-    def test_Project(self):
+    def test_project(self):
         with open('./tests/resource/Test_Projects.csv') as f:
             project_data = f.readlines()
         f.close()
@@ -48,7 +47,7 @@ class ProjectTestCase(TestCase):
             self.assertEqual(project.user, self.users[int(index)])
 
 
-def buildTestUsers(user_file):
+def build_test_users(user_file):
     with open(user_file) as f:
         user_data = f.readlines()
     f.close()
@@ -66,7 +65,7 @@ def buildTestUsers(user_file):
     return users
 
 
-def buildTestProjects(project_file, users):
+def build_test_projects(project_file, users):
     with open(project_file) as f:
         project_data = f.readlines()
     f.close()
@@ -83,7 +82,7 @@ def buildTestProjects(project_file, users):
 
     return projects
 
-#
+
 # def buildTestControls(control_file):
 #     with open(control_file) as f:
 #         control_data = f.readlines()

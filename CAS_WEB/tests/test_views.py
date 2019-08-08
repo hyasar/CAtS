@@ -62,13 +62,9 @@ class LoginTest(TestCase):
         response = self.client.get('/get_control_by_id', {"id": "2"})
         self.assertEqual(response.status_code, 200)
 
-    def test_searchControls(self):
+    def test_search_controls_by_name(self):
         response = self.client.get('/searchControls', {"key": "Access"})
         self.assertEqual(response.status_code, 200)
-
-    # def test_search_project_by_id(self):
-    #     response = self.client.get('/search/4/')
-    #     self.assertEqual(response.status_code, 200)
 
     def test_update_project_get(self):
         response = self.client.get('/update/4/')

@@ -159,7 +159,6 @@ public class CatsPublisher extends Recorder {
 
 // Request is lazily fired whenever you need to obtain information about response.
         int responseCode = ((HttpURLConnection) connection).getResponseCode();
-        System.out.println(responseCode); // Should be 200
         return true;
     }
 
@@ -192,7 +191,6 @@ public class CatsPublisher extends Recorder {
          * <p>
          * If you don't want fields to be persisted, use <tt>transient</tt>.
          */
-//        private boolean useFrench;
 
         private String casUrl;
         private String casPort;
@@ -230,8 +228,6 @@ public class CatsPublisher extends Recorder {
             // set that to properties and call save().
             casUrl = formData.getString("casUrl");
             casPort = formData.getString("casPort");
-            // ^Can also use req.bindJSON(this, formData);
-            //  (easier when there are many fields; need set* methods for this, like setUseFrench)
             save();
             return super.configure(req, formData);
         }
