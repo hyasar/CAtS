@@ -17,47 +17,48 @@ function getCookie(cname) {
   return "";
 }
 
+function key2TR(key, value) {
+  return (<tr>
+    <td scope="col">{key}</td>
+    <td scope="col">{value}</td>
+  </tr>)
+}
+
+function array2TR(array, key, id) {
+  if (key != "parts")
+    return (
+      <tr>
+        <td colspan={2}>
+          <a data-toggle="collapse" data-target={"#child-collapese-array" + key + id} href="#">{key}</a>
+          <div id={"child-collapese-array" + key + id} class="collapse">
+            <table class="table">
+              <thead>
+              </thead>
+              <tbody>
+                {
+                  array.map((item) => {
+                    if (typeof (item) != "string")
+                      return (<tr><td>{JSON.stringify(item)}</td></tr>)
+                    else
+                      return (<tr><td>{item}</td></tr>)
+                  })
+                }
+              </tbody>
+            </table>
+          </div>
+        </td>
+      </tr>
+    )
+}
+
+function replaceDot(str) {
+  if (typeof str != "string") {
+    return str;
+  }
+  return str.toString().replace(new RegExp("\\.", 'g'), "_")
+}
+
 class Description extends React.Component {
-  key2TR(key, value) {
-    return (<tr>
-      <td scope="col">{key}</td>
-      <td scope="col">{value}</td>
-    </tr>)
-  }
-
-  array2TR(array, key, id) {
-    if (key != "parts")
-      return (
-        <tr>
-          <td colspan={2}>
-            <a data-toggle="collapse" data-target={"#child-collapese-array" + key + id} href="#">{key}</a>
-            <div id={"child-collapese-array" + key + id} class="collapse">
-              <table class="table">
-                <thead>
-                </thead>
-                <tbody>
-                  {
-                    array.map((item) => {
-                      if (typeof (item) != "string")
-                        return (<tr><td>{JSON.stringify(item)}</td></tr>)
-                      else
-                        return (<tr><td>{item}</td></tr>)
-                    })
-                  }
-                </tbody>
-              </table>
-            </div>
-          </td>
-        </tr>
-      )
-  }
-
-  replaceDot(str) {
-    if (typeof str != "string") {
-      return str;
-    }
-    return str.toString().replace(new RegExp("\\.", 'g'), "_")
-  }
 
   render() {
     return (
@@ -69,8 +70,8 @@ class Description extends React.Component {
             part => (
               <tr>
                 <td>
-                  <a data-toggle="collapse" data-target={"#child-collapese" + this.replaceDot(part.id)} href="#">{part.id ? part.id : part.name}</a>
-                  <div id={"child-collapese" + this.replaceDot(part.id)} class="collapse">
+                  <a data-toggle="collapse" data-target={"#child-collapese" + replaceDot(part.id)} href="#">{part.id ? part.id : part.name}</a>
+                  <div id={"child-collapese" + replaceDot(part.id)} class="collapse">
                     <table class="table">
                       <thead>
                       </thead>
@@ -78,13 +79,13 @@ class Description extends React.Component {
                         {
                           Object.keys(part).map((key) => { // map all the key-value pairs with string value
                             if (typeof part[key] == "string")
-                              return this.key2TR(key, part[key])
+                              return key2TR(key, part[key])
                           })
                         }
                         {
                           Object.keys(part).map((key) => { // map all the key-value pairs with array value (except parts)
                             if (Array.isArray(part[key]))
-                              return this.array2TR(part[key], key, this.replaceDot(part.id))
+                              return array2TR(part[key], key, replaceDot(part.id))
                           })
                         }
                         {
@@ -94,9 +95,9 @@ class Description extends React.Component {
                                 <tr>
                                   <td colspan={2}>
                                     <div>
-                                      <a data-toggle="collapse" data-target={"#collapseControls-" + this.replaceDot(part.id)} href="#">parts</a>
+                                      <a data-toggle="collapse" data-target={"#collapseControls-" + replaceDot(part.id)} href="#">parts</a>
                                     </div>
-                                    <div class="collapse" id={"collapseControls-" + this.replaceDot(part.id)}>
+                                    <div class="collapse" id={"collapseControls-" + replaceDot(part.id)}>
                                       <div class="card card-body">
                                         <Description parts={part[key]} />
                                       </div>
@@ -139,47 +140,6 @@ class Control extends React.Component {
   componentDidMount() {
     this.loadControls();
     this.loadSelectedControls();
-  }
-
-  key2TR(key, value) {
-    return (<tr>
-      <td scope="col">{key}</td>
-      <td scope="col">{value}</td>
-    </tr>)
-  }
-
-  array2TR(array, key, id) {
-    if (key != "parts")
-      return (
-        <tr>
-          <td colspan={2}>
-            <a data-toggle="collapse" data-target={"#child-collapese-array" + key + id} href="#">{key}</a>
-            <div id={"child-collapese-array" + key + id} class="collapse">
-              <table class="table">
-                <thead>
-                </thead>
-                <tbody>
-                  {
-                    array.map((item) => {
-                      if (typeof (item) != "string")
-                        return (<tr><td>{JSON.stringify(item)}</td></tr>)
-                      else
-                        return (<tr><td>{item}</td></tr>)
-                    })
-                  }
-                </tbody>
-              </table>
-            </div>
-          </td>
-        </tr>
-      )
-  }
-
-  replaceDot(str) {
-    if (typeof str != "string") {
-      return str;
-    }
-    return str.toString().replace(new RegExp("\\.", 'g'), "_")
   }
 
   loadControls = () => {
@@ -261,7 +221,7 @@ class Control extends React.Component {
     let controlconfigs = []
     let selected = this.state.select
     for (let id in selected) {
-      controlconfigs.push({'id': id, 'keywords': Array.from(selected[id].keywords).join(',')})
+      controlconfigs.push({ 'id': id, 'keywords': Array.from(selected[id].keywords).join(',') })
     }
 
     const csrfToken = getCookie('csrftoken');
@@ -301,24 +261,24 @@ class Control extends React.Component {
       let newSet = this.state.select;
       let newKeywordDictRender = this.state.newKeywordDictAdd;
       fetch("/get_controlconfig_by_id?project_id=" + query.get("id") + '&control_id=' + control_id)
-          .then(res => res.json())
-          .then(
-              (result) => {
+        .then(res => res.json())
+        .then(
+          (result) => {
 
-                newSet[control_id] = result.control;
-                let keywords = newSet[control_id].keywords;
-                if (keywords.length > 0) {
-                  newSet[control_id].keywords = new Set(keywords.split(','));
-                } else {
-                  newSet[control_id].keywords = new Set();
-                }
-                newKeywordDictRender[control_id] = '';
-                this.setState({
-                  select: newSet,
-                  newKeywordDictAdd: newKeywordDictRender
-                });
-              }
-          )
+            newSet[control_id] = result.control;
+            let keywords = newSet[control_id].keywords;
+            if (keywords.length > 0) {
+              newSet[control_id].keywords = new Set(keywords.split(','));
+            } else {
+              newSet[control_id].keywords = new Set();
+            }
+            newKeywordDictRender[control_id] = '';
+            this.setState({
+              select: newSet,
+              newKeywordDictAdd: newKeywordDictRender
+            });
+          }
+        )
     }
   }
 
@@ -374,7 +334,7 @@ class Control extends React.Component {
     let newKeywordDictAddRender = this.state.newKeywordDictAdd;
     newKeywordDictAddRender[parseInt(target.getAttribute("cid"))] = target.value;
     this.setState({
-        newKeywordDictAdd: newKeywordDictAddRender
+      newKeywordDictAdd: newKeywordDictAddRender
     });
   };
 
@@ -386,7 +346,7 @@ class Control extends React.Component {
       newSet[id].keywords.delete(keywordDel)
     }
     this.setState({
-        select: newSet
+      select: newSet
     });
   };
 
@@ -429,13 +389,13 @@ class Control extends React.Component {
                         {
                           Object.keys(item).map((key) => { // map all the key-value pairs with string value
                             if (typeof item[key] == "string")
-                              return this.key2TR(key, item[key])
+                              return key2TR(key, item[key])
                           })
                         }
                         {
                           Object.keys(item).map((key) => { // map all the key-value pairs with array value (except parts)
                             if (Array.isArray(item[key]))
-                              return this.array2TR(item[key], key, this.replaceDot(item.id))
+                              return array2TR(item[key], key, replaceDot(item.id))
                           })
                         }
                         {item.parts ?
@@ -443,9 +403,9 @@ class Control extends React.Component {
                             <tr>
                               <td colspan={2}>
                                 <div>
-                                  <a data-toggle="collapse" data-target={"#collapseControlsParts-" + this.replaceDot(item.id)} href="#">parts</a>
+                                  <a data-toggle="collapse" data-target={"#collapseControlsParts-" + replaceDot(item.id)} href="#">parts</a>
                                 </div>
-                                <div class="collapse" id={"collapseControlsParts-" + this.replaceDot(item.id)}>
+                                <div class="collapse" id={"collapseControlsParts-" + replaceDot(item.id)}>
                                   <div class="card card-body">
                                     <Description parts={item.parts} />
                                   </div>
@@ -531,15 +491,15 @@ class Control extends React.Component {
                         <button type="button" class="btn btn-primary float-right"
                           cid={control_id} onClick={this.deleteClick.bind(this)}>delete</button>
                         <div class="keywords my-1">
-                          {this.sortKeywords(select[control_id].keywords).map((keyword)=>(
-                              <button
-                                  class="mx-1 my-1 btn btn-light"
-                                  keyword={keyword}
-                                  cid={control_id}
-                                  onClick={this.delInputKeyword.bind(this)}
-                              >
-                                {keyword} <img width='15' height='15' src="static/img/x.png"/>
-                              </button>
+                          {this.sortKeywords(select[control_id].keywords).map((keyword) => (
+                            <button
+                              class="mx-1 my-1 btn btn-light"
+                              keyword={keyword}
+                              cid={control_id}
+                              onClick={this.delInputKeyword.bind(this)}
+                            >
+                              {keyword} <img width='15' height='15' src="static/img/x.png" />
+                            </button>
                           ))
                           }
                           <button className="btn btn-md btn-outline-primary" onClick={this.startAddingKeyword.bind(this, control_id)}>Add keyword</button>
@@ -548,15 +508,15 @@ class Control extends React.Component {
                             {/*{ isAdding && <input type="text" cid={control_id} value={this.state.newKeywordDictAdd[control_id]} onChange={this.addInputKeyword}/> }*/}
                             {/*{ isAdding && <button type="button" onClick={this.addKeyword.bind(this, control_id)}>+</button> }*/}
 
-                            { isAdding[control_id] &&
+                            {isAdding[control_id] &&
                               <div className="input-group mb-3">
                                 <input type="text" className="form-control" placeholder="Keyword"
-                                       aria-describedby="button-addon2" cid={control_id} value={this.state.newKeywordDictAdd[control_id]}
-                                       onChange={this.addInputKeyword}/>
-                                  <div className="input-group-append">
-                                    <button className="btn btn-outline-secondary" type="button" onClick={this.addKeyword.bind(this, control_id)}
-                                            id="button-addon2">Confirm</button>
-                                  </div>
+                                  aria-describedby="button-addon2" cid={control_id} value={this.state.newKeywordDictAdd[control_id]}
+                                  onChange={this.addInputKeyword} />
+                                <div className="input-group-append">
+                                  <button className="btn btn-outline-secondary" type="button" onClick={this.addKeyword.bind(this, control_id)}
+                                    id="button-addon2">Confirm</button>
+                                </div>
                               </div>
                             }
 
@@ -570,7 +530,7 @@ class Control extends React.Component {
                 </ul>
               </div>
             </div>
-            <button id="updateControls" type="button" class="btn btn-secondary btn-block" onClick={this.commitControls.bind(this) }>Update Controls</button>
+            <button id="updateControls" type="button" class="btn btn-secondary btn-block" onClick={this.commitControls.bind(this)}>Update Controls</button>
           </div>
         </div>
       );

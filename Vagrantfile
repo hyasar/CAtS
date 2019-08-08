@@ -7,6 +7,7 @@ $PYTHON_ENV = <<SCRIPT
   sudo DEBIAN_FRONTEND=noninteractive apt-get install python3 -y
   sudo DEBIAN_FRONTEND=noninteractive apt-get install python3-pip -y
   sudo python3 -m pip install -r /vagrant/CAS_WEB/requirements.txt --no-cache-dir
+  sudo python3 -m pip install coverage
 SCRIPT
 
 Vagrant.configure(2) do |config|
