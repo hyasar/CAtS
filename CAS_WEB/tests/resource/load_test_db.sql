@@ -12,7 +12,7 @@ INSERT INTO public.cas_project (id, name, description, created_time, updated_tim
 INSERT INTO public.cas_project (id, name, description, created_time, updated_time, user_id) VALUES (9, 'MASA JPL', 'NASA''s JPL is the graphical editor for NASA FPP Model.', '2019-08-06 20:18:05.267036', '2019-08-06 20:18:05.267057', 3);
 INSERT INTO public.cas_project (id, name, description, created_time, updated_time, user_id) VALUES (10, 'Aber AutoDriving', 'Uber''s auto-driving services. ', '2019-08-06 20:21:31.307520', '2019-08-06 20:21:31.307541', 4);
 INSERT INTO public.cas_project (id, name, description, created_time, updated_time, user_id) VALUES (11, 'HHQ Machine Learning Project', 'LTI''s Machine learning Project.', '2019-08-06 20:23:53.678742', '2019-08-06 20:23:53.678761', 5);
-
+SELECT setval('cas_project_id_seq', (SELECT MAX(id) FROM public.cas_project)+1);
 
 
 INSERT INTO public.cas_controlconfigure (id, keywords, control_id, project_id) VALUES (85, 'access,username,error', 1, 9);
