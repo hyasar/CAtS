@@ -1,67 +1,46 @@
 from django.test import TestCase, Client
-import unittest
 from cas.models import *
+from django.utils.encoding import force_text
+
 
 class LoginTest(TestCase):
     def setUp(self):
-        # Every test needs a client.
         self.client = Client()
-        # self.client.login(username="yueqi", password="yueqi")
-        # self.credentials = {
-        #     'username': 'yueqi',
-        #     'password': 'yueqi'}
-        # User.objects.create_user(**self.credentials)
-        user = User.objects.create_user(username='username', password='password')
-        self.client.login(username='username', password='password')
+        self.client.login(username='yueqi', password='yueqi')
 
     def test_login_get(self):
-        # Issue a GET request.
         response = self.client.get('/')
-
-        # Check that the response is 200 OK.
         self.assertEqual(response.status_code, 200)
-
         self.assertTemplateUsed(response, 'cas/login.html')
 
-    # def test_login_valid(self):
-    #     # Issue a GET request.
-    #     # response = self.client.post('/', {'username': 'yueqi', 'password': 'yueqi'})
-    #
-    #     response = self.client.post('/', **self.credentials)
-    #
-    #     # Check that the response is 200 OK.
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertTrue(response.context['user'].is_active)
-
-
-        # self.assertTemplateUsed(response, 'cas/projects.html')
-
-
-    # def test_login_invalid(self):
-    #     # Issue a GET request.
-    #     response = self.client.post('/', {'username': 'yueqi', 'password': 'wrong'})
-    #
-    #     # Check that the response is 200 OK.
-    #     self.assertEqual(response.status_code, 200)
-
-
-    def test_projects(self):
-        # Issue a GET request.
-        # response = self.client.post('/', {'username': 'yueqi', 'password': 'yueqi'})
-
-        response = self.client.post('/projects')
-
-        # Check that the response is 200 OK.
+    def test_get_project_list(self):
+        response = self.client.get('/projects')
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'cas/projects.html')
 
-    def test_config_project(self):
-        # Issue a GET request.
-        # response = self.client.post('/', {'username': 'yueqi', 'password': 'yueqi'})
-
-        response = self.client.post('/config_project',{'id':'1'})
-
-        # Check that the response is 200 OK.
+    def test_get_project_configuration(self):
+        response = self.client.get('/config_project', {'id': 3})
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'cas/projects.html')
+        self.assertTemplateUsed(response, 'cas/config_project.html')
+
+    def test_get_project_controls(self):
+        response = self.client.get('/get_project_controlls', {'id': 3})
+        self.assertEqual(response.status_code, 200)
+        self.assertJSONEqual(force_text(response.content),
+                             {"controls":
+                                  [{"cid": "ac-1", "id": 1, "title": "Access Control Policy and Procedures", "keywords": "access,accessor,field,private"},
+                                   {"cid": "ac-2", "id": 2, "title": "Account Management", "keywords": "account"},
+                                   {"cid": "ac-6", "id": 6, "title": "Least Privilege", "keywords": "privilege"}
+                                   ]
+                              })
+
+    def test_create_project_get(self):
+        response = self.client.get('/new_project')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'cas/new_project.html')
+
+    # def test_create_project_post(self):
+    #     response = self.client.post('/new_project', {"name": "test_create_project", "description": "it is a test for creating new projects in cas"})
+    #     self.assertEqual(response.status_code, 200)
+    #     print("location: ", response["location"])
 

@@ -14,3 +14,23 @@ INSERT INTO public.cas_project (id, name, description, created_time, updated_tim
 INSERT INTO public.cas_project (id, name, description, created_time, updated_time, user_id) VALUES (4, 'CAtS', 'continuous authorization service', '2019-08-01 02:24:41.227464', '2019-08-01 02:24:41.227490', 1);
 INSERT INTO public.cas_project (id, name, description, created_time, updated_time, user_id) VALUES (1, 'EDISS Project', 'data intensive scalable system', '2019-07-29 03:21:10.862322', '2019-07-29 03:21:10.862344', 1);
 
+INSERT INTO public.cas_controlconfigure (id, keywords, control_id, project_id) VALUES (85, 'access,username,error', 1, 9);
+INSERT INTO public.cas_controlconfigure (id, keywords, control_id, project_id) VALUES (86, 'username, error, line', 2, 9);
+INSERT INTO public.cas_controlconfigure (id, keywords, control_id, project_id) VALUES (87, 'enforcement,time,limit,connecting,error', 3, 9);
+INSERT INTO public.cas_controlconfigure (id, keywords, control_id, project_id) VALUES (88, 'type,error,message,unit,test', 8, 9);
+INSERT INTO public.cas_controlconfigure (id, keywords, control_id, project_id) VALUES (89, 'log,out,time', 35, 10);
+INSERT INTO public.cas_controlconfigure (id, keywords, control_id, project_id) VALUES (90, 'user', 36, 10);
+INSERT INTO public.cas_controlconfigure (id, keywords, control_id, project_id) VALUES (91, 'time', 37, 10);
+INSERT INTO public.cas_controlconfigure (id, keywords, control_id, project_id) VALUES (92, 'time,error', 345, 10);
+INSERT INTO public.cas_controlconfigure (id, keywords, control_id, project_id) VALUES (93, 'time,usable,no,none,access', 348, 10);
+INSERT INTO public.cas_controlconfigure (id, keywords, control_id, project_id) VALUES (94, 'error', 2, 11);
+INSERT INTO public.cas_controlconfigure (id, keywords, control_id, project_id) VALUES (95, 'message', 128, 11);
+INSERT INTO public.cas_controlconfigure (id, keywords, control_id, project_id) VALUES (96, 'type', 149, 11);
+INSERT INTO public.cas_controlconfigure (id, keywords, control_id, project_id) VALUES (97, 'usage', 159, 11);
+INSERT INTO public.cas_controlconfigure (id, keywords, control_id, project_id) VALUES (98, 'message,working', 259, 11);
+INSERT INTO public.cas_controlconfigure (id, keywords, control_id, project_id) VALUES (224, 'accessor,private,access,field', 1, 3);
+INSERT INTO public.cas_controlconfigure (id, keywords, control_id, project_id) VALUES (225, 'account', 2, 3);
+INSERT INTO public.cas_controlconfigure (id, keywords, control_id, project_id) VALUES (226, 'privilege', 6, 3);
+INSERT INTO public.cas_controlconfigure (id, keywords, control_id, project_id) VALUES (237, 'sdf', 1, 5);
+INSERT INTO public.cas_controlconfigure (id, keywords, control_id, project_id) VALUES (238, 'te', 3, 5);
+INSERT INTO public.cas_controlconfigure (id, keywords, control_id, project_id) VALUES (239, '', 5, 5);

@@ -2,15 +2,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect, JsonResponse, Http404, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
-
-from os.path import expanduser, join
-from django.core.files.storage import FileSystemStorage
 
 from cas.utils.xml_parser import *
 from .forms import *
@@ -102,20 +98,15 @@ def get_project_list_action(request):
 @login_required
 def get_project_configuration(request):
     content = dict()
-    content['user'] = request.user
-
     project = Project.objects.get(user=request.user, id=request.GET.get('id'))
-
+    content['user'] = request.user
     content['project'] = project
-    # content['controls'] = get_control_list_action(request)
-    # print(content['controls'])
     return render(request, 'cas/config_project.html', content)
 
 
 @login_required
 def get_project_controlls(request):
     content = dict()
-
     project = Project.objects.get(user=request.user, id=request.GET.get('id'))
     controls = list(
         Control.objects.filter(controlconfigure__in=ControlConfigure.objects.filter(project=project)).values("cid",
@@ -124,7 +115,9 @@ def get_project_controlls(request):
     content['controls'] = []
     for control in controls:
         control_obj = get_object_or_404(Control, id=control['id'])
-        keywords = ','.join(ControlConfigure.objects.filter(project=project, control=control_obj).first().keywords)
+        keywords = list(ControlConfigure.objects.filter(project=project, control=control_obj).first().keywords)
+        keywords.sort()
+        keywords = ','.join(keywords)
         control['keywords'] = keywords
         content['controls'].append(control)
 
@@ -137,7 +130,6 @@ def create_project_action(request):
     if request.method == 'GET':
         content['user'] = request.user
         content['form'] = ProjectForm()
-        print(content['form'])
         return render(request, 'cas/new_project.html', content)
 
     project = Project(name=request.POST['name'], description=request.POST['description'], user=request.user,
@@ -359,9 +351,7 @@ def get_reports(request):
     content = dict()
     project_id = request.GET.get('id')
     project_obj = get_object_or_404(Project, id=project_id)
-    print(project_obj)
     reports = list(Report.objects.filter(project=project_obj).order_by('version').values())
-    print(reports)
     content['reports'] = reports
     return JsonResponse(content)
 
