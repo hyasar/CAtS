@@ -113,7 +113,7 @@ public class CatsPublisher extends Recorder {
 
         File firstFile = files[0];
         String boundary = Long.toHexString(System.currentTimeMillis()); // Just generate some unique random value.
-        String CRLF = "\r\n"; // Line separator required by multipart/form-data.
+        String crlf = "\r\n"; // Line separator required by multipart/form-data.
 
         URLConnection connection = new URL(url).openConnection();
         connection.setDoOutput(true);
@@ -124,41 +124,41 @@ public class CatsPublisher extends Recorder {
                 PrintWriter writer = new PrintWriter(new OutputStreamWriter(output, charset), true);
         ) {
             // Send normal param.
-            writer.append("--" + boundary).append(CRLF);
-            writer.append("Content-Disposition: form-data; name=\"username\"").append(CRLF);
-            writer.append("Content-Type: text/plain; charset=" + charset).append(CRLF);
-            writer.append(CRLF).append(username).append(CRLF).flush();
+            String contentTypeString = "Content-Type: text/plain; charset=";
 
-            writer.append("--" + boundary).append(CRLF);
-            writer.append("Content-Disposition: form-data; name=\"password\"").append(CRLF);
-            writer.append("Content-Type: text/plain; charset=" + charset).append(CRLF);
-            writer.append(CRLF).append(password).append(CRLF).flush();
+            writer.append("--" + boundary).append(crlf);
+            writer.append("Content-Disposition: form-data; name=\"username\"").append(crlf);
+            writer.append(contentTypeString + charset).append(crlf);
+            writer.append(crlf).append(username).append(crlf).flush();
 
-            writer.append("--" + boundary).append(CRLF);
-            writer.append("Content-Disposition: form-data; name=\"projectId\"").append(CRLF);
-            writer.append("Content-Type: text/plain; charset=" + charset).append(CRLF);
-            writer.append(CRLF).append(projectId).append(CRLF).flush();
+            writer.append("--" + boundary).append(crlf);
+            writer.append("Content-Disposition: form-data; name=\"password\"").append(crlf);
+            writer.append(contentTypeString + charset).append(crlf);
+            writer.append(crlf).append(password).append(crlf).flush();
 
-            writer.append("--" + boundary).append(CRLF);
-            writer.append("Content-Disposition: form-data; name=\"buildNumber\"").append(CRLF);
-            writer.append("Content-Type: text/plain; charset=" + charset).append(CRLF);
-            writer.append(CRLF).append(String.valueOf(buildNumber)).append(CRLF).flush();
+            writer.append("--" + boundary).append(crlf);
+            writer.append("Content-Disposition: form-data; name=\"projectId\"").append(crlf);
+            writer.append(contentTypeString + charset).append(crlf);
+            writer.append(crlf).append(projectId).append(crlf).flush();
+
+            writer.append("--" + boundary).append(crlf);
+            writer.append("Content-Disposition: form-data; name=\"buildNumber\"").append(crlf);
+            writer.append(contentTypeString + charset).append(crlf);
+            writer.append(crlf).append(String.valueOf(buildNumber)).append(crlf).flush();
 
             // Send text file.
-            writer.append("--" + boundary).append(CRLF);
-            writer.append("Content-Disposition: form-data; name=\"testingReport\"; filename=\"" + firstFile.getName() + "\"").append(CRLF);
-            writer.append("Content-Type: text/plain; charset=" + charset).append(CRLF); // Text file itself must be saved in this charset!
-            writer.append(CRLF).flush();
+            writer.append("--" + boundary).append(crlf);
+            writer.append("Content-Disposition: form-data; name=\"testingReport\"; filename=\"" + firstFile.getName() + "\"").append(crlf);
+            writer.append(contentTypeString + charset).append(crlf); // Text file itself must be saved in this charset!
+            writer.append(crlf).flush();
             Files.copy(firstFile.toPath(), output);
             output.flush(); // Important before continuing with writer!
-            writer.append(CRLF).flush(); // CRLF is important! It indicates end of boundary.
+            writer.append(crlf).flush(); // crlf is important! It indicates end of boundary.
 
 
-            writer.append("--" + boundary + "--").append(CRLF).flush();
+            writer.append("--" + boundary + "--").append(crlf).flush();
         }
 
-// Request is lazily fired whenever you need to obtain information about response.
-        int responseCode = ((HttpURLConnection) connection).getResponseCode();
         return true;
     }
 

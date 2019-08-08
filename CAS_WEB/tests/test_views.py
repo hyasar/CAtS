@@ -106,10 +106,7 @@ class LoginTest(TestCase):
     def test_get_controlconfig_by_id(self):
         response = self.client.get('/get_controlconfig_by_id', {"project_id": "3", "control_id": "1"})
         self.assertEqual(response.status_code, 200)
-    
-    # def test_get_reports(self):
-    #     response = self.client.get('/get_reports', {"project_id": "3", "control_id": "1"})
-    #     self.assertEqual(response.status_code, 200)
+
 
     def test_logout(self):
         response = self.client.get('/logout')
