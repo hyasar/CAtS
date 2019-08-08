@@ -6,7 +6,7 @@ COMA_SPACE = re.compile('[,|\\s|_]')
 REX = re.compile('[^a-z0-9]+')
 
 
-def parseReport(csv_file, project, report_version):
+def parse_report(csv_file, project, report_version):
 
     report = Report(project=project, report_version=report_version)
     report.save()
@@ -38,14 +38,14 @@ def parseReport(csv_file, project, report_version):
     return report
 
 
-def searchIssue(ControlConfigure, report):
+def search_issue(control_configure, report):
     all_issues = CSVIssue.objects.filter(report=report)
 
     issues = []
     for issue in all_issues:
         count = 0
         for word in issue.rule:
-            if word in ControlConfigure.keywords:
+            if word in control_configure.keywords:
                 count += 1
             if count == 3:
                 issue_json = serializers.serialize('json', issue)

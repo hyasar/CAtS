@@ -3,7 +3,7 @@ from xml.etree import ElementTree as ET
 from django.forms.models import model_to_dict
 
 
-def parseReportXML(file, project, report_version):
+def parse_report_xml(file, project, report_version):
     report = Report(project=project, version=report_version)
     report.save()
 
@@ -16,20 +16,19 @@ def parseReportXML(file, project, report_version):
         method, location, group, code, severity, message, _ = bug
 
         location = location[0]
-        sourcefile, startLine, endLine = location.find('SourceFile'), \
+        sourcefile, start_line, end_line = location.find('SourceFile'), \
                                          location.find('StartLine'), location.find('EndLine')
 
         rule = message.text
         issue = XMLIssue(report=report, sourcefile=sourcefile.text, \
-                         startLine=startLine.text, endLine=endLine.text, group=group.text, code=code.text, \
+                         startLine=start_line.text, endLine=end_line.text, group=group.text, code=code.text, \
                          severity=severity.text, rule=rule)
-        # created_time=date
         issue.save()
 
     return report
 
 
-def searchIssueXML(controlconfig, report):
+def search_issue_xml(controlconfig, report):
     try:
         all_issues = XMLIssue.objects.filter(report=report)
         issues = []

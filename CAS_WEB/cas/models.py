@@ -34,10 +34,8 @@ class Project(models.Model):
     description = models.TextField(blank=True, null=True, max_length=600)
     created_time = models.DateTimeField(auto_now_add=True)
     updated_time = models.DateTimeField(auto_now=True)
-    # control = models.ManyToManyField(Control)
 
     def __str__(self):
-        # return 'Project(id=' + str(self.id) + ', name=' + str(self.name) + ')'
         return self.name
 
 

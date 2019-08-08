@@ -4,19 +4,13 @@
 function getCSRFToken() {
     var cookies = document.cookie.split(";");
     for (var i = 0; i < cookies.length; i++) {
-        c = cookies[i].trim();
+        var c = cookies[i].trim();
         if (c.startsWith("csrftoken=")) {
             return c.substring("csrftoken=".length, c.length);
         }
     }
     return "unknown";
 }
-
-// function initialize(){
-//     $("input[id^='project_id']").each(function(i, element){
-//         project_ids.push(element.value);
-//     });
-// }
 
 function deleteProject(project_id, project_name) {
     var result = confirm("Are you sure you want to delete " + project_name + "?");
@@ -35,4 +29,3 @@ function deleteProject(project_id, project_name) {
     }
 }
 
-// window.onload = initialize();
