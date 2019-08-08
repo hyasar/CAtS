@@ -4,15 +4,16 @@ INSERT INTO public.auth_user (id, password, last_login, is_superuser, username, 
 INSERT INTO public.auth_user (id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined) VALUES (4, 'pbkdf2_sha256$150000$e11m721IB3hF$zqQXR/fnmJQgOTAxehtJ/5RSW5JkYmpp5iph1sVSFDU=', '2019-08-06 20:14:40.631378', false, 'xiaotong', 'Tong', 'Xiao', 'tongxiao@andrew.cmu.edu', false, true, '2019-08-06 20:14:40.386141');
 INSERT INTO public.auth_user (id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined) VALUES (5, 'pbkdf2_sha256$150000$1snH3QNjQYqB$4sqBJvzReI29bW5a19+vYF34I/9B+F+CmKw/24EycJE=', '2019-08-06 20:15:25.127479', false, 'Jingze', 'Jingze', 'Shi', 'jingzes@andrew.cmu.edu', false, true, '2019-08-06 20:15:24.873391');
 
-
-INSERT INTO public.cas_project (id, name, description, created_time, updated_time, user_id) VALUES (10, 'Aber AutoDriving', 'Uber''s auto-driving services. ', '2019-08-06 20:21:31.307520', '2019-08-06 20:21:31.307541', 4);
-INSERT INTO public.cas_project (id, name, description, created_time, updated_time, user_id) VALUES (2, 'IoT project: order fulfillment', 'iot project', '2019-08-01 02:18:09.270583', '2019-08-01 02:18:09.270607', 1);
-INSERT INTO public.cas_project (id, name, description, created_time, updated_time, user_id) VALUES (5, 'Gaagle Chome Service', 'this is spadar', '2019-08-03 18:40:20.452982', '2019-08-03 18:40:20.453000', 2);
-INSERT INTO public.cas_project (id, name, description, created_time, updated_time, user_id) VALUES (3, 'Pet Clinic', 'pet clinic project: better health condition of pets', '2019-08-01 02:23:23.685747', '2019-08-01 02:23:23.685773', 1);
-INSERT INTO public.cas_project (id, name, description, created_time, updated_time, user_id) VALUES (11, 'HHQ Machine Learning Project', 'LTI''s Machine learning Project.', '2019-08-06 20:23:53.678742', '2019-08-06 20:23:53.678761', 5);
-INSERT INTO public.cas_project (id, name, description, created_time, updated_time, user_id) VALUES (9, 'MASA JPL', 'NASA''s JPL is the graphical editor for NASA FPP Model.', '2019-08-06 20:18:05.267036', '2019-08-06 20:18:05.267057', 3);
-INSERT INTO public.cas_project (id, name, description, created_time, updated_time, user_id) VALUES (4, 'CAtS', 'continuous authorization service', '2019-08-01 02:24:41.227464', '2019-08-01 02:24:41.227490', 1);
 INSERT INTO public.cas_project (id, name, description, created_time, updated_time, user_id) VALUES (1, 'EDISS Project', 'data intensive scalable system', '2019-07-29 03:21:10.862322', '2019-07-29 03:21:10.862344', 1);
+INSERT INTO public.cas_project (id, name, description, created_time, updated_time, user_id) VALUES (2, 'IoT project: order fulfillment', 'iot project', '2019-08-01 02:18:09.270583', '2019-08-01 02:18:09.270607', 1);
+INSERT INTO public.cas_project (id, name, description, created_time, updated_time, user_id) VALUES (3, 'Pet Clinic', 'pet clinic project: better health condition of pets', '2019-08-01 02:23:23.685747', '2019-08-01 02:23:23.685773', 1);
+INSERT INTO public.cas_project (id, name, description, created_time, updated_time, user_id) VALUES (4, 'CAtS', 'continuous authorization service', '2019-08-01 02:24:41.227464', '2019-08-01 02:24:41.227490', 1);
+INSERT INTO public.cas_project (id, name, description, created_time, updated_time, user_id) VALUES (5, 'Gaagle Chome Service', 'this is spadar', '2019-08-03 18:40:20.452982', '2019-08-03 18:40:20.453000', 2);
+INSERT INTO public.cas_project (id, name, description, created_time, updated_time, user_id) VALUES (9, 'MASA JPL', 'NASA''s JPL is the graphical editor for NASA FPP Model.', '2019-08-06 20:18:05.267036', '2019-08-06 20:18:05.267057', 3);
+INSERT INTO public.cas_project (id, name, description, created_time, updated_time, user_id) VALUES (10, 'Aber AutoDriving', 'Uber''s auto-driving services. ', '2019-08-06 20:21:31.307520', '2019-08-06 20:21:31.307541', 4);
+INSERT INTO public.cas_project (id, name, description, created_time, updated_time, user_id) VALUES (11, 'HHQ Machine Learning Project', 'LTI''s Machine learning Project.', '2019-08-06 20:23:53.678742', '2019-08-06 20:23:53.678761', 5);
+
+
 
 INSERT INTO public.cas_controlconfigure (id, keywords, control_id, project_id) VALUES (85, 'access,username,error', 1, 9);
 INSERT INTO public.cas_controlconfigure (id, keywords, control_id, project_id) VALUES (86, 'username, error, line', 2, 9);
