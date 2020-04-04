@@ -120,3 +120,4 @@ static_collected
 .vagrant/
 
 # migration cache
+CAS_WEB/cas/migrations
