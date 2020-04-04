@@ -115,3 +115,8 @@ static_collected
 
 # DS_STORE
 **/.DS_Store
+
+# vagrant
+.vagrant/
+
+# migration cache
