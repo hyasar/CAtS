@@ -42,7 +42,7 @@ urlpatterns = [
     path('get_issues', views.get_issues, name='get_issues'),
     path('logout', views.logout_action, name='logout'),
     path('profile', views.get_profile_action, name='get_profile'),
-    path('update_profile', views.update_profile, name='update_profile'),
+    path('update_profile', views.update_profile_action, name='update_profile_info'),
     path('setting', views.get_setting_action, name='get_setting'),
     path('change_password/<int:id>/', views.change_password_action, name='change_password'),
 ]

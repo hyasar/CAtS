@@ -125,7 +125,7 @@ def change_password_action(request, id):
  
  
 @login_required
-def update_profile(request):
+def update_profile_action(request):
     if request.method == 'GET':
         content = dict()
         content['user'] = request.user
