@@ -42,5 +42,6 @@ urlpatterns = [
     path('get_issues', views.get_issues, name='get_issues'),
     path('logout', views.logout_action, name='logout'),
     path('profile', views.get_profile_action, name='get_profile'),
+    path('update_profile', views.update_profile, name='update_profile'),
 
 ]

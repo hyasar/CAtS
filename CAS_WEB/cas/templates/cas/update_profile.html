@@ -16,20 +16,8 @@
     <!-- Customized stylesheet -->
     {% load static %}
     <link href="{% static '/css/app.css' %}" rel="stylesheet" type="text/css">
-    <script src="{% static '/js/projects.js' %}" type="text/javascript" async defer></script>
 
-
-    <!-- Load react -->
-    <script src="https://unpkg.com/react@16/umd/react.production.min.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js" crossorigin></script>
-
-    <!-- Load scripts-->
-    <script src="static/js/jquery.min.js"></script>
-    <script src="static/js/popper.min.js"></script>
-    <script src="static/js/bootstrap.min.js"></script>
-
-
-    <title mb-3>Profile</title>
+    <title mb-3>Update Profile</title mb-3>
 </head>
 <body>
 
@@ -53,8 +41,7 @@
                aria-haspopup="true" aria-expanded="false">
                 {{ user.username }}
             </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown"
-                 style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 0px; will-change: transform;">
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="{% url 'get_profile' %}">Profile</a>
                 <a class="dropdown-item" href="#">Settings</a>
                 <div class="dropdown-divider"></div>
@@ -65,30 +52,45 @@
 </nav>
 
 <section class="bg-light py-4">
-    <div class="container">
-        <div class="mb-2">
-            <h2> User Profile for: {{ user.username }} </h2>
-            <div class="card bg-info">
-                <div class="card-body">
-                    
-                    <div class="row">
-                        <!-- <p class="card-title mb-3">{{ user.username }}</p> -->
-                        <div class="col-sm-4">
-                            <h5>First Name</h5>
-                            <h5>Last Name</h5>
-                            <h5>Email Address</h5>
-                        </div>
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4 login-clean">
+            <form method="POST" action="{% url 'update_profile' %}">
+                {% csrf_token %}
+                <div class="text-primary illustration"><i class="fas fa-cat mr-1"></i></div>
+                <h3>Update Information: {{ user.username }}</h3>
 
-                        <div class="col-sm-6">
-                            <h5>{{ user.first_name }}</h5>
-                            <h5>{{ user.last_name }}</h5>
-                            <h5>{{ user.email }}</h5>
-                        </div>
-                    </div>
+                <div class="form-group">
+                    <label for="name">
+                        First Name
+                    </label>
+                    <input class="form-control" id="firstName" name="firstName" value="{{user.first_name}}">
+
+                    <label for="name">
+                        Last Name
+                    </label>
+                    <input class="form-control" id="lastName" name="lastName" value="{{user.last_name}}">
+
+                    <label for="email">
+                        Email
+                    </label>
+                    <textarea class="form-control" id="email" name="email">{{user.email}}</textarea>
+
                 </div>
-            </div>
-            <a href="{% url 'update_profile' %}" class="btn btn-secondary btn-block">Update Info</a>
+
+
+                <div class="errorlist">
+                    {% for error in form.non_field_errors %}
+                    <p class="error">
+                        {{ error }}
+                    </p>
+                    {% endfor %}
+                </div>
+
+                <button type="submit" class="btn btn-secondary btn-block">Update</button>
+            </form>
         </div>
+        <div class="col-md-4"></div>
     </div>
 </section>
 

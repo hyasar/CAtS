@@ -79,16 +79,45 @@ def logout_action(request):
     logout(request)
     return redirect(reverse('login'))
 
+
 @login_required
 def get_profile_action(request):
     content = dict()
     content['user'] = request.user
 
-    user = User.objects.get(username=request.user.username)
+    # user = request.user
 
-    content['name'] = user.get_username()
-    content['email'] = user.email
+    # content['firstName'] = user.first_name
+    # content['lastName']
+    # content['email'] = user.email
     return render(request, 'cas/profile.html', content)
+
+
+@login_required
+def update_profile(request):
+    if request.method == 'GET':
+        content = dict()
+        content['user'] = request.user
+
+        return render(request, 'cas/update_profile.html', content)
+
+    # project = get_object_or_404(Project, pk=id)
+    user = request.user
+    firstName = request.POST['firstName']
+    lastName = request.POST['lastName']
+    email = request.POST['email']
+
+    user.first_name = firstName
+    user.last_name = lastName
+    user.email = email
+    user.save()
+
+    content = dict()
+    content['user'] = user
+    # content['name'] = name
+    # content['email'] = email
+
+    return redirect(reverse('get_profile'))
 
 
 @login_required
