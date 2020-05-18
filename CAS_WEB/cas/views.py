@@ -84,8 +84,10 @@ def get_profile_action(request):
     content = dict()
     content['user'] = request.user
 
-    content['name'] = 'tmp name'
-    content['description'] = 'tmp description'
+    user = User.objects.get(username=request.user.username)
+
+    content['name'] = user.get_username()
+    content['email'] = user.email
     return render(request, 'cas/profile.html', content)
 
 
