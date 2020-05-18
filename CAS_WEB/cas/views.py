@@ -92,7 +92,38 @@ def get_profile_action(request):
     # content['email'] = user.email
     return render(request, 'cas/profile.html', content)
 
+@login_required
+def get_setting_action(request):
+    content = dict()
+    content['user'] = request.user
 
+    user = User.objects.get(username=request.user.username)
+
+    content['password'] = user.password
+    return render(request, 'cas/setting.html', content)
+ 
+@login_required
+def change_password_action(request, id):
+    if request.method == 'GET':
+        content = dict()
+        content['user'] = request.user
+        
+        return render(request, 'cas/change_password.html', content)
+
+    request.user.set_password(request.POST['password'])
+    request.user.save()
+    
+    content = dict()
+    content['user'] = request.user
+    user = User.objects.get(username=request.user.username)
+    updated_user = authenticate(username=user.get_username(),
+                            password=request.POST['password'])
+
+    login(request, updated_user)
+    return redirect(reverse('projects'))
+
+ 
+ 
 @login_required
 def update_profile(request):
     if request.method == 'GET':
