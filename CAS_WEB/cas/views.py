@@ -79,6 +79,15 @@ def logout_action(request):
     logout(request)
     return redirect(reverse('login'))
 
+@login_required
+def get_profile_action(request):
+    content = dict()
+    content['user'] = request.user
+
+    content['name'] = 'tmp name'
+    content['description'] = 'tmp description'
+    return render(request, 'cas/profile.html', content)
+
 
 @login_required
 def get_project_list_action(request):
