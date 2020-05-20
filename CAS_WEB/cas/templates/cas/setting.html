@@ -67,14 +67,28 @@
 <section class="bg-light py-4">
     <div class="container">
         <div class="mb-2">
+            <h2> USER SETTING </h2>
             <div class="card">
                 <div class="card-body">
-                    <p class="card-title mb-3">{{ user.username }}</p>
-                    <a href="{% url 'change_password' user.id %}" class="btn btn-secondary btn-block">
-                        Change Password
-                    </a>  
+                    <!-- <p class="card-title mb-3">USER SETTING</p> -->
+                    <div class="row">
+                        <!-- <p class="card-title mb-3">{{ user.username }}</p> -->
+                        <div class="col-sm-4">
+                            <h5>Username: </h5>
+                            <h5>Email Address:</h5>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <h5>{{ user.username }}</h5>
+                            <h5>{{ user.email }}</h5>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            <a href="{% url 'change_password' user.id %}" class="btn btn-secondary btn-block">
+                Change Password
+            </a>  
         </div>
     </div>
 </section>
