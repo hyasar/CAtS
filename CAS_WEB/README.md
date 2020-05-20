@@ -1,3 +1,8 @@
+* To migrate database:
+```
+$ python3 manage.py makemigrations cas
+```
+
 * To create database:
 ```
 $ python3 manage.py migrate
