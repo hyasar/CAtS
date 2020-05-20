@@ -1,10 +1,12 @@
 # CAtS
 
-## Jenkins
-http://:8080/
+## Port for all the services
 
-## SonarQube
-http://:9000/
+### Web-service (8000)
 
-## Web-service
-http://:8000/
+### Jenkins (8080)
+
+### SonarQube (9000)
+
+
+
