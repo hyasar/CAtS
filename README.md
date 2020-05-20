@@ -1,10 +1,10 @@
 # CAtS
 
 ## Jenkins
-http://ec2-54-162-139-224.compute-1.amazonaws.com:8080/
+http://:8080/
 
 ## SonarQube
-http://ec2-54-162-139-224.compute-1.amazonaws.com:9000/
+http://:9000/
 
 ## Web-service
-http://ec2-54-162-139-224.compute-1.amazonaws.com:8000/
+http://:8000/
