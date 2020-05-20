@@ -67,19 +67,21 @@
 <section class="bg-light py-4">
     <div class="container">
         <div class="mb-2">
-            <h2> User Profile for: {{ user.username }} </h2>
-            <div class="card bg-info">
+            <h2> USER PROFILE </h2>
+            <div class="card">
                 <div class="card-body">
                     
                     <div class="row">
                         <!-- <p class="card-title mb-3">{{ user.username }}</p> -->
                         <div class="col-sm-4">
-                            <h5>First Name</h5>
-                            <h5>Last Name</h5>
-                            <h5>Email Address</h5>
+                            <h5>Username: </h5>
+                            <h5>First Name:</h5>
+                            <h5>Last Name:</h5>
+                            <h5>Email Address:</h5>
                         </div>
 
                         <div class="col-sm-6">
+                            <h5>{{ user.username }}</h5>
                             <h5>{{ user.first_name }}</h5>
                             <h5>{{ user.last_name }}</h5>
                             <h5>{{ user.email }}</h5>
