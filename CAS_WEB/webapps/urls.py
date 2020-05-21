@@ -45,4 +45,6 @@ urlpatterns = [
     path('update_profile', views.update_profile_action, name='update_profile_info'),
     path('setting', views.get_setting_action, name='get_setting'),
     path('change_password/<int:id>/', views.change_password_action, name='change_password'),
+    path('share_project/<int:id>/', views.share_project_action, name='share'),
+    path('shared_projects', views.get_shared_project_list_action, name='get_shared_project'),
 ]

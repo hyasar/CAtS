@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.fields import JSONField, ArrayField
 from django_mysql.models import SetTextField
 
 
@@ -30,6 +30,7 @@ class Control(models.Model):
 
 class Project(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name="project")
+    shared = ArrayField(models.IntegerField(), null=True, blank=True)
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True, max_length=600)
     created_time = models.DateTimeField(auto_now_add=True)
