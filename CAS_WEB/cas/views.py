@@ -208,8 +208,9 @@ def share_project_action(request, id):
         # shared_user_ids = []
         project.shared = []
 
-    project.shared.append(user.id)
-    project.save()
+    if user.id not in project.shared:
+        project.shared.append(user.id)
+        project.save()
 
     shared_users = []
     if project.shared is not None:
@@ -254,7 +255,7 @@ def get_project_configuration(request):
 @login_required
 def get_project_controlls(request):
     content = dict()
-    project = Project.objects.get(user=request.user, id=request.GET.get('id'))
+    project = Project.objects.get(id=request.GET.get('id'))
     controls = list(
         Control.objects.filter(controlconfigure__in=ControlConfigure.objects.filter(project=project)).values("cid",
                                                                                                              "id",
