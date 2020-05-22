@@ -70,7 +70,7 @@
         <div class="mb-2">
             <div class="card">
                 <div class="card-body">
-                    <p class="card-title mb-3"><b>{{project.name}}</b> is visible to the following users: </p>
+                    <p class="card-title mb-3">PROJECT: <b>{{project.name}}</b> is visible to the following users: </p>
 
                     {% for sharedUser in sharedUsers %}
 
@@ -151,11 +151,13 @@
 
     {% else %}
 
-    <div class="row">
-        <div class="card col-12">
-            <div class="card-body">
-                <p class="card-title mb-3">Project {{project.name}} owned by: {{owner.username}}</p>
+    <div class="container">
+        <div class="mb-2">
+            <div class="card">
+                <div class="card-body">
+                <p class="card-title mb-3">PROJECT: <b>{{project.name}}</b> is owned by: <b>{{owner.username}}</b></p>
                 <p class="card-text mt-3">You are not premitted to change settings</p>
+                </div>
             </div>
         </div>
     </div>
