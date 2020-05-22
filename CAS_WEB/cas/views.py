@@ -227,7 +227,62 @@ def share_project_action(request, id):
 
     return render(request, 'cas/share.html', content)
 
+@login_required
+def stop_share_project_action(request, id):
+    if request.method == 'GET':
+        content = dict()
+        content['user'] = request.user
+        try:
+            project = Project.objects.filter(id=id).first()
+            owner = project.user
+            # shared_user_ids = project.shared
+            # shared_users = [User.objects.get(id=user_id) for user_id in shared_user_ids]
+        except:
+            raise Http404("Project not found")
 
+        shared_user_ids = project.shared
+        shared_users = []
+        if shared_user_ids is not None:
+            for uid in shared_user_ids:
+                u = User.objects.get(id=uid)
+                if u is not None:
+                    shared_users.append(u)
+            # shared_users = [User.objects.get(id=user_id) for user_id in shared_user_ids]
+
+        content['sharedUsers'] = shared_users
+        content['project'] = project
+        content['owner'] = owner
+        return render(request, 'cas/share.html', content)
+
+    project = get_object_or_404(Project, pk=id)
+    name = request.POST['stopSharedUser']
+    
+    try:
+        user = User.objects.get(username=name)
+    except:
+        raise Http404("User does not exist")
+    
+    if project.shared is not None:
+        for uid in project.shared:
+            if uid == user.id: 
+                project.shared.remove(uid)
+                project.save()
+                
+    shared_users = []
+    if project.shared is not None:
+        for uid in project.shared:
+            u = User.objects.get(id=uid)
+            if u is not None:
+                shared_users.append(u)
+
+    content = dict()
+    content['sharedUsers'] = shared_users
+    content['project'] = project
+    content['owner'] = request.user
+    content['user'] = request.user
+
+    return render(request, 'cas/share.html', content)
+    
 @login_required
 def get_shared_project_list_action(request):
     content = dict()

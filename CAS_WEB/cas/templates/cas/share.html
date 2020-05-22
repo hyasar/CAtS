@@ -65,48 +65,88 @@
 <section class="bg-light py-4">
 
     {% if owner.id == user.id %}
+    
+    <div class="container">
+        <div class="mb-2">
+            <div class="card">
+                <div class="card-body">
+                    <p class="card-title mb-3"><b>{{project.name}}</b> is visible to the following users: </p>
 
-    <div class="row">
-        <div class="card col-12">
-            <div class="card-body">
-                <p class="card-title mb-3">Share project {{project.name}} with: </p>
+                    {% for sharedUser in sharedUsers %}
 
-                {% for sharedUser in sharedUsers %}
+                        <p class="card-text mt-3">{{ sharedUser.username }}</p>
 
-                    <p class="card-text mt-3">{{ sharedUser.username }}</p>
-
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-4"></div>
-        <div class="col-md-4 login-clean">
-            <form method="POST" action="{% url 'share' project.id %}">
-                {% csrf_token %}
-
-                <div class="form-group">
-                    <label for="name">
-                        Give accessibility to
-                    </label>
-                    <input class="form-control" id="newSharedUser" name="newSharedUser" placeholder="username of whom you want to share with">
-
-                </div>
-
-
-                <div class="errorlist">
-                    {% for error in form.non_field_errors %}
-                    <p class="error">
-                        {{ error }}
-                    </p>
                     {% endfor %}
                 </div>
-
-                <button type="submit" class="btn btn-secondary btn-block">Share</button>
-            </form>
-
+            </div>
         </div>
-        <div class="col-md-4"></div>
+
+        <div class="mb-2">
+        <div class="card">
+            <div class="card-body">
+            <!-- <div class="col-md-4"></div> -->
+            <!-- <div class="col-md-4 login-clean"> -->
+                <form method="POST" action="{% url 'share' project.id %}">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <label for="name">
+                            Share project with
+                        </label>
+                        <input class="form-control" id="newSharedUser" name="newSharedUser" placeholder="username of whom you want to share with">
+
+                    </div>
+
+
+                    <div class="errorlist">
+                        {% for error in form.non_field_errors %}
+                        <p class="error">
+                            {{ error }}
+                        </p>
+                        {% endfor %}
+                    </div>
+
+                    <button type="submit" class="btn btn-secondary btn-block">Share</button>
+                </form>
+            <!-- </div> -->
+            </div>
+            <!-- <div class="col-md-4"></div> -->
+        </div>
+        </div>
+
+        <div class="mb-2">
+        <div class="card">
+            <div class="card-body">
+            <!-- <div class="col-md-4"></div> -->
+            <!-- <div class="col-md-4 login-clean"> -->
+                <form method="POST" action="{% url 'stop_share' project.id %}">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <label for="name">
+                            Stop sharing with
+                        </label>
+                        <input class="form-control" id="stopSharedUser" name="stopSharedUser" placeholder="username of whom you want to stop sharing with">
+
+                    </div>
+
+
+                    <div class="errorlist">
+                        {% for error in form.non_field_errors %}
+                        <p class="error">
+                            {{ error }}
+                        </p>
+                        {% endfor %}
+                    </div>
+
+                    <button type="submit" class="btn btn-secondary btn-block">Confirm</button>
+                </form>
+            <!-- </div> -->
+            </div>
+            <!-- <div class="col-md-4"></div> -->
+        </div>
+        </div>
+    </div>
     </div>
 
     {% else %}
@@ -122,8 +162,14 @@
 
     {% endif %}
 
-    <div class="row">
-        <a href="/project_dashboard?id={{project.id}}" class="btn btn-secondary btn-block">Go back</a>
+    <div class="container">
+        <div class="mb-2">
+            <div class="card">
+                <div class="card-body">
+                    <a href="/project_dashboard?id={{project.id}}" class="btn btn-secondary btn-block">Go back</a>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 

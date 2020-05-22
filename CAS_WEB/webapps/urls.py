@@ -46,5 +46,6 @@ urlpatterns = [
     path('setting', views.get_setting_action, name='get_setting'),
     path('change_password/<int:id>/', views.change_password_action, name='change_password'),
     path('share_project/<int:id>/', views.share_project_action, name='share'),
+    path('stop_share_project/<int:id>/', views.stop_share_project_action, name="stop_share"),
     path('shared_projects', views.get_shared_project_list_action, name='get_shared_project'),
 ]
