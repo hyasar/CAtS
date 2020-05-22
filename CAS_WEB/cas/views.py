@@ -360,7 +360,7 @@ def search_projects_action(request):
     content['user'] = request.user
 
     query_name = request.GET.get('name')
-    project_list = Project.objects.filter(user=request.user).filter(name__contains=query_name).order_by('-updated_time')
+    project_list = Project.objects.filter(user=request.user).filter(name__icontains=query_name).order_by('-updated_time')
     paginator = Paginator(project_list, 10)
     page = request.GET.get('page')
     if not page:
