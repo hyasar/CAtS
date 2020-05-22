@@ -39,7 +39,7 @@
             <div class="dropdown-menu" aria-labelledby="navbarDropdown"
                  style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 0px; will-change: transform;">
                 <a class="dropdown-item" href="{% url 'projects' %}">Own projects</a>
-                <a class="dropdown-item" href="#">Shared projects</a>
+                <a class="dropdown-item" href="{% url 'get_shared_project' %}">Shared projects</a>
             </div>
         </li>
         <ul class="navbar-nav">
@@ -54,7 +54,7 @@
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="{% url 'get_profile' %}">Profile</a>
-                <a class="dropdown-item" href="#">Settings</a>
+                <a class="dropdown-item" href="{% url 'get_setting' %}">Settings</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
             </div>

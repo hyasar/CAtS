@@ -26,11 +26,22 @@
     <div class="container">
         <a class="navbar-brand" href="#"><i class="fas fa-cat mr-1"></i> CAS</a>
 
-        <ul class="navbar-nav">
+        <!-- <ul class="navbar-nav">
             <li class="nav-item active">
                 <a class="nav-link" href="{% url 'projects' %}">Projects <span class="sr-only">(current)</span></a>
             </li>
-        </ul>
+        </ul> -->
+        <li class="navbar-nav navbar-left nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+               aria-haspopup="true" aria-expanded="false">
+                Projects
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown"
+                 style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 0px; will-change: transform;">
+                <a class="dropdown-item" href="{% url 'projects' %}">Own projects</a>
+                <a class="dropdown-item" href="{% url 'get_shared_project' %}">Shared projects</a>
+            </div>
+        </li>
         <ul class="navbar-nav">
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'new_project' %}">New Project<span class="sr-only">(current)</span></a>
@@ -42,8 +53,8 @@
                 {{ user.username }}
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="#">Profile</a>
-                <a class="dropdown-item" href="#">Settings</a>
+                <a class="dropdown-item" href="{% url 'get_profile' %}">Profile</a>
+                <a class="dropdown-item" href="{% url 'get_setting' %}">Settings</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
             </div>
