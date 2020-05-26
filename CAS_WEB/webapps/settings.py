@@ -79,7 +79,7 @@ DATABASES = {
         'NAME': 'cats',
         'USER': 'cats',
         'PASSWORD': 'miao',
-        'HOST': 'ec2-54-146-201-23.compute-1.amazonaws.com',
+        'HOST': 'ec2-54-85-48-26.compute-1.amazonaws.com',
         'PORT': '',
         'TEST': {
           'NAME': 'cats_test'
