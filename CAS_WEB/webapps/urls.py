@@ -41,5 +41,11 @@ urlpatterns = [
     path('get_reports', views.get_reports, name='get_reports'),
     path('get_issues', views.get_issues, name='get_issues'),
     path('logout', views.logout_action, name='logout'),
-
+    path('profile', views.get_profile_action, name='get_profile'),
+    path('update_profile', views.update_profile_action, name='update_profile_info'),
+    path('setting', views.get_setting_action, name='get_setting'),
+    path('change_password/<int:id>/', views.change_password_action, name='change_password'),
+    path('share_project/<int:id>/', views.share_project_action, name='share'),
+    path('stop_share_project/<int:id>/', views.stop_share_project_action, name="stop_share"),
+    path('shared_projects', views.get_shared_project_list_action, name='get_shared_project'),
 ]

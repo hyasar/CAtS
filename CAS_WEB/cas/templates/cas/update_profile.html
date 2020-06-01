@@ -17,9 +17,10 @@
     {% load static %}
     <link href="{% static '/css/app.css' %}" rel="stylesheet" type="text/css">
 
-    <title mb-3>Projects</title mb-3>
+    <title mb-3>Update Profile</title mb-3>
 </head>
 <body>
+
 
 <nav class="navbar navbar-dark bg-dark">
     <div class="container">
@@ -57,35 +58,48 @@
 </nav>
 
 <section class="bg-light py-4">
-    <div class="container">
-        <div class="mb-3">
-            <form class="form-inline input-group-sm" method="get" action="{% url 'search_projects' %}">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search Projects" aria-label="Search" name="name">
-                <button class="btn btn-info my-2 my-sm-0 btn-sm" type="submit">Search</button>
-            </form>
-        </div>
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4 login-clean">
+            <form method="POST" action="{% url 'update_profile_info' %}">
+                {% csrf_token %}
+                <div class="text-primary illustration"><i class="fas fa-cat mr-1"></i></div>
+                <h3>Update Information: {{ user.username }}</h3>
 
-        <div class="mb-2">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title mb-3">{{ project.name }}</h5>
-                    <p class="card-text mt-3">{{ project.description }}</p>
-                    <p class="font-weight-light card-date mb-0 pb-0">{{ project.updated_time }}</p>
+                <div class="form-group">
+                    <label for="name">
+                        First Name
+                    </label>
+                    <input class="form-control" id="firstName" name="firstName" value="{{user.first_name}}">
+
+                    <label for="name">
+                        Last Name
+                    </label>
+                    <input class="form-control" id="lastName" name="lastName" value="{{user.last_name}}">
+
+                    <label for="email">
+                        Email
+                    </label>
+                    <textarea class="form-control" id="email" name="email">{{user.email}}</textarea>
+
                 </div>
-            </div>
-        </div>
-        <!--<div style="display: flex;">-->
-        <div class="inline-block">
-            <form action="{% url 'update_project' project.id %}">
-                <input type="submit" value="Update" />
-            </form>
-            <form action="{% url 'delete_project' project.id %}">
-                <input type="submit" value="Delete" />
-            </form>
-        </div>
 
+
+                <div class="errorlist">
+                    {% for error in form.non_field_errors %}
+                    <p class="error">
+                        {{ error }}
+                    </p>
+                    {% endfor %}
+                </div>
+
+                <button type="submit" class="btn btn-secondary btn-block">Update</button>
+            </form>
+        </div>
+        <div class="col-md-4"></div>
     </div>
 </section>
+
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->

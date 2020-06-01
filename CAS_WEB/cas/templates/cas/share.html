@@ -17,9 +17,10 @@
     {% load static %}
     <link href="{% static '/css/app.css' %}" rel="stylesheet" type="text/css">
 
-    <title mb-3>Projects</title mb-3>
+    <title mb-3>Share Project</title mb-3>
 </head>
 <body>
+
 
 <nav class="navbar navbar-dark bg-dark">
     <div class="container">
@@ -57,35 +58,110 @@
 </nav>
 
 <section class="bg-light py-4">
-    <div class="container">
-        <div class="mb-3">
-            <form class="form-inline input-group-sm" method="get" action="{% url 'search_projects' %}">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search Projects" aria-label="Search" name="name">
-                <button class="btn btn-info my-2 my-sm-0 btn-sm" type="submit">Search</button>
-            </form>
-        </div>
 
+    {% if owner.id == user.id %}
+    
+    <div class="container">
         <div class="mb-2">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title mb-3">{{ project.name }}</h5>
-                    <p class="card-text mt-3">{{ project.description }}</p>
-                    <p class="font-weight-light card-date mb-0 pb-0">{{ project.updated_time }}</p>
+                    <p class="card-title mb-3">PROJECT: <b>{{project.name}}</b> is visible to the following users: </p>
+
+                    {% for sharedUser in sharedUsers %}
+
+                        <p class="card-text mt-3">{{ sharedUser.username }}</p>
+
+                    {% endfor %}
                 </div>
             </div>
         </div>
-        <!--<div style="display: flex;">-->
-        <div class="inline-block">
-            <form action="{% url 'update_project' project.id %}">
-                <input type="submit" value="Update" />
-            </form>
-            <form action="{% url 'delete_project' project.id %}">
-                <input type="submit" value="Delete" />
-            </form>
+
+        <div class="mb-2">
+        <div class="card">
+            <div class="card-body">
+                <form method="POST" action="{% url 'share' project.id %}">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <label for="name">
+                            Share project with
+                        </label>
+                        <input class="form-control" id="newSharedUser" name="newSharedUser" placeholder="username of whom you want to share with">
+
+                    </div>
+
+
+                    <div class="errorlist">
+                        {% for error in form.non_field_errors %}
+                        <p class="error">
+                            {{ error }}
+                        </p>
+                        {% endfor %}
+                    </div>
+
+                    <button type="submit" class="btn btn-secondary btn-block">Share</button>
+                </form>
+            </div>
+        </div>
         </div>
 
+        <div class="mb-2">
+        <div class="card">
+            <div class="card-body">
+                <form method="POST" action="{% url 'stop_share' project.id %}">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <label for="name">
+                            Stop sharing with
+                        </label>
+                        <input class="form-control" id="stopSharedUser" name="stopSharedUser" placeholder="username of whom you want to stop sharing with">
+
+                    </div>
+
+
+                    <div class="errorlist">
+                        {% for error in form.non_field_errors %}
+                        <p class="error">
+                            {{ error }}
+                        </p>
+                        {% endfor %}
+                    </div>
+
+                    <button type="submit" class="btn btn-secondary btn-block">Confirm</button>
+                </form>
+            </div>
+        </div>
+        </div>
+    </div>
+    </div>
+
+    {% else %}
+
+    <div class="container">
+        <div class="mb-2">
+            <div class="card">
+                <div class="card-body">
+                <p class="card-title mb-3">PROJECT: <b>{{project.name}}</b> is owned by: <b>{{owner.username}}</b></p>
+                <p class="card-text mt-3">You are not premitted to change settings</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% endif %}
+
+    <div class="container">
+        <div class="mb-2">
+            <div class="card">
+                <div class="card-body">
+                    <a href="/project_dashboard?id={{project.id}}" class="btn btn-secondary btn-block">Go back</a>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
+
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->

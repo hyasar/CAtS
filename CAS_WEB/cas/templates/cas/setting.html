@@ -16,10 +16,23 @@
     <!-- Customized stylesheet -->
     {% load static %}
     <link href="{% static '/css/app.css' %}" rel="stylesheet" type="text/css">
+    <script src="{% static '/js/projects.js' %}" type="text/javascript" async defer></script>
 
-    <title mb-3>Projects</title mb-3>
+
+    <!-- Load react -->
+    <script src="https://unpkg.com/react@16/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js" crossorigin></script>
+
+    <!-- Load scripts-->
+    <script src="static/js/jquery.min.js"></script>
+    <script src="static/js/popper.min.js"></script>
+    <script src="static/js/bootstrap.min.js"></script>
+
+
+    <title mb-3>Profile</title>
 </head>
 <body>
+
 
 <nav class="navbar navbar-dark bg-dark">
     <div class="container">
@@ -46,7 +59,8 @@
                aria-haspopup="true" aria-expanded="false">
                 {{ user.username }}
             </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown"
+                 style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 0px; will-change: transform;">
                 <a class="dropdown-item" href="{% url 'get_profile' %}">Profile</a>
                 <a class="dropdown-item" href="{% url 'get_setting' %}">Settings</a>
                 <div class="dropdown-divider"></div>
@@ -58,45 +72,31 @@
 
 <section class="bg-light py-4">
     <div class="container">
-        <div class="mb-3">
-            <form class="form-inline input-group-sm" method="get" action="{% url 'search_projects' %}">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search Projects" aria-label="Search" name="name">
-                <button class="btn btn-info my-2 my-sm-0 btn-sm" type="submit">Search</button>
-            </form>
-        </div>
-
         <div class="mb-2">
+            <div class="text-primary illustration"><i class="fas fa-cat mr-1"></i></div>
+            <h2> USER SETTING </h2>
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title mb-3">{{ project.name }}</h5>
-                    <p class="card-text mt-3">{{ project.description }}</p>
-                    <p class="font-weight-light card-date mb-0 pb-0">{{ project.updated_time }}</p>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <h5>Username: </h5>
+                            <h5>Email Address:</h5>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <h5>{{ user.username }}</h5>
+                            <h5>{{ user.email }}</h5>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <!--<div style="display: flex;">-->
-        <div class="inline-block">
-            <form action="{% url 'update_project' project.id %}">
-                <input type="submit" value="Update" />
-            </form>
-            <form action="{% url 'delete_project' project.id %}">
-                <input type="submit" value="Delete" />
-            </form>
-        </div>
 
+            <a href="{% url 'change_password' user.id %}" class="btn btn-secondary btn-block">
+                Change Password
+            </a>  
+        </div>
     </div>
 </section>
 
-<!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous"></script>
 </body>
 </html>

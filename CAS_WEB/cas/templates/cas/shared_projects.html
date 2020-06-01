@@ -29,7 +29,7 @@
     <script src="static/js/bootstrap.min.js"></script>
 
 
-    <title mb-3>Projects</title>
+    <title mb-3>Shared Projects</title>
 </head>
 <body>
 
@@ -123,19 +123,6 @@
                             </script>
 
 
-                        </div>
-                        <div class="col-2">
-                            <a href="config_project?id={{project.id}}" class="btn btn-info btn-secondary btn-block">
-                                Config Controls
-                            </a>
-                            <a href="{% url 'update_project' project.id %}" class="btn btn-secondary btn-block">
-                                Update Info
-                            </a>
-                            <!--<a href="javascript:if(confirm('Are you sure you want to delete {{ project.name }} ?')) location= '{% url 'delete_project' %}'" class="btn btn-secondary btn-block">-->
-                            <button class="btn btn-secondary btn-block" id="delete_{{ project.id }}"
-                                    onclick="deleteProject({{ project.id }}, '{{ project.name }}');">
-                                Delete
-                            </button>
                         </div>
                     </div>
                 </div>

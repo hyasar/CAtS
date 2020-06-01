@@ -77,6 +77,7 @@ class Reports extends React.Component {
 
     render() {
         let {reports, issues} = this.state;
+        console.log("do you read me?");
 
         return (
             <div className="row justify-content-between mt-3">

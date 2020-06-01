@@ -81,6 +81,80 @@ def logout_action(request):
 
 
 @login_required
+def get_profile_action(request):
+    content = dict()
+    content['user'] = request.user
+
+    # Can get user info (profile) from user object directly
+    return render(request, 'cas/profile.html', content)
+
+
+@login_required
+def get_setting_action(request):
+    content = dict()
+    content['user'] = request.user
+
+    user = User.objects.get(username=request.user.username)
+
+    # return user password (encrypted)
+    content['password'] = user.password
+    return render(request, 'cas/setting.html', content)
+ 
+
+@login_required
+def change_password_action(request, id):
+    if request.method == 'GET':
+        content = dict()
+        content['user'] = request.user
+        
+        # return with a html of a input form
+        return render(request, 'cas/change_password.html', content)
+
+    # set new password
+    request.user.set_password(request.POST['password'])
+    request.user.save()
+    
+    content = dict()
+    content['user'] = request.user
+    user = User.objects.get(username=request.user.username)
+
+    # authentcate again
+    updated_user = authenticate(username=user.get_username(),
+                            password=request.POST['password'])
+
+    # login again
+    login(request, updated_user)
+    return redirect(reverse('projects'))
+
+ 
+@login_required
+def update_profile_action(request):
+    if request.method == 'GET':
+        content = dict()
+        content['user'] = request.user
+
+        # return with a html of a input form
+        return render(request, 'cas/update_profile.html', content)
+
+    # get user input from the request form
+    user = request.user
+    firstName = request.POST['firstName']
+    lastName = request.POST['lastName']
+    email = request.POST['email']
+
+    # set and save changes
+    user.first_name = firstName
+    user.last_name = lastName
+    user.email = email
+    user.save()
+
+    content = dict()
+    content['user'] = user
+
+    return redirect(reverse('get_profile'))
+
+
+@login_required
 def get_project_list_action(request):
     content = dict()
     content['user'] = request.user
@@ -95,6 +169,142 @@ def get_project_list_action(request):
     return render(request, 'cas/projects.html', content)
 
 
+# give accessibility to another user
+@login_required
+def share_project_action(request, id):
+    if request.method == 'GET':
+        content = dict()
+        content['user'] = request.user
+        try:
+            project = Project.objects.filter(id=id).first()
+            owner = project.user
+        except:
+            raise Http404("Project not found")
+
+        # get all users that have accessibility to this project
+        shared_user_ids = project.shared
+        shared_users = []
+        if shared_user_ids is not None:
+            for uid in shared_user_ids:
+                u = User.objects.get(id=uid)
+                if u is not None:
+                    shared_users.append(u)
+
+        content['sharedUsers'] = shared_users
+        content['project'] = project
+        content['owner'] = owner
+        return render(request, 'cas/share.html', content)
+
+    # get the username from the request form
+    project = get_object_or_404(Project, pk=id)
+    name = request.POST['newSharedUser']
+
+    try:
+        user = User.objects.get(username=name)
+    except:
+        raise Http404("User does not exist")
+
+    # get project shared list
+    if project.shared is None:
+        project.shared = []
+
+    # add a new accessible user 
+    if user.id not in project.shared:
+        project.shared.append(user.id)
+        project.save()
+
+    # get all users that have accessibility to this project
+    shared_users = []
+    if project.shared is not None:
+        for uid in project.shared:
+            u = User.objects.get(id=uid)
+            if u is not None:
+                shared_users.append(u)
+
+    content = dict()
+    content['sharedUsers'] = shared_users
+    content['project'] = project
+    content['owner'] = request.user
+    content['user'] = request.user
+
+    return render(request, 'cas/share.html', content)
+
+
+# remove a user from the project accessible list
+@login_required
+def stop_share_project_action(request, id):
+    if request.method == 'GET':
+        content = dict()
+        content['user'] = request.user
+        try:
+            project = Project.objects.filter(id=id).first()
+            owner = project.user
+        except:
+            raise Http404("Project not found")
+
+        # get all users that have accessibility to this project
+        shared_user_ids = project.shared
+        shared_users = []
+        if shared_user_ids is not None:
+            for uid in shared_user_ids:
+                u = User.objects.get(id=uid)
+                if u is not None:
+                    shared_users.append(u)
+
+        content['sharedUsers'] = shared_users
+        content['project'] = project
+        content['owner'] = owner
+        return render(request, 'cas/share.html', content)
+
+    # get username from request form
+    project = get_object_or_404(Project, pk=id)
+    name = request.POST['stopSharedUser']
+    
+    try:
+        user = User.objects.get(username=name)
+    except:
+        raise Http404("User does not exist")
+    
+    # remove the user from this project's accessible list
+    if project.shared is not None:
+        for uid in project.shared:
+            if uid == user.id: 
+                project.shared.remove(uid)
+                project.save()
+                
+    # get all users that have accessibility to this project
+    shared_users = []
+    if project.shared is not None:
+        for uid in project.shared:
+            u = User.objects.get(id=uid)
+            if u is not None:
+                shared_users.append(u)
+
+    content = dict()
+    content['sharedUsers'] = shared_users
+    content['project'] = project
+    content['owner'] = request.user
+    content['user'] = request.user
+
+    return render(request, 'cas/share.html', content)
+    
+
+@login_required
+def get_shared_project_list_action(request):
+    content = dict()
+    content['user'] = request.user
+
+    # find all projects that are shared to this user
+    project_list = Project.objects.filter(shared__contains=[request.user.id]).order_by('-updated_time')
+    paginator = Paginator(project_list, 5)
+    page = request.GET.get('page')
+    if not page:
+        page = 1
+    projects = paginator.get_page(page)
+    content['projects'] = projects
+    return render(request, 'cas/shared_projects.html', content)
+
+
 @login_required
 def get_project_configuration(request):
     content = dict()
@@ -107,7 +317,7 @@ def get_project_configuration(request):
 @login_required
 def get_project_controlls(request):
     content = dict()
-    project = Project.objects.get(user=request.user, id=request.GET.get('id'))
+    project = Project.objects.get(id=request.GET.get('id'))
     controls = list(
         Control.objects.filter(controlconfigure__in=ControlConfigure.objects.filter(project=project)).values("cid",
                                                                                                              "id",
@@ -212,7 +422,7 @@ def search_projects_action(request):
     content['user'] = request.user
 
     query_name = request.GET.get('name')
-    project_list = Project.objects.filter(user=request.user).filter(name__contains=query_name).order_by('-updated_time')
+    project_list = Project.objects.filter(user=request.user).filter(name__icontains=query_name).order_by('-updated_time')
     paginator = Paginator(project_list, 10)
     page = request.GET.get('page')
     if not page:
@@ -281,7 +491,7 @@ def delete_project(request):
 @login_required
 def project_dashboard(request):
     project_id = request.GET.get('id')
-    project = get_object_or_404(Project, pk=project_id, user=request.user)
+    project = get_object_or_404(Project, pk=project_id) #, user=request.user)
     content = dict()
     content['project'] = project
 
