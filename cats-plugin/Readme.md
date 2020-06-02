@@ -150,41 +150,48 @@ Go to `Auto-manage webhooks` and select it.
 In Jenkins, select the project > `Configure`.
 
 Source Code Management
+
 ```
 Select `Git`.
 Repository URL: ${github URL}
 Credential: Add a global credential.
-
 ```
+
 Build Triggers
+
 ```
 Select `GitHub hook trigger for GITScm polling`.
-
 ```
+
 Package Settings
+
 ```
 Package Name: main
 Package Version: build:$build-date:$date
 Package Language:Java
-
 ```
+
 Build Settings
+
 ```
 Build System: maven
-
 ```
+
 Assessment Settings
+
 ```
 Tool: checkstyle
 Platform: Ubuntu 16.04 64 bit
-
 ```
+
 Output Settings
+
 ```
 Assessment Output Directory: Assessment_Output
-
 ```
+
 CAS Account & Project Configuration
+
 ```
 These settings should be based on the specific user and project.
 ```
