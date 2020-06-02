@@ -8,7 +8,7 @@ You can refer to https://wiki.jenkins.io/display/JENKINS/Plugin+tutorial and htt
 
 ### Setting up environment
 
-- Maven(For Unix-based OS):
+#### Maven(For Unix-based OS):
 
 1. Download binary file http://maven.apache.org/download.cgi
 
@@ -21,8 +21,7 @@ source ~/.profile
 
 3. Run mvn -v check if succeeded
 
-=================================================================
-- Jenkins
+#### Jenkins
 
 1. Run 'brew cask install homebrew/cask-versions/adoptopenjdk8'
 
@@ -32,7 +31,6 @@ source ~/.profile
 
 4. Browse to http://localhost:8080
 
-=================================================================
 
 ### Create Target
 
