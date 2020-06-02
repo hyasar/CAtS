@@ -10,26 +10,30 @@ You can refer to https://wiki.jenkins.io/display/JENKINS/Plugin+tutorial and htt
 
 #### Maven(For Unix-based OS):
 
-1. Download binary file http://maven.apache.org/download.cgi
+Download binary file http://maven.apache.org/download.cgi
 
-2. Add path to '~/.profile'
+Add path to '~/.profile'
+
+```
 source ~/.profile
-
+```
+```
   export MAVEN_HOME=/users/$username/apache-maven-$version
   export PATH=${MAVEN_HOME}/bin:$PATH
   export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-11.0.2.jdk/Contents/Home
+```
 
-3. Run mvn -v check if succeeded
+Run mvn -v check if succeeded
 
 #### Jenkins
 
-1. Run 'brew cask install homebrew/cask-versions/adoptopenjdk8'
+Run 'brew cask install homebrew/cask-versions/adoptopenjdk8'
 
-2. Run 'brew install jenkins'
+Run 'brew install jenkins'
 
-3. Run 'brew services start jenkins'
+Run 'brew services start jenkins'
 
-4. Browse to http://localhost:8080
+Browse to `http://localhost:8080`
 
 
 ### Create Target
@@ -52,7 +56,6 @@ $ mvn install
 
 It shall generate a `.hpi ` under the target folder.
 
-=================================================================
 
 ### Install Plugin
 
@@ -62,7 +65,6 @@ Go to `advanced` > `Upload Plugin`.
 
 Select the generated plugin(hpi file).
 
-=================================================================
 
 ### Jenkins Configuration
 
@@ -70,7 +72,6 @@ Select the generated plugin(hpi file).
 
 In Jenkins, select `Manage Jenkins` > `Configure System`.
 Add credentials for different plugins.
-
 
 #### Install Plugin
 
