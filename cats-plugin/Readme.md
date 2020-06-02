@@ -145,11 +145,10 @@ Credentials: Select admin credential
 Go to `Auto-manage webhooks` and select it.
 ```
 
-#### Project Configuration
+### Project Configuration
 
 In Jenkins, select the project > `Configure`.
 
-```
 Source Code Management
 ```
 Select `Git`.
@@ -188,3 +187,4 @@ Assessment Output Directory: Assessment_Output
 CAS Account & Project Configuration
 ```
 These settings should be based on the specific user and project.
+```
