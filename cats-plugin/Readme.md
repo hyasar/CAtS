@@ -12,11 +12,8 @@ You can refer to https://wiki.jenkins.io/display/JENKINS/Plugin+tutorial and htt
 
 Download binary file http://maven.apache.org/download.cgi
 
-Add path to '~/.profile'
+Add source path to '~/.profile'
 
-```
-source ~/.profile
-```
 ```
   export MAVEN_HOME=/users/$username/apache-maven-$version
   export PATH=${MAVEN_HOME}/bin:$PATH
@@ -102,7 +99,7 @@ Choose default project.
 
 Build Timestamp
 ```
-Select `Enable BUILD_TIMESTAMP`
+Select Enable BUILD_TIMESTAMP
 ```
 
 SSH remote hosts
@@ -119,12 +116,15 @@ Jenkins URL: http://${AWS public DNS}:8080/
 
 Git Parameter
 
-Select `Show 'need to clone' information`
+```
+Select Show 'need to clone' information
+```
 
 
 Publish over SSH
+
 ```
-Fill in the `Passphrase` of Jenkins SSH key.
+Passphrase: Fill in the Passphrase of Jenkins SSH key.
 ```
 
 CAtS Plugin
@@ -137,7 +137,7 @@ CAS Port: 8000
 GitHub Pull Request Builder
 
 ```
-Go to `GitHub Auth`.
+Go to GitHub Auth.
 GitHub Server API URL: https://api.github.com
 Shared secret: 
 Credentials: Select admin credential
