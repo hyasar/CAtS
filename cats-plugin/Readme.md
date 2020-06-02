@@ -117,7 +117,7 @@ Jenkins URL: http://${AWS public DNS}:8080/
 Git Parameter
 
 ```
-Select Show 'need to clone' information
+Select Show need to clone information
 ```
 
 
