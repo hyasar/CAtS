@@ -152,7 +152,7 @@ In Jenkins, select the project > `Configure`.
 Source Code Management
 
 ```
-Select `Git`.
+Select Git.
 Repository URL: ${github URL}
 Credential: Add a global credential.
 ```
@@ -160,7 +160,7 @@ Credential: Add a global credential.
 Build Triggers
 
 ```
-Select `GitHub hook trigger for GITScm polling`.
+Select GitHub hook trigger for GITScm polling.
 ```
 
 Package Settings
