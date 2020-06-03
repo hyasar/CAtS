@@ -1,6 +1,6 @@
 # Jenkins-plug-in
 
-The Jenkins plug-in can get the Sonarqube report and upload the report to the configured CAtS service.
+The Jenkins plug-in can get the SWAMP report and upload the report to the configured CAtS service.
 
 ## How to use?
 
