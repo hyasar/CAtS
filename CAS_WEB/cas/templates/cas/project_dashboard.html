@@ -73,10 +73,37 @@
     <div class="container" id="project_{{project.id}}">
         <div class = "row">
             <div class="card col-12">
+                <script>
+                    let id = {{project.id}}
+                </script>
+
                 <div class="card-body">
                     <p class="card-title mb-3">{{ project.name }} (#{{project.id}})</p>
                     <p class="card-text mt-3">{{ project.description }}</p>
                     <p class="font-weight-light card-date mb-3 pb-0">{{ project.updated_time }}</p>
+
+                    <p>
+                        <a class="btn btn-info" id="get-controls-{{project.id}}" data-toggle="collapse" href="#collapseControls-{{project.id}}"
+                       role="button" aria-expanded="false" aria-controls="collapseExample">
+                        Controls Selected<span id="control-cnt-{{ project.id }}"></span>
+                        </a>
+                        <div class="collapse" id="collapseControls-{{project.id}}">
+                            <div class="card card-body">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Title</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="controls-{{project.id}}">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </p>
+
                     <a href="{% url 'share' project.id %}" class="btn btn-secondary btn-block">
                         Project Setting
                     </a>
@@ -88,7 +115,29 @@
     </div>
 </section>
 
+<script>
+    $(document).ready(function () {
+        // $.each(project_ids, function (index, id) {
+            $.ajax({
+                url: '/get_project_controlls?id=' + id,
+                type: 'get',
+                dataType: 'json',
+                success: function (data) {
+                    let controls = data.controls;
+                    let num_controls = controls.length
+                    $('#control-cnt-' + id).html(': ' + num_controls)
+                    for (let i=0; i < num_controls; i++) {
+                        let title = controls[i].title;
+                        let cid = controls[i].cid;
+                        let res = '<tr><th scope="row">' + (i+1) + '</th><td>' + cid + '</td><td>' + title + '</td></tr>>'
+                        $('#controls-' + id).append(res);
+                    }
+                }
+            });
 
+        });
+    // });
+</script>
 
 </body>
 </html>
