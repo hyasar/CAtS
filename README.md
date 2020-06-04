@@ -113,3 +113,35 @@ python3 manage.py runserver 0.0.0.0:8000
 192.168.56.22:8000
 ```
 
+## How to build docker image ? 
+
+##### Note: Please install `docker` and `docker-compose` before you build the docker image
+
+##### To build and run the image
+
+```
+docker-compose up
+```
+
+##### To run in daemon
+
+```
+docker-compose up -d
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
