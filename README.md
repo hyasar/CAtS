@@ -40,6 +40,13 @@ psql -h localhost -p 5432 -U cats cats
 
 ## How to migrate the database ?
 
+##### Install dependencies:
+
+```
+pip3 install psycopg2
+```
+
+
 ##### Delete current migrations folder under `./CAS_WEB/cas`
 
 ```
