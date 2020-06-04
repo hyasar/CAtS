@@ -35,7 +35,7 @@ Browse to `http://localhost:8080`
 
 ### Create Target
 
-Under the `./cats` directory, run
+In the `cats-plugin` directory, run
 
 ```
 mvn package
