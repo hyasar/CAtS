@@ -590,15 +590,20 @@ def get_issues(request):
 def get_id_from_name(request):
     content = dict()
     name = request.GET.get('name')
-    if (name == ''):
-        content['name'] = name
-        content['id'] = -1
-        return JsonResponse(content)
+    try: 
+        user = User.objects.get(username=name)
+        uid = user.id
+    except Exception:
+        uid = -1
+    # if (name == ''):
+        # content['name'] = name
+        # content['id'] = -1
+        # return JsonResponse(content)
 
-    user = User.objects.get(username=name)
+    # user = User.objects.get(username=name)
     
     content['name'] = name
-    content['id'] = user.id
+    content['id'] = uid
     return JsonResponse(content)
 
 
@@ -606,15 +611,21 @@ def get_id_from_name(request):
 def get_name_from_id(request):
     content = dict()
     uid = request.GET.get('id')
-    print(type(uid), uid)
-    if (uid == "-1"):
-        content['name'] = ""
-        content['id'] = uid
-        return JsonResponse(content)
+    # print(type(uid), uid)
+    try: 
+        user = User.objects.get(id=uid)
+        name = user.username
+    except Exception:
+        name = ""
 
-    user = User.objects.get(id=uid)
+    # if (uid == "-1"):
+    #     content['name'] = ""
+    #     content['id'] = uid
+    #     return JsonResponse(content)
+
+    # user = User.objects.get(id=uid)
     
-    content['name'] = user.username
+    content['name'] = name
     content['id'] = uid
     return JsonResponse(content)
 
