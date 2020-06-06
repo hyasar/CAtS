@@ -16,7 +16,7 @@ class ProjectAdmin(admin.ModelAdmin):
     list_display = ('name', 'description', 'created_time', 'updated_time')
     list_filter = ('created_time', )
     search_fields = ('name', )
-    # change_form_template = "change_form.html"
+    change_form_template = "change_form.html"
     
 class ControlAdmin(admin.ModelAdmin):
     list_display = ('title', 'id')

@@ -586,5 +586,39 @@ def get_issues(request):
     return JsonResponse(content)
 
 
+@login_required
+def get_id_from_name(request):
+    content = dict()
+    name = request.GET.get('name')
+    if (name == ''):
+        content['name'] = name
+        content['id'] = -1
+        return JsonResponse(content)
+
+    user = User.objects.get(username=name)
+    
+    content['name'] = name
+    content['id'] = user.id
+    return JsonResponse(content)
+
+
+@login_required
+def get_name_from_id(request):
+    content = dict()
+    uid = request.GET.get('id')
+    print(type(uid), uid)
+    if (uid == "-1"):
+        content['name'] = ""
+        content['id'] = uid
+        return JsonResponse(content)
+
+    user = User.objects.get(id=uid)
+    
+    content['name'] = user.username
+    content['id'] = uid
+    return JsonResponse(content)
+
+
+
 
 
