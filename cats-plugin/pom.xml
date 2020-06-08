@@ -6,8 +6,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>8</source>
-                    <target>8</target>
+                    <source>7</source>
+                    <target>7</target>
                 </configuration>
             </plugin>
         </plugins>
@@ -15,7 +15,7 @@
     <parent>
     <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>4.2</version><!-- which version of Jenkins is this plugin built against? -->
+    <version>1.424</version><!-- which version of Jenkins is this plugin built against? -->
   </parent>
 
   <groupId>CAtS</groupId>
@@ -37,8 +37,4 @@
       <url>http://repo.jenkins-ci.org/public/</url>
     </pluginRepository>
   </pluginRepositories>
-
-  <properties>
-    <java.level>8</java.level>
-  </properties> 
 </project>
