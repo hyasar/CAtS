@@ -150,12 +150,12 @@
 
                 {% if projects.has_previous %}
                 <li class="page-item">
-                    <a class="page-link" href="?page=1" aria-label="first">
+                    <a class="page-link" href="?page=1&name={{ qname }}" aria-label="first">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ projects.previous_page_number }}" aria-label="previous">
+                    <a class="page-link" href="?page={{ projects.previous_page_number }}&name={{ qname }}" aria-label="previous">
                         <span aria-hidden="true">previous</span>
                     </a>
                 </li>
@@ -174,12 +174,12 @@
 
                 {% if projects.has_next %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ projects.next_page_number }}" aria-label="next">
+                    <a class="page-link" href="?page={{ projects.next_page_number }}&name={{ qname }}" aria-label="next">
                         <span aria-hidden="true">next</span>
                     </a>
                 </li>
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ projects.paginator.num_pages }}" aria-label="last">
+                    <a class="page-link" href="?page={{ projects.paginator.num_pages }}&name={{ qname }}" aria-label="last">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>

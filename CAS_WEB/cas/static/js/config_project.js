@@ -124,6 +124,7 @@ class Control extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      pid: query.get("id"),
       error: null,
       isLoaded: false,
       items: [],
@@ -365,7 +366,7 @@ class Control extends React.Component {
   }
 
   render() {
-    const { error, isLoaded, items, page, searchPage, select, isAdding } = this.state;
+    const {pid, error, isLoaded, items, page, searchPage, select, isAdding } = this.state;
     let list;
 
     if (isLoaded) {
@@ -531,6 +532,7 @@ class Control extends React.Component {
               </div>
             </div>
             <button id="updateControls" type="button" class="btn btn-secondary btn-block" onClick={this.commitControls.bind(this)}>Update Controls</button>
+            <a href={"project_dashboard?id=" + pid} class="btn btn-secondary btn-block">View Project</a>
           </div>
         </div>
       );

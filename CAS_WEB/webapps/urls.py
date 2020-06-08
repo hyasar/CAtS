@@ -48,4 +48,6 @@ urlpatterns = [
     path('share_project/<int:id>/', views.share_project_action, name='share'),
     path('stop_share_project/<int:id>/', views.stop_share_project_action, name="stop_share"),
     path('shared_projects', views.get_shared_project_list_action, name='get_shared_project'),
+    path('get_id_by_name', views.get_id_from_name, name='get_id_by_name'),
+    path('get_name_by_id', views.get_name_from_id, name='get_name_by_id'),
 ]

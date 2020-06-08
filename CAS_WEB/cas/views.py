@@ -166,6 +166,7 @@ def get_project_list_action(request):
         page = 1
     projects = paginator.get_page(page)
     content['projects'] = projects
+    content['qname'] = ""
     return render(request, 'cas/projects.html', content)
 
 
@@ -302,6 +303,7 @@ def get_shared_project_list_action(request):
         page = 1
     projects = paginator.get_page(page)
     content['projects'] = projects
+    content['qname'] = ""
     return render(request, 'cas/shared_projects.html', content)
 
 
@@ -423,12 +425,13 @@ def search_projects_action(request):
 
     query_name = request.GET.get('name')
     project_list = Project.objects.filter(user=request.user).filter(name__icontains=query_name).order_by('-updated_time')
-    paginator = Paginator(project_list, 10)
+    paginator = Paginator(project_list, 5)
     page = request.GET.get('page')
     if not page:
         page = 1
     projects = paginator.get_page(page)
     content['projects'] = projects
+    content['qname'] = query_name
     return render(request, 'cas/projects.html', content)
 
 
@@ -581,6 +584,39 @@ def get_issues(request):
     content = dict()
     content['issues'] = issues
     return JsonResponse(content)
+
+
+@login_required
+def get_id_from_name(request):
+    content = dict()
+    name = request.GET.get('name')
+    
+    try: 
+        user = User.objects.get(username=name)
+        uid = user.id
+    except Exception:
+        uid = -1
+    
+    content['name'] = name
+    content['id'] = uid
+    return JsonResponse(content)
+
+
+@login_required
+def get_name_from_id(request):
+    content = dict()
+    uid = request.GET.get('id')
+
+    try: 
+        user = User.objects.get(id=uid)
+        name = user.username
+    except Exception:
+        name = ""
+    
+    content['name'] = name
+    content['id'] = uid
+    return JsonResponse(content)
+
 
 
 

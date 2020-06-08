@@ -1,0 +1,15 @@
+{% extends "admin/change_form.html" %}
+{% load i18n static %}
+
+{% block extrahead %}
+{{ block.super }}
+<script src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+<script type="text/jsx" src="/static/js/match.js"></script>
+{% endblock %}
+
+{% block after_field_sets %}
+<div id="matches"></div>
+{% endblock %}
