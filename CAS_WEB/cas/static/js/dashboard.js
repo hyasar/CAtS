@@ -78,6 +78,15 @@ class Reports extends React.Component {
 
     render() {
         let {pid, reports, selectedReportId, issues} = this.state;
+        let link;
+        if (selectedReportId == -1) {
+            link = <p></p>
+        }
+        else {
+            link = <a href={"/detail?pid=" + pid + "&rid=" + selectedReportId} class="btn btn-secondary btn-block">
+                            View Details
+                        </a>
+        }
 
         return (
             <div className="row justify-content-between mt-3">
@@ -128,10 +137,8 @@ class Reports extends React.Component {
 
                             </tbody>
                         </table>
-
-                        <a href={"/detail?pid=" + pid + "&rid=" + selectedReportId} class="btn btn-secondary btn-block">
-                            View Details
-                        </a>
+                        
+                        {link}
 
                     </div>
                 </div>

@@ -70,39 +70,81 @@
         function generatePDF() {
         // Choose the element that our invoice is rendered in.
         const element = document.getElementById("detail_report_pdf");
+        const rname = document.getElementById("report_name").value;
         // Choose the element and save the PDF for our user.
         html2pdf()
           .from(element)
-          .save();
+          .toPdf()
+          .save(rname);
     }
     </script>
+    <input type="hidden" id="report_name" value="{{project.name}}_v{{report.version}}"/>
 
     <div class="container" id="detail_report_pdf">
-        <h1>Project: {{project.name}}</h1>
-        <h3>Owner: {{project.user.username}}</h3>
-        <h3>Build on: {{report.date}}</h3>
-        <h3>Version: {{report.version}}</h3>
+        <h1 style="text-align: left">{{project.name}}</h1>
+        <div class="row">
+            <div class="col-sm-2">
+                <h5>Owner:</h5>
+                <h5>Build on:</h5>
+                <h5>Version:</h5>
+            </div>
+            <div class="col-sm-6">
+                <h5>{{project.user.username}}</h5>
+                <h5>{{report.date}}</h5>
+                <h5>{{report.version}}</h5>
+            </div>
+        </div>
+
+        <p></p>
+        <p></p>
 
         {% for id, dict in issues.items %}
-            <h5>{{id}}</h5>
-            {% for issue in dict.items %}
-                <p>Rule: {{issue.rule}}</p>
-                <p>Created Time: {{issue.created_time}}</p>
-                <p>Severity: {{issue.severity}}</p>
-                <p>Group: {{issue.group}}</p>
-                <p>Source File: {{issue.sourcefile}}</p>
-                <p>Start Line: {{issue.startLine}}</p>
-                <p>End Line: {{issue.endLine}}</p>
-                <p>Code: {{issue.code}}</p>
-            {% endfor %}
-
+            <h3>Control: {{id}}</h3>
             {% if dict.length == 0 %}
-                <p>Every thing is OK, Good Job!</p>
+                <h5>Every thing is OK, Good Job!</h5>
+            {% else %}
+            <table border="1" cellspacing="0" cellpadding="0" class="template-table" style="text-align: center; width: 100%">
+                <thead>
+                <tr bgcolor="yellow">
+                    <th>Rule</th>
+                    <th>Created Time</th>
+                    <th>Severity</th>
+                    <th>Group</th>
+                    <th>Source File</th>
+                    <th>Start line</th>
+                    <th>End line</th>
+                    <th>Code</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for issue in dict.items %}
+                        <tr>
+                            <td style="word-break:break-word; width:15%">{{issue.rule}}</td>
+                            <td style="word-break:break-word; width:10%">{{issue.created_time}}</td>
+                            <td style="word-break:break-word; width:5%">{{issue.severity}}</td>
+                            <td style="word-break:break-word; width:5%">{{issue.group}}</td>
+                            <td style="word-break:break-all; width:30%">{{issue.sourcefile}}</td>
+                            <td style="word-break:break-word; width:5%">{{issue.startLine}}</td>
+                            <td style="word-break:break-word; width:5%">{{issue.endLine}}</td>
+                            <td style="word-break:break-all; width:25%">{{issue.code}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <p></p>
+            <p></p>
+
+            
             {% endif %}
         {% endfor %}
     </div>
 
-    <button onclick="generatePDF()">Download as PDF</button>
-    <a href="/project_dashboard?id={{project.id}}" class="btn btn-secondary btn-block">Go back</a>
+    <div class="container">
+        <div class="mb-2">
+            <button onclick="generatePDF()">Download as PDF</button>
+            <a href="/project_dashboard?id={{project.id}}" class="btn btn-secondary btn-block">Go back</a>
+        </div>
+    </div>
+
 </body>
 </html>
