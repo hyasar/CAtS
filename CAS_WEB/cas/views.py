@@ -634,6 +634,8 @@ def get_details(request):
         issues = {}
         for controlconfig in controlconfigs:
             issues_tmp = search_issue_xml(controlconfig, report_obj)
+            # for issue in issues_tmp:
+            #     issue["created_time"] = datetime.datetime.strftime(issue.created_time)
             issues[controlconfig.control.cid] = {
                 "items": issues_tmp,
                 "length": len(issues_tmp),
@@ -642,8 +644,8 @@ def get_details(request):
         issues = {}
     content = dict()
 
-    print(type(issues))
-    print(issues)
+    # print(type(issues))
+    # print(issues)
     content['issues'] = issues
     content['project'] = project_obj
     content['report'] = report_obj
