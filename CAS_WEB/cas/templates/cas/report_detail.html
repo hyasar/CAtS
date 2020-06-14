@@ -98,6 +98,7 @@
         <p></p>
         <p></p>
 
+        <!-- version 1 -->
         {% for id, dict in issues.items %}
             <h3>Control: {{id}}</h3>
             {% if dict.length == 0 %}
@@ -137,6 +138,86 @@
             
             {% endif %}
         {% endfor %}
+
+        <!-- version 2 -->
+        <!-- {% for id, dict in issues.items %}
+            <h3>Control: {{id}}</h3>
+            {% if dict.length == 0 %}
+                <h5>Every thing is OK, Good Job!</h5>
+            {% else %}
+                {% for issue in dict.items %}
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <h5>Rule: </h5>
+                                </div>
+
+                                <div class="col-sm-10">
+                                    <h5>{{issue.rule}}</h5>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <h5>Created Time:</h5>
+                                </div>
+                                <div class="col-sm-10">
+                                    <h5>{{issue.created_time}}</h5>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <h5>Severity:</h5>
+                                </div>
+                                <div class="col-sm-10">
+                                    <h5>{{issue.severity}}</h5>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <h5>Group:</h5>
+                                </div>
+                                <div class="col-sm-10">
+                                    <h5>{{issue.group}}</h5>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <h5>Source File:</h5>
+                                </div>
+                                <div class="col-sm-10" style="word-break:break-all">
+                                    <h5>{{issue.sourcefile}}</h5>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <h5>Start Line:</h5>
+                                </div>
+                                <div class="col-sm-10">
+                                    <h5>{{issue.startLine}}</h5>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <h5>End Line:</h5>
+                                </div>
+                                <div class="col-sm-10">
+                                    <h5>{{issue.endLine}}</h5>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <h5>Code:</h5>
+                                </div>
+                                <div class="col-sm-10" style="word-break:break-all">
+                                    <h5>{{issue.code}}</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endfor %} -->
     </div>
 
     <div class="container">
