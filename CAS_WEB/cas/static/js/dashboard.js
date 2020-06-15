@@ -6,6 +6,7 @@ class Reports extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            pid: query.get("id"),
             reports: [],
             selectedReportId: -1,
             issues: {}
@@ -76,7 +77,16 @@ class Reports extends React.Component {
 
 
     render() {
-        let {reports, issues} = this.state;
+        let {pid, reports, selectedReportId, issues} = this.state;
+        let link;
+        if (selectedReportId == -1) {
+            link = <p></p>
+        }
+        else {
+            link = <a href={"/detail?pid=" + pid + "&rid=" + selectedReportId} class="btn btn-secondary btn-block">
+                            View Details
+                        </a>
+        }
 
         return (
             <div className="row justify-content-between mt-3">
@@ -127,6 +137,9 @@ class Reports extends React.Component {
 
                             </tbody>
                         </table>
+                        
+                        {link}
+
                     </div>
                 </div>
             </div>

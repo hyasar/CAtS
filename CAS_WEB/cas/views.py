@@ -590,7 +590,7 @@ def get_issues(request):
 def get_id_from_name(request):
     content = dict()
     name = request.GET.get('name')
-    
+
     try: 
         user = User.objects.get(username=name)
         uid = user.id
@@ -618,6 +618,34 @@ def get_name_from_id(request):
     return JsonResponse(content)
 
 
+@login_required
+def get_details(request):
+    report_id = request.GET.get('rid')
+    project_id = request.GET.get('pid')
+    if report_id == -1:
+        issues = {}
+        return issues
 
+    report_obj = get_object_or_404(Report, id=report_id)
+    project_obj = get_object_or_404(Project, id=project_id)
+
+    try:
+        controlconfigs = ControlConfigure.objects.filter(project=project_obj)
+        issues = {}
+        for controlconfig in controlconfigs:
+            issues_tmp = search_issue_xml(controlconfig, report_obj)
+            
+            issues[controlconfig.control.cid] = {
+                "items": issues_tmp,
+                "length": len(issues_tmp),
+            }
+    except ControlConfigure.DoesNotExist:
+        issues = {}
+    content = dict()
+
+    content['issues'] = issues
+    content['project'] = project_obj
+    content['report'] = report_obj
+    return render(request, 'cas/report_detail.html', content)
 
 

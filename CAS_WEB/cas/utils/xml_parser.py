@@ -39,8 +39,9 @@ def search_issue_xml(controlconfig, report):
                 if word in controlconfig.keywords:
                     count += 1
                 if count == 1:
-                    dict_issue = model_to_dict(issue, fields=['severity', 'sourcefile', 'startLine', 'endLine', 'code'])
+                    dict_issue = model_to_dict(issue, fields=['severity', 'sourcefile', 'startLine', 'endLine', 'code', 'group'])
                     dict_issue['rule'] = rule
+                    dict_issue['created_time'] = issue.created_time
                     issues.append(dict_issue)
                     break
     except XMLIssue.DoesNotExist:
