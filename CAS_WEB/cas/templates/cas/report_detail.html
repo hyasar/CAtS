@@ -100,7 +100,7 @@
 
         <!-- version 1 -->
         {% for id, dict in issues.items %}
-            <h3>Control: {{id}}</h3>
+            <h3>Control-{{id}}: {{dict.title}}</h3>
             {% if dict.length == 0 %}
                 <h5>Every thing is OK, Good Job!</h5>
             {% else %}
