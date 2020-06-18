@@ -136,6 +136,14 @@ docker-compose up
 docker-compose up -d
 ```
 
+## How to run test ?
+
+##### Note: Link the python version with python3
+
+```
+sudo ln -s /usr/bin/python3 /usr/bin/python
+```
+
 
 
 
