@@ -108,7 +108,7 @@ cd /vagrant/
 
 ##### Config the `./CAS_WEB/webapps/settings.py` with current IP address,
 
-##### And start the server with localhost 
+##### And start the server with localhost in `./CAS_WEB` folder
 
 ```
 python3 manage.py runserver 0.0.0.0:8000
@@ -143,6 +143,15 @@ docker-compose up -d
 ```
 sudo ln -s /usr/bin/python3 /usr/bin/python
 ```
+
+##### Run all test scripts with following command in `./CAS_WEB` folder
+
+```
+./manage.py test
+```
+
+
+
 
 
 
