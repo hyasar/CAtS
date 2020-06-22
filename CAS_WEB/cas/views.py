@@ -636,6 +636,7 @@ def get_details(request):
             issues_tmp = search_issue_xml(controlconfig, report_obj)
             
             issues[controlconfig.control.cid] = {
+                "title": controlconfig.control.title,
                 "items": issues_tmp,
                 "length": len(issues_tmp),
             }
