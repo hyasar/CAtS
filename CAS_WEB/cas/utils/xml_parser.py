@@ -4,12 +4,12 @@ from django.forms.models import model_to_dict
 import json
 import requests
 
-USERNAME = 'zyihong'
-PASSWORD = '4399/7k7k/'
+USERNAME = ''
+PASSWORD = ''
 
 # The repository to add this issue to
-REPO_OWNER = 'zyihong'
-REPO_NAME = 'test'
+REPO_OWNER = ''
+REPO_NAME = ''
 
 class color:
    PURPLE = '\033[95m'
