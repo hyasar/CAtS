@@ -630,6 +630,8 @@ def get_details(request):
     project_obj = get_object_or_404(Project, id=project_id)
 
     try:
+        create_issues(project_obj, report_obj, report_obj.version)
+
         controlconfigs = ControlConfigure.objects.filter(project=project_obj)
         issues = {}
         for controlconfig in controlconfigs:
@@ -640,6 +642,8 @@ def get_details(request):
                 "items": issues_tmp,
                 "length": len(issues_tmp),
             }
+
+
     except ControlConfigure.DoesNotExist:
         issues = {}
     content = dict()
@@ -650,3 +654,20 @@ def get_details(request):
     return render(request, 'cas/report_detail.html', content)
 
 
+@login_required
+def create_git_issues(request):
+    content = dict()
+    report_id = request.GET.get('rid')
+    project_id = request.GET.get('pid')
+
+    # report_obj = get_object_or_404(Report, id=report_id)
+    project_obj = get_object_or_404(Project, id=project_id)
+    content['project']
+    if report_id == -1:
+        return render(request, 'cas/project_dashboard.html', content)
+
+    report_obj = get_object_or_404(Report, id=report_id)
+
+    create_issues(project_obj, report_obj, report_obj.version)
+        # issues = {}
+        # return issues

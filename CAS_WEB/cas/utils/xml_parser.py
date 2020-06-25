@@ -1,13 +1,15 @@
 from ..models import *
 from xml.etree import ElementTree as ET
 from django.forms.models import model_to_dict
+import json
+import requests
 
-USERNAME = ''
-PASSWORD = ''
+USERNAME = 'zyihong'
+PASSWORD = '4399/7k7k/'
 
 # The repository to add this issue to
-REPO_OWNER = ''
-REPO_NAME = ''
+REPO_OWNER = 'zyihong'
+REPO_NAME = 'test'
 
 class color:
    PURPLE = '\033[95m'
@@ -43,7 +45,7 @@ def parse_report_xml(file, project, report_version):
                          severity=severity.text, rule=rule)
         issue.save()
 
-    create_issues(project, report, report_version)
+    # create_issues(project, report, report_version)
 
     return report
 
@@ -94,13 +96,15 @@ def create_issues(project, report, report_version):
             body += (cid + ": ")
             body += issue["title"]
             body += color.END
-            body += "/n"
+            body += "\n"
 
-            for col, msg in issue["items"].items():
-                body += (col + ": ")
-                body += (msg + "/n")
+            for item in issue["items"]:
+                for col, msg in item.items():
+                    body += (col + ": ")
+                    body += ("{}\n".format(msg))
+                body += "\n"
 
-            body += "/n/n"
+            body += "\n\n"
 
         make_github_issue("Project " + project.name + " Pipeline Test", body)
 
