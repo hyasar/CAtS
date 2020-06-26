@@ -4,7 +4,6 @@ from django.forms.models import model_to_dict
 import json
 import requests
 
-
 class color:
    PURPLE = '\033[95m'
    CYAN = '\033[96m'
