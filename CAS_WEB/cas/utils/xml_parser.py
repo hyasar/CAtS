@@ -4,12 +4,6 @@ from django.forms.models import model_to_dict
 import json
 import requests
 
-USERNAME = 'zyihong'
-PASSWORD = '4399/7k7k/'
-
-# The repository to add this issue to
-REPO_OWNER = 'zyihong'
-REPO_NAME = 'test'
 
 class color:
    PURPLE = '\033[95m'
@@ -45,8 +39,6 @@ def parse_report_xml(file, project, report_version):
                          severity=severity.text, rule=rule)
         issue.save()
 
-    # create_issues(project, report, report_version)
-
     return report
 
 
@@ -72,7 +64,7 @@ def search_issue_xml(controlconfig, report):
     return issues
 
 
-def create_issues(project, report, report_version):
+def create_issues(project, report, report_version, username, password, reponame):
     # issues = {}
     try:
         controlconfigs = ControlConfigure.objects.filter(project=project)
@@ -106,13 +98,13 @@ def create_issues(project, report, report_version):
 
             body += "\n\n"
 
-        make_github_issue("Project " + project.name + " Pipeline Test", body)
+        make_github_issue("Project " + project.name + " Pipeline Test", username, password, reponame, body)
 
 
-def make_github_issue(title, body=None):
+def make_github_issue(title, USERNAME, PASSWORD, REPO_NAME, body=None):
     '''Create an issue on github.com using the given parameters.'''
     # Our url to create issues via POST
-    url = 'https://api.github.com/repos/%s/%s/issues' % (REPO_OWNER, REPO_NAME)
+    url = 'https://api.github.com/repos/%s/%s/issues' % (USERNAME, REPO_NAME)
     # Create an authenticated session to create the issue
     session = requests.Session()
     session.auth = (USERNAME, PASSWORD)

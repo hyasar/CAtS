@@ -153,7 +153,6 @@ def update_profile_action(request):
 
     return redirect(reverse('get_profile'))
 
-
 @login_required
 def get_project_list_action(request):
     content = dict()
@@ -630,7 +629,7 @@ def get_details(request):
     project_obj = get_object_or_404(Project, id=project_id)
 
     try:
-        create_issues(project_obj, report_obj, report_obj.version)
+        # create_issues(project_obj, report_obj, report_obj.version)
 
         controlconfigs = ControlConfigure.objects.filter(project=project_obj)
         issues = {}
@@ -654,20 +653,36 @@ def get_details(request):
     return render(request, 'cas/report_detail.html', content)
 
 
-@login_required
-def create_git_issues(request):
-    content = dict()
-    report_id = request.GET.get('rid')
-    project_id = request.GET.get('pid')
+@login_required 
+def enter_credential_action(request):
 
-    # report_obj = get_object_or_404(Report, id=report_id)
+    if request.method == 'GET':
+        content = dict()
+        
+        report_id = request.GET.get('rid')
+        project_id = request.GET.get('pid')
+
+        project_obj = get_object_or_404(Project, id=project_id)
+        report_obj = get_object_or_404(Report, id=report_id)
+
+        content['rid'] = report_id
+        content['pid'] = project_id
+        
+        # return with a html of a input form
+        return render(request, 'cas/enter_credential.html', content)
+    
+    report_id = request.POST['rid']
+    project_id = request.POST['pid']
+    
     project_obj = get_object_or_404(Project, id=project_id)
-    content['project']
-    if report_id == -1:
-        return render(request, 'cas/project_dashboard.html', content)
-
     report_obj = get_object_or_404(Report, id=report_id)
-
-    create_issues(project_obj, report_obj, report_obj.version)
-        # issues = {}
-        # return issues
+        
+    # get user input from the request form
+    git_username = request.POST['git_username']
+    git_password = request.POST['git_password']
+    git_repo = request.POST['git_repo']
+    
+    create_issues(project_obj, report_obj, report_obj.version, git_username, git_password, git_repo)
+    
+    return redirect(reverse('projects'))
+    
