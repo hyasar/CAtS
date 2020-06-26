@@ -83,11 +83,11 @@ def create_issues(project, report, report_version, username, password, reponame)
         # build issue body string
         body = ""
         for cid, issue in issues.items():
-            body += color.BOLD
+            # body += color.BOLD
             body += (cid + ": ")
             body += issue["title"]
-            body += color.END
-            body += "\n"
+            # body += color.END
+            body += "\n--------------------------------------------------\n"
 
             for item in issue["items"]:
                 for col, msg in item.items():
