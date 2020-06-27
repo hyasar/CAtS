@@ -91,7 +91,7 @@ def create_issues(project, report, report_version, username, password, reponame)
 
             for item in issue["items"]:
                 for col, msg in item.items():
-                    body += (col + ": ")
+                    body += ("**" + col + ":** ")
                     body += ("{}\n".format(msg))
                 body += "\n"
 
