@@ -7,9 +7,8 @@ def parse_report_xml(file, project, report_version):
     report = Report(project=project, version=report_version)
     report.save()
 
-    #tree = ET.parse(file)
-    #root = tree.getroot()
-    root = ET.fromstring(file)
+    tree = ET.parse(file)
+    root = tree.getroot()
 
     for bug in root:
         if bug.tag != 'BugInstance':
