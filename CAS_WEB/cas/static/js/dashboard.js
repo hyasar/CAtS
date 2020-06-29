@@ -83,9 +83,15 @@ class Reports extends React.Component {
             link = <p></p>
         }
         else {
-            link = <a href={"/detail?pid=" + pid + "&rid=" + selectedReportId} class="btn btn-secondary btn-block">
+            link = 
+            <div>
+            <a href={"/detail?pid=" + pid + "&rid=" + selectedReportId} class="btn btn-secondary btn-block">
                             View Details
-                        </a>
+                </a>
+            <a href={"/enter_credential?pid=" + pid + "&rid=" + selectedReportId} class="btn btn-secondary btn-block">
+                            Create Issues
+                </a>
+            </div>
         }
 
         return (

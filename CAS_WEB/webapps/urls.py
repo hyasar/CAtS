@@ -51,4 +51,5 @@ urlpatterns = [
     path('get_id_by_name', views.get_id_from_name, name='get_id_by_name'),
     path('get_name_by_id', views.get_name_from_id, name='get_name_by_id'),
     path('detail', views.get_details, name='get_detail'),
+    path('enter_credential', views.enter_credential_action, name='enter_credential'),
 ]
