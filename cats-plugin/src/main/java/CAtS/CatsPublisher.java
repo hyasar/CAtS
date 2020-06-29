@@ -115,10 +115,59 @@ public class CatsPublisher extends Recorder {
         String boundary = Long.toHexString(System.currentTimeMillis()); // Just generate some unique random value.
         String crlf = "\r\n"; // Line separator required by multipart/form-data.
 
-        URLConnection connection = new URL(url).openConnection();
+        HttpURLConnection connection = (HttpURLConnection)new URL(url).openConnection();
         connection.setDoOutput(true);
+        connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
 
+        OutputStream output = connection.getOutputStream();
+        String contentTypeString = "Content-Type: text/plain; charset=";
+
+        output.write(("--"+boundary+crlf).getBytes());
+        output.write("Content-Disposition: form-data; name=\"username\"\r\n".getBytes());
+        output.write((contentTypeString + charset+crlf).getBytes());
+        output.write((crlf+username+crlf).getBytes());
+
+        output.write(("--"+boundary+crlf).getBytes());
+        output.write("Content-Disposition: form-data; name=\"password\"\r\n".getBytes());
+        output.write((contentTypeString + charset+crlf).getBytes());
+        output.write((crlf+password+crlf).getBytes());
+
+        output.write(("--"+boundary+crlf).getBytes());
+        output.write("Content-Disposition: form-data; name=\"projectId\"\r\n".getBytes());
+        output.write((contentTypeString + charset+crlf).getBytes());
+        output.write((crlf+projectId+crlf).getBytes());
+
+        output.write(("--"+boundary+crlf).getBytes());
+        output.write("Content-Disposition: form-data; name=\"buildNumber\"\r\n".getBytes());
+        output.write((contentTypeString + charset+crlf).getBytes());
+        output.write((crlf+String.valueOf(buildNumber)+crlf).getBytes());
+
+        output.write(("--"+boundary+crlf).getBytes());
+        output.write("Content-Disposition: form-data; name=\"testingReport\"\r\n".getBytes());
+        output.write((contentTypeString + charset+crlf).getBytes());
+        output.write((crlf).getBytes());
+        Files.copy(firstFile.toPath(), output);
+        output.write((crlf).getBytes());
+        output.flush();
+        output.close();
+
+        int responseCode = connection.getResponseCode();
+        listener.getLogger().println("POST Response Code ::  " + responseCode);
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+            listener.getLogger().println(response.toString());
+        } else {
+            listener.getLogger().println("POST request not worked");
+        }
+
+        /*
         try (
                 OutputStream output = connection.getOutputStream();
                 PrintWriter writer = new PrintWriter(new OutputStreamWriter(output, charset), true);
@@ -158,7 +207,7 @@ public class CatsPublisher extends Recorder {
 
             writer.append("--" + boundary + "--").append(crlf).flush();
         }
-
+        */
         return true;
     }
 
