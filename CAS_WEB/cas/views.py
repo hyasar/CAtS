@@ -311,7 +311,7 @@ def parse_testing_report(request):
 
         # Parse report
         build_number = request.POST['buildNumber']
-        testing_report = request.FILES['testingReport']
+        testing_report = request.POST['testingReport']
         if not testing_report:
             message = "No report sent"
             return HttpResponse(message)
