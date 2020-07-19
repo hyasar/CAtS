@@ -5,10 +5,25 @@
 We will use Helm on **Ubuntu** to package and run an application on AKS (Azure Kubernetes Service)
 
 ## Prerequisites
+
 -   An Azure **Pay-as-you-go** subscription. If you don't have an Azure subscription, you can create <a href="https://azure.microsoft.com/en-us/free/">a free account</a>.
 -   <a href="https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-apt?view=azure-cli-latest">Azure CLI installed</a>.
 -   Docker installed and configured on <a href="https://docs.docker.com/engine/install/ubuntu/">Linux Ubuntu</a> system.
 -   <a href="https://helm.sh/docs/intro/install/">Helm v3 installed</a>.
+
+## Sign in Azure CLI
+
+Execute:
+
+```
+az login
+```
+
+If the CLI can open your default browser, it will do so and load an Azure sign-in page.
+
+Otherwise, open a browser page at <a>https://aka.ms/devicelogin</a> and enter the authorization code displayed in your terminal.
+
+Sign in with your account credentials in the browser.
 
 ## Deploy
 
