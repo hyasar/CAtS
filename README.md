@@ -133,7 +133,7 @@ python3 manage.py migrate ${app_name}
 
 ## How to run test ?
 
-### Run Django unit test
+### How to run Django unit test ?
 
 ##### Log in PostgreS database with admin control with following command: 
 ```
@@ -152,19 +152,32 @@ psql -U cats cats_test < CAtS/CAS_WEB/tests/resource/load_test_db.sql
 ```
 
 ##### From now, the database are correctly set and ready to test
+
 ##### Test all the scripts with keep database option by:
+##### Note: Run all test scripts with following command in `./CAS_WEB` folder
 ```
 python3 manage.py test tests --keepdb
 ```
-
-
 ##### Note: If any python version error occurs, try to link the python version with python3
-
 ```
 sudo ln -s /usr/bin/python3 /usr/bin/python
 ```
 
-##### Run all test scripts with following command in `./CAS_WEB` folder
+### How to get test coverage report ?
+
+##### Install coverage
+```
+pip3 install coverage==3.6
+```
+##### Run the following test command under `./CAS_WEB` folder
+```
+coverage run --source='.' manage.py test tests --keepdb
+```
+##### Get the coverage report by:
+```
+coverage report
+```
+
 
 
 
