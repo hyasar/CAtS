@@ -33,6 +33,8 @@ Change the `image.repository` with correct acr repo name in `CASWEB/values.yaml`
 
 Change the `appVersion` to correct tag in `CASWEB/Chart.yaml`
 
+Make sure the database IP address in `../CAS_WEB/webapps/settings.py` is configured.
+
 Execute:
 
 ```
