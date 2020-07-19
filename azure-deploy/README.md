@@ -56,3 +56,7 @@ When the cluster is no longer needed, use the az group delete command to remove 
 ```
 az group delete --name $RESOURCE_GROUP_NAME --yes --no-wait
 ```
+
+## Reference
+
+<a>https://docs.microsoft.com/en-us/azure/aks/quickstart-helm</a>
