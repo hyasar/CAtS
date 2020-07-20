@@ -25,7 +25,7 @@ Otherwise, open a browser page at <a>https://aka.ms/devicelogin</a> and enter th
 
 Sign in with your account credentials in the browser.
 
-## Deploy
+## Deploy CAS Web Service
 
 Change the variables (resource group name, acr name, aks name and tags) in `deploy.sh`
 
@@ -42,6 +42,24 @@ Execute:
 ```
 
 Wait until commands finish.
+
+## Deploy Jenkins
+
+Change the variables (resource group name, acr name, aks name and tags) in `jenkins_deploy.sh`
+
+If running in Vagrant or VM without public IP address, change `$MYIP` to the private IP address.
+
+Execute:
+```
+./jenkins_deploy.sh
+```
+
+## Kill the pods
+
+```
+sudo kubectl delete pod ${POD_NAME}
+sudo kill -9 $(sudo lsof -t -i:${PORT_LISTENING})
+```
 
 ## Uninstall Helm Resource
 
