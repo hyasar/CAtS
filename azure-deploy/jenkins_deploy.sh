@@ -1,8 +1,8 @@
 #!/bin/sh
 echo "<---------------Variables--------------->"
 # Change the names here
-ACR="yunhsua2"
-RESOURCEGROUP="MyResourceGroup2"
+ACR="zyhacr"
+RESOURCEGROUP="MyResourceGroup"
 AKSNAME="MyAKS"
 
 echo "<---------------Link your AKS--------------->"
