@@ -38,7 +38,7 @@ Make sure the database IP address in `../CAS_WEB/webapps/settings.py` is configu
 Execute:
 
 ```
-./deploy.sh
+./cas_deploy.sh
 ```
 
 Wait until commands finish.
