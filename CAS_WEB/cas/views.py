@@ -138,13 +138,13 @@ def update_profile_action(request):
 
     # get user input from the request form
     user = request.user
-    firstName = request.POST['firstName']
-    lastName = request.POST['lastName']
+    first_name = request.POST['firstName']
+    last_name = request.POST['lastName']
     email = request.POST['email']
 
     # set and save changes
-    user.first_name = firstName
-    user.last_name = lastName
+    user.first_name = first_name
+    user.last_name = last_name
     user.email = email
     user.save()
 

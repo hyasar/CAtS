@@ -4,24 +4,10 @@ from django.forms.models import model_to_dict
 import json
 import requests
 
-class color:
-   PURPLE = '\033[95m'
-   CYAN = '\033[96m'
-   DARKCYAN = '\033[36m'
-   BLUE = '\033[94m'
-   GREEN = '\033[92m'
-   YELLOW = '\033[93m'
-   RED = '\033[91m'
-   BOLD = '\033[1m'
-   UNDERLINE = '\033[4m'
-   END = '\033[0m'
-
 def parse_report_xml(file, project, report_version):
     report = Report(project=project, version=report_version)
     report.save()
 
-    #tree = ET.parse(file)
-    #root = tree.getroot()
     root = ET.fromstring(file)
 
     for bug in root:
@@ -65,7 +51,7 @@ def search_issue_xml(controlconfig, report):
 
 
 def create_issues(project, report, report_version, username, password, reponame):
-    # issues = {}
+
     try:
         controlconfigs = ControlConfigure.objects.filter(project=project)
         issues = {}
@@ -84,10 +70,10 @@ def create_issues(project, report, report_version, username, password, reponame)
         # build issue body string
         body = ""
         for cid, issue in issues.items():
-            # body += color.BOLD
+            
             body += (cid + ": ")
             body += issue["title"]
-            # body += color.END
+    
             body += "\n--------------------------------------------------\n"
 
             for item in issue["items"]:
@@ -101,13 +87,13 @@ def create_issues(project, report, report_version, username, password, reponame)
         make_github_issue("Project " + project.name + " Pipeline Test", username, password, reponame, body)
 
 
-def make_github_issue(title, USERNAME, PASSWORD, REPO_NAME, body=None):
+def make_github_issue(title, user_name, pass_word, repo_name, body=None):
     '''Create an issue on github.com using the given parameters.'''
     # Our url to create issues via POST
-    url = 'https://api.github.com/repos/%s/%s/issues' % (USERNAME, REPO_NAME)
+    url = 'https://api.github.com/repos/%s/%s/issues' % (user_name, repo_name)
     # Create an authenticated session to create the issue
     session = requests.Session()
-    session.auth = (USERNAME, PASSWORD)
+    session.auth = (user_name, pass_word)
     # Create our issue
     issue = {'title': title,
              'body': body
