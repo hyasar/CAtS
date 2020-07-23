@@ -45,6 +45,8 @@ Wait until commands finish.
 
 ## Deploy Jenkins
 
+Run `cas_deploy.sh` before deploying Jenkins to create resource group and AKS.
+
 Change the variables (resource group name, acr name, aks name and tags) in `jenkins_deploy.sh`
 
 If running in Vagrant or VM without public IP address, change `$MYIP` to the private IP address.
