@@ -119,3 +119,93 @@ class LoginTest(TestCase):
     def test_get_issues(self):
         response = self.client.get('/get_issues', {"report_id" : "19", "project_id":"3"})
         self.assertEqual(response.status_code, 200)
+
+    def test_get_profile(self):
+        response = self.client.get('/profile')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'cas/profile.html')
+
+    def test_get_setting(self):
+        response = self.client.get('/setting')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'cas/setting.html')
+
+    def test_change_ps_get(self):
+        response = self.client.get('/change_password/1/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'cas/change_password.html')
+
+    def test_change_ps_post(self):
+        response = self.client.post('/change_password/1/', {"password": "newpswd"})
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, '/projects')
+
+        response = self.client.post('/change_password/1/', {"password": "yueqi"})
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, '/projects')
+
+    def test_update_profile_get(self):
+        response = self.client.get('/update_profile')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'cas/update_profile.html')
+
+    def test_update_profile_post(self):
+        response = self.client.post('/update_profile', 
+            {"firstName": "newFN", "lastName": "newLN", "email": "new@new.com"})
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, '/profile')
+
+        response = self.client.post('/update_profile', 
+            {"firstName": "Yue", "lastName": "Qi", "email": "qyigakki@gmail.com"})
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, '/profile')
+
+    def test_get_shared_pj_list(self):
+        response = self.client.get('/shared_projects')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'cas/shared_projects.html')
+
+    def test_share_pj_get(self):
+        response = self.client.get('/share_project/3/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'cas/share.html')
+
+    def test_stop_share_get(self):
+        response = self.client.get('/stop_share_project/3/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'cas/share.html')
+
+    def test_share_and_stop_share_pj_post(self):
+        response = self.client.post('/share_project/3/', 
+            {"newSharedUser": "xiaotong"})
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'cas/share.html')
+
+        response = self.client.post('/stop_share_project/3/', 
+            {"stopSharedUser": "xiaotong"})
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'cas/share.html')
+
+    def test_get_id_from_name(self):
+        response = self.client.get('/get_id_by_name', 
+            {"name": "xiaotong"})
+        self.assertEqual(response.status_code, 200)
+        self.assertJSONEqual(force_text(response.content),
+                             {"name": "xiaotong", "id": 4})
+
+    def test_get_name_from_id(self):
+        response = self.client.get('/get_name_by_id', 
+            {"id": 4})
+        self.assertEqual(response.status_code, 200)
+        self.assertJSONEqual(force_text(response.content),
+                             {"name": "xiaotong", "id": '4'})
+
+    def test_get_details(self):
+        response = self.client.get('/detail', {'rid': 19, 'pid': 3})
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'cas/report_detail.html')
+
+    def test_enter_credentials_get(self):
+        response = self.client.get('/enter_credential', {'rid': 19, 'pid': 3})
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'cas/enter_credential.html')

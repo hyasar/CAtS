@@ -22,7 +22,7 @@ function deleteProject(project_id, project_name) {
             data: "project_id=" + project_id + "&csrfmiddlewaretoken=" + getCSRFToken(),
             success: function (message) {
                 location.reload();
-                alert(message);
+                // alert(message);
             }
         });
 
