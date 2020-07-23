@@ -16,7 +16,7 @@ sudo az aks install-cli
 sudo az aks get-credentials --resource-group $RESOURCEGROUP --name $AKSNAME
 
 echo "<---------------Build and Upload Image--------------->"
-ACRSERVER=$(az acr show -n $ACR --resource-group MyResourceGroup --query loginServer | tr -d '"')
+ACRSERVER=$(az acr show -n $ACR --resource-group $RESOURCEGROUP --query loginServer | tr -d '"')
 
 # You may want to change the name and tag of the image here
 cd ~/CAtS/CAS_WEB
