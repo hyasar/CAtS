@@ -10,7 +10,7 @@ echo "<---------------Create AKS--------------->"
 az group create --name $RESOURCEGROUP --location eastus
 az acr create --resource-group $RESOURCEGROUP --name $ACR --sku Basic
 sudo az acr login --name $ACR
-sudo apt-get install pass gnupg2
+sudo apt-get -y install pass gnupg2
 az aks create -g $RESOURCEGROUP -n $AKSNAME --location eastus  --attach-acr $ACR --generate-ssh-keys
 sudo az aks install-cli
 sudo az aks get-credentials --resource-group $RESOURCEGROUP --name $AKSNAME
