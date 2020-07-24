@@ -106,7 +106,7 @@
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
-            <stringProp name="HTTPSampler.domain">ec2-54-91-201-232.compute-1.amazonaws.com</stringProp>
+            <stringProp name="HTTPSampler.domain">ec2-100-25-213-135.compute-1.amazonaws.com</stringProp>
             <stringProp name="HTTPSampler.port">8000</stringProp>
             <stringProp name="HTTPSampler.protocol"></stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
@@ -167,7 +167,7 @@
                 </elementProp>
               </collectionProp>
             </elementProp>
-            <stringProp name="HTTPSampler.domain">ec2-54-91-201-232.compute-1.amazonaws.com</stringProp>
+            <stringProp name="HTTPSampler.domain">ec2-100-25-213-135.compute-1.amazonaws.com</stringProp>
             <stringProp name="HTTPSampler.port">8000</stringProp>
             <stringProp name="HTTPSampler.protocol"></stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
@@ -223,7 +223,7 @@
               <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
                 <collectionProp name="Arguments.arguments"/>
               </elementProp>
-              <stringProp name="HTTPSampler.domain">ec2-54-91-201-232.compute-1.amazonaws.com</stringProp>
+              <stringProp name="HTTPSampler.domain">ec2-100-25-213-135.compute-1.amazonaws.com</stringProp>
               <stringProp name="HTTPSampler.port">8000</stringProp>
               <stringProp name="HTTPSampler.protocol"></stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
@@ -264,7 +264,7 @@
                   </elementProp>
                 </collectionProp>
               </elementProp>
-              <stringProp name="HTTPSampler.domain">ec2-54-91-201-232.compute-1.amazonaws.com</stringProp>
+              <stringProp name="HTTPSampler.domain">ec2-100-25-213-135.compute-1.amazonaws.com</stringProp>
               <stringProp name="HTTPSampler.port">8000</stringProp>
               <stringProp name="HTTPSampler.protocol"></stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
@@ -305,7 +305,7 @@
                   </elementProp>
                 </collectionProp>
               </elementProp>
-              <stringProp name="HTTPSampler.domain">ec2-54-91-201-232.compute-1.amazonaws.com</stringProp>
+              <stringProp name="HTTPSampler.domain">ec2-100-25-213-135.compute-1.amazonaws.com</stringProp>
               <stringProp name="HTTPSampler.port">8000</stringProp>
               <stringProp name="HTTPSampler.protocol"></stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
@@ -346,7 +346,7 @@
                   </elementProp>
                 </collectionProp>
               </elementProp>
-              <stringProp name="HTTPSampler.domain">ec2-54-91-201-232.compute-1.amazonaws.com</stringProp>
+              <stringProp name="HTTPSampler.domain">ec2-100-25-213-135.compute-1.amazonaws.com</stringProp>
               <stringProp name="HTTPSampler.port">8000</stringProp>
               <stringProp name="HTTPSampler.protocol"></stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
@@ -387,7 +387,7 @@
                   </elementProp>
                 </collectionProp>
               </elementProp>
-              <stringProp name="HTTPSampler.domain">ec2-54-91-201-232.compute-1.amazonaws.com</stringProp>
+              <stringProp name="HTTPSampler.domain">ec2-100-25-213-135.compute-1.amazonaws.com</stringProp>
               <stringProp name="HTTPSampler.port">8000</stringProp>
               <stringProp name="HTTPSampler.protocol"></stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
@@ -428,7 +428,7 @@
                   </elementProp>
                 </collectionProp>
               </elementProp>
-              <stringProp name="HTTPSampler.domain">ec2-54-91-201-232.compute-1.amazonaws.com</stringProp>
+              <stringProp name="HTTPSampler.domain">ec2-100-25-213-135.compute-1.amazonaws.com</stringProp>
               <stringProp name="HTTPSampler.port">8000</stringProp>
               <stringProp name="HTTPSampler.protocol"></stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
@@ -469,7 +469,7 @@
                   </elementProp>
                 </collectionProp>
               </elementProp>
-              <stringProp name="HTTPSampler.domain">ec2-54-91-201-232.compute-1.amazonaws.com</stringProp>
+              <stringProp name="HTTPSampler.domain">ec2-100-25-213-135.compute-1.amazonaws.com</stringProp>
               <stringProp name="HTTPSampler.port">8000</stringProp>
               <stringProp name="HTTPSampler.protocol"></stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
@@ -510,7 +510,7 @@
                   </elementProp>
                 </collectionProp>
               </elementProp>
-              <stringProp name="HTTPSampler.domain">ec2-54-91-201-232.compute-1.amazonaws.com</stringProp>
+              <stringProp name="HTTPSampler.domain">ec2-100-25-213-135.compute-1.amazonaws.com</stringProp>
               <stringProp name="HTTPSampler.port">8000</stringProp>
               <stringProp name="HTTPSampler.protocol"></stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
@@ -558,7 +558,7 @@
                   </elementProp>
                 </collectionProp>
               </elementProp>
-              <stringProp name="HTTPSampler.domain">ec2-54-91-201-232.compute-1.amazonaws.com</stringProp>
+              <stringProp name="HTTPSampler.domain">ec2-100-25-213-135.compute-1.amazonaws.com</stringProp>
               <stringProp name="HTTPSampler.port">8000</stringProp>
               <stringProp name="HTTPSampler.protocol"></stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
@@ -599,7 +599,7 @@
                   </elementProp>
                 </collectionProp>
               </elementProp>
-              <stringProp name="HTTPSampler.domain">ec2-54-91-201-232.compute-1.amazonaws.com</stringProp>
+              <stringProp name="HTTPSampler.domain">ec2-100-25-213-135.compute-1.amazonaws.com</stringProp>
               <stringProp name="HTTPSampler.port">8000</stringProp>
               <stringProp name="HTTPSampler.protocol"></stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
@@ -647,7 +647,7 @@
                   </elementProp>
                 </collectionProp>
               </elementProp>
-              <stringProp name="HTTPSampler.domain">ec2-54-91-201-232.compute-1.amazonaws.com</stringProp>
+              <stringProp name="HTTPSampler.domain">ec2-100-25-213-135.compute-1.amazonaws.com</stringProp>
               <stringProp name="HTTPSampler.port">8000</stringProp>
               <stringProp name="HTTPSampler.protocol"></stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
@@ -681,7 +681,7 @@
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
-            <stringProp name="HTTPSampler.domain">ec2-54-91-201-232.compute-1.amazonaws.com</stringProp>
+            <stringProp name="HTTPSampler.domain">ec2-100-25-213-135.compute-1.amazonaws.com</stringProp>
             <stringProp name="HTTPSampler.port">8000</stringProp>
             <stringProp name="HTTPSampler.protocol"></stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
@@ -768,7 +768,7 @@
               </elementProp>
             </collectionProp>
           </elementProp>
-          <stringProp name="HTTPSampler.domain">ec2-54-91-201-232.compute-1.amazonaws.com</stringProp>
+          <stringProp name="HTTPSampler.domain">ec2-100-25-213-135.compute-1.amazonaws.com</stringProp>
           <stringProp name="HTTPSampler.port">8000</stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
