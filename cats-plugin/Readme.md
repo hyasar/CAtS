@@ -82,13 +82,6 @@ Go to `Installed` > select plugins.
 
 In Jenkins, select `Manage Jenkins` > `Configure System`.
 
-
-SonarQube servers
-
-```
-TODO
-```
-
 SWAMP
 
 ```
@@ -97,34 +90,10 @@ Add SWAMP Credential.
 Choose default project.
 ```
 
-Build Timestamp
-```
-Select Enable BUILD_TIMESTAMP
-```
-
-SSH remote hosts
-```
-Hostname: ${AWS public DNS}
-Port: 22
-```
-
 Jenkins Location
 
 ```
 Jenkins URL: http://${AWS public DNS}:8080/
-```
-
-Git Parameter
-
-```
-Select Show need to clone information
-```
-
-
-Publish over SSH
-
-```
-Passphrase: Fill in the Passphrase of Jenkins SSH key.
 ```
 
 CAtS Plugin
@@ -132,17 +101,6 @@ CAtS Plugin
 ```
 CAS Host URL: ${AWS public DNS}
 CAS Port: 8000
-```
-
-GitHub Pull Request Builder
-
-```
-Go to GitHub Auth.
-GitHub Server API URL: https://api.github.com
-Shared secret: 
-Credentials: Select admin credential
-
-Go to `Auto-manage webhooks` and select it.
 ```
 
 ### Project Configuration
